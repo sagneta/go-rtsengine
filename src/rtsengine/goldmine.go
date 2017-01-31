@@ -8,6 +8,8 @@ package rtsengine
 // Goldmine is an IUnit that maintains a gold mine
 type Goldmine struct {
 	Poolable
+	Health
+	owner IPlayer
 }
 
 func (unit *Goldmine) name() string {

@@ -9,6 +9,8 @@ package rtsengine
 // fortification like an abatis.
 type Wall struct {
 	Poolable
+	Health
+	owner IPlayer
 }
 
 func (unit *Wall) name() string {

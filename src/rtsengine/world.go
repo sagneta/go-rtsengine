@@ -13,10 +13,12 @@ type World struct {
 	span image.Rectangle
 }
 
-// Generate will construct a random world of width and height specified.
+// NewWorld will construct a random world of width and height specified.
 // works on 'this'. Another way of thinking is width are the columns
 // and height are the rows.
-func (world *World) Generate(width int, height int) {
+func NewWorld(width int, height int) *World {
+	world := World{}
+
 	// allocate 2d array row per row.
 	world.Grid = make([][]Acre, height)
 	for i := range world.Grid {
@@ -27,5 +29,9 @@ func (world *World) Generate(width int, height int) {
 	world.span = image.Rect(0, 0, width, height)
 
 	// Generate the entire world semi-randomly
+	// We will need some configuration parameters
+	// to control this behavior.
 	world.Grid[0][0].terrain = Trees
+
+	return &world
 }
