@@ -12,16 +12,3 @@ type Acre struct {
 	terrain Terrain
 	unit    IUnit
 }
-
-// Ok, I have the compilation correct
-func dummy() {
-	a := Acre{}
-	a.unit = &Farm{}
-	a.unit = &WoodPile{}
-
-	p := Pool{}
-	p.Free(a.unit)
-	farms := p.Farms(10)
-	a.unit = farms[0]
-
-}

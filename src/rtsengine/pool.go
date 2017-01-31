@@ -522,6 +522,8 @@ func (pool *Pool) Peasants(n int) []*Peasant {
 }
 
 // Free will deallocate the object and return it to the pool
-func (pool *Pool) Free(object IPoolable) {
-	object.Deallocate()
+func (pool *Pool) Free(objects ...IPoolable) {
+	for _, object := range objects {
+		object.Deallocate()
+	}
 }
