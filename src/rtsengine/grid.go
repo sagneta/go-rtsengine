@@ -3,6 +3,7 @@ package rtsengine
 import (
 	"errors"
 	"image"
+	"math"
 )
 
 // Grid maintains an acre grid and its span.
@@ -76,4 +77,14 @@ func (grid *Grid) Add(unit IUnit, location image.Point) error {
 	grid.Matrix[location.X][location.Y].unit = unit
 
 	return nil
+}
+
+// Distance between two points.
+func (grid *Grid) Distance(source image.Point, destination image.Point) int {
+	x2 := (destination.X - source.X) * (destination.X - source.X)
+	y2 := (destination.Y - source.Y) * (destination.Y - source.Y)
+	d2 := x2 + y2
+	distance := math.Sqrt(float64(d2))
+
+	return int(math.Trunc(distance))
 }
