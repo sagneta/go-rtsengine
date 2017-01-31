@@ -3,14 +3,14 @@
 *.a
 *.so
 *.*~
-./src/github.com/*
-./src/golang.org/*
-./src/gopkg.in/*
+src/github.com
+src/golang.org
+src/gopkg.in
 
 # Folders
 _obj
 _test
-
+bin
 # Architecture specific extensions/prefixes
 *.[568vq]
 [568vq].out

@@ -6,6 +6,11 @@ import (
 	"rtsengine"
 )
 
+/*
+ Main entry point for the go rtsengine.
+
+*/
+
 type flags struct {
 	port    *int
 	host    *string
@@ -29,5 +34,9 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
-	rtsengine.Thingy()
+	world := rtsengine.World{}
+	world.Generate(1000, 1000)
+
+	pool := rtsengine.Pool{}
+	pool.Generate(10000)
 }

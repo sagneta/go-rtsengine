@@ -29,8 +29,3 @@ func (world *World) Generate(width int, height int) {
 	// Generate the entire world semi-randomly
 	world.Grid[0][0].terrain = Trees
 }
-
-// Thingy is exported
-func Thingy() {
-
-}
