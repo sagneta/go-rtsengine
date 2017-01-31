@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the Catapult (artillery) unit
 
 */
 
-// Catapult is an IUnit that maintains a stone quarry
+// Catapult is an IUnit that maintains artillery of some sort.
 type Catapult struct {
 	Poolable
 }
 
-func (farm *Catapult) name() string {
+func (unit *Catapult) name() string {
 	return "Catapult"
 }

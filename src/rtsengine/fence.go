@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the unit
 
 */
 
-// Fence is an IUnit that maintains a stone quarry
+// Fence is an IUnit that maintains a wood fence
 type Fence struct {
 	Poolable
 }
 
-func (farm *Fence) name() string {
+func (unit *Fence) name() string {
 	return "Fence"
 }

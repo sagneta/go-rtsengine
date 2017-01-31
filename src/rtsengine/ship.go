@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
-// Ship is an IUnit that maintains a stone quarry
+// Ship is an IUnit that maintains a military vessel of some sort.
 type Ship struct {
 	Poolable
 }
 
-func (farm *Ship) name() string {
+func (unit *Ship) name() string {
 	return "Ship"
 }

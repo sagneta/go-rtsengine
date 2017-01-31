@@ -1,7 +1,7 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
@@ -10,6 +10,6 @@ type Goldmine struct {
 	Poolable
 }
 
-func (farm *Goldmine) name() string {
+func (unit *Goldmine) name() string {
 	return "Goldmine"
 }

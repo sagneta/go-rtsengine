@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
-// Infantry is an IUnit that maintains a stone quarry
+// Infantry is an IUnit that maintains a foot soldier unit. Like a century or company
 type Infantry struct {
 	Poolable
 }
 
-func (farm *Infantry) name() string {
+func (unit *Infantry) name() string {
 	return "Infantry"
 }

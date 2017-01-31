@@ -12,6 +12,10 @@ import (
  1) Much faster unit production
  2) Far less GC'ing that would potentially pause the game.
 
+ Should a request for an unit fail to find a free structure
+ within the pool then one will be dyanamically created.
+ Upon invocation of Free that structure will be GC'ed like
+ any other lacking a reference.
 */
 
 // Pool will pool several types of structures.

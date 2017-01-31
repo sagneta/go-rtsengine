@@ -1,15 +1,16 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
-// Wall is an IUnit that maintains a stone quarry
+// Wall is an IUnit that maintains a stone (masonry) wall or defensive
+// fortification like an abatis.
 type Wall struct {
 	Poolable
 }
 
-func (farm *Wall) name() string {
+func (unit *Wall) name() string {
 	return "Wall"
 }

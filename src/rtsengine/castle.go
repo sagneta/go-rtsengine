@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
-// Castle is an IUnit that maintains a stone quarry
+// Castle is an IUnit that maintains a military fortification
 type Castle struct {
 	Poolable
 }
 
-func (farm *Castle) name() string {
+func (unit *Castle) name() string {
 	return "Castle"
 }

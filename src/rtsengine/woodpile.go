@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
-// WoodPile is an IUnit that maintains a stone quarry
+// WoodPile is an IUnit that maintains a wood pile that provides wood.
 type WoodPile struct {
 	Poolable
 }
 
-func (farm *WoodPile) name() string {
+func (unit *WoodPile) name() string {
 	return "WoodPile"
 }

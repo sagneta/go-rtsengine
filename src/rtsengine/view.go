@@ -1,5 +1,7 @@
 package rtsengine
 
+import "image"
+
 /*
  A View into the world grid
 
@@ -11,11 +13,19 @@ type View struct {
 	Grid [][]Acre
 
 	// Width and Height of this Grid
-	width  int
-	height int
+	span image.Rectangle
 
 	// Where the upper left hand corner of this grid
 	// is located in world coordinates
-	worldX int
-	worldY int
+	worldOrigin image.Point
+}
+
+// Converts world coordinates to view coordinates
+func (view *View) toViewPoint(worldPoint image.Point) image.Point {
+	return worldPoint.Sub(view.worldOrigin)
+}
+
+// In returns true if worldPoint is in the view. False otherwise.
+func (view *View) In(worldPoint image.Point) bool {
+	return view.toViewPoint(worldPoint).In(view.span)
 }

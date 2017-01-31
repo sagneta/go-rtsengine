@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the unit
 
 */
 
-// Archer is an IUnit that maintains a stone quarry
+// Archer is an IUnit that maintains a range unit of some sort
 type Archer struct {
 	Poolable
 }
 
-func (farm *Archer) name() string {
+func (unit *Archer) name() string {
 	return "Archer"
 }

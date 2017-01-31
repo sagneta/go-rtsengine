@@ -1,5 +1,7 @@
 package rtsengine
 
+import "image"
+
 /*
  World 2D grid. That is an array of acre structures.
 
@@ -7,9 +9,8 @@ package rtsengine
 
 // World maintains the world state. This is the big one!
 type World struct {
-	Grid   [][]Acre
-	width  int
-	height int
+	Grid [][]Acre
+	span image.Rectangle
 }
 
 // Generate will construct a random world of width and height specified.
@@ -23,8 +24,7 @@ func (world *World) Generate(width int, height int) {
 	}
 
 	// store the dimensions for later.
-	world.width = width
-	world.height = height
+	world.span = image.Rect(0, 0, width, height)
 
 	// Generate the entire world semi-randomly
 	world.Grid[0][0].terrain = Trees

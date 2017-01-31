@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the  unit
 
 */
 
-// Peasant is an IUnit.
+// Peasant is an IUnit. Basic non-combatant that produces resources.
 type Peasant struct {
 	Poolable
 }
 
-func (farm *Peasant) name() string {
+func (unit *Peasant) name() string {
 	return "Peasant"
 }

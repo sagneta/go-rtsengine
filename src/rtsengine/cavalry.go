@@ -1,15 +1,15 @@
 package rtsengine
 
 /*
- Implements the farm unit
+ Implements the unit
 
 */
 
-// Cavalry is an IUnit that maintains a stone quarry
+// Cavalry is an IUnit that maintains a horse unit
 type Cavalry struct {
 	Poolable
 }
 
-func (farm *Cavalry) name() string {
+func (unit *Cavalry) name() string {
 	return "Cavalry"
 }
