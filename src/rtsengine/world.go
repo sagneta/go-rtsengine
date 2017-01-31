@@ -1,6 +1,11 @@
 package rtsengine
 
-import "image"
+import (
+	"fmt"
+	"image"
+	"math/rand"
+	"time"
+)
 
 /*
  World 2D grid. That is an array of acre structures.
@@ -27,4 +32,55 @@ func NewWorld(width int, height int) *World {
 	world.Matrix[0][0].terrain = Trees
 
 	return &world
+}
+
+// GenerateSimple will generate a simple world for basic testing.
+// Good for testing pathing etcetera.
+func (world *World) GenerateSimple() {
+
+	// Make all the world grass!
+	for i := range world.Matrix {
+		for j := range world.Matrix[i] {
+			world.Matrix[i][j].unit = nil
+			world.Matrix[i][j].terrain = Grass
+		}
+	}
+
+	// Randomly dot with trees and mountains
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+
+	// Trees
+	for i := 0; i < 10; i++ {
+		xr := r1.Intn(world.Span.Dx())
+		yr := r1.Intn(world.Span.Dy())
+		world.Matrix[xr][yr].terrain = Trees
+	}
+
+	// Mountains
+	for i := 0; i < 10; i++ {
+		xr := r1.Intn(world.Span.Dx())
+		yr := r1.Intn(world.Span.Dy())
+		world.Matrix[xr][yr].terrain = Mountains
+	}
+
+}
+
+// Print the world as ascii text.
+func (world *World) Print() {
+	for i := range world.Matrix {
+		for j := range world.Matrix[i] {
+			switch world.Matrix[i][j].terrain {
+			case Trees:
+				fmt.Printf("T")
+			case Mountains:
+				fmt.Printf("M")
+			case Grass:
+				fmt.Printf(".")
+			default:
+				fmt.Printf(".")
+			}
+		} //j
+		fmt.Println("")
+	} //i
 }
