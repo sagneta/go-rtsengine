@@ -91,7 +91,6 @@ func (grid *Grid) Set(locus *image.Point, unit IUnit) {
 func (grid *Grid) Collision(locus *image.Point) bool {
 	acre := grid.Matrix[locus.X][locus.Y]
 	return acre.unit != nil || acre.terrain == Trees || acre.terrain == Mountains
-	//return false
 }
 
 // Distance between two points.
