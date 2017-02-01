@@ -1,7 +1,6 @@
 package rtsengine
 
 import (
-	"fmt"
 	"image"
 	"math/rand"
 	"time"
@@ -64,23 +63,4 @@ func (world *World) GenerateSimple() {
 		world.Matrix[xr][yr].terrain = Mountains
 	}
 
-}
-
-// Print the world as ascii text.
-func (world *World) Print() {
-	for i := range world.Matrix {
-		for j := range world.Matrix[i] {
-			switch world.Matrix[i][j].terrain {
-			case Trees:
-				fmt.Printf("T")
-			case Mountains:
-				fmt.Printf("M")
-			case Grass:
-				fmt.Printf(".")
-			default:
-				fmt.Printf(".")
-			}
-		} //j
-		fmt.Println("")
-	} //i
 }

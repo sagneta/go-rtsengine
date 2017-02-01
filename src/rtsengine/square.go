@@ -1,16 +1,31 @@
 package rtsengine
 
+import (
+	"fmt"
+	"image"
+)
+
 // Square maintains scoring for a square in the World Grid.
 type Square struct {
+	Poolable
+
 	// The parent Square in a path
-	parent *Square
+	Parent *Square
 
 	// Location in the World Grid in world coordinates
-	x, y int
+	Locus image.Point
 
 	// Scoring.
 	// g is the cost it takes to get to this Square
 	// h is our guess (heuristic) as to how much it'll cost to reach the goal from that node
 	// f = g + h so f is the final cost. The lower the better.
-	f, g, h int
+	F, G, H int
+
+	// Position (also known as a neihborhood
+	Position int
+}
+
+// Print will dump the contents of this Square
+func (s *Square) Print() {
+	fmt.Printf("Locus(%d,%d) Position(%d) F(%d) G(%d) H(%d)\n", s.Locus.X, s.Locus.Y, s.Position, s.F, s.G, s.H)
 }

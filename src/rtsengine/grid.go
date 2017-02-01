@@ -2,6 +2,7 @@ package rtsengine
 
 import (
 	"errors"
+	"fmt"
 	"image"
 	"math"
 )
@@ -36,17 +37,17 @@ func (grid *Grid) GenerateGrid(worldLocation image.Point, width int, height int)
 }
 
 // ToGridPoint Converts world coordinates to grid coordinates
-func (grid *Grid) ToGridPoint(worldPoint image.Point) image.Point {
+func (grid *Grid) ToGridPoint(worldPoint *image.Point) image.Point {
 	return worldPoint.Sub(grid.WorldOrigin)
 }
 
 // ToWorldPoint converts grid coordinates to world coordinates
-func (grid *Grid) ToWorldPoint(gridPoint image.Point) image.Point {
+func (grid *Grid) ToWorldPoint(gridPoint *image.Point) image.Point {
 	return gridPoint.Add(grid.WorldOrigin)
 }
 
 // In returns true if worldPoint is In the grid. False otherwise.
-func (grid *Grid) In(worldPoint image.Point) bool {
+func (grid *Grid) In(worldPoint *image.Point) bool {
 	return grid.ToGridPoint(worldPoint).In(grid.Span)
 }
 
@@ -69,7 +70,7 @@ func (grid *Grid) Remove(unit IUnit) {
 
 // Add will place the unit in the grid at location. Error is returned
 // if the location is invalid. That is outside the known grid.
-func (grid *Grid) Add(unit IUnit, location image.Point) error {
+func (grid *Grid) Add(unit IUnit, location *image.Point) error {
 	if !grid.In(location) {
 		return errors.New("Location not within the world")
 	}
@@ -79,12 +80,52 @@ func (grid *Grid) Add(unit IUnit, location image.Point) error {
 	return nil
 }
 
+// Set the unit at locus within this grid.
+func (grid *Grid) Set(locus *image.Point, unit IUnit) {
+	grid.Matrix[locus.X][locus.Y].unit = unit
+}
+
+// Collision returns true if the locus is already occupied
+// by any other unit OR the terrain is inaccessible such as
+// Mountains and Trees.
+func (grid *Grid) Collision(locus *image.Point) bool {
+	acre := grid.Matrix[locus.X][locus.Y]
+	return acre.unit != nil || acre.terrain == Trees || acre.terrain == Mountains
+	//return false
+}
+
 // Distance between two points.
-func (grid *Grid) Distance(source image.Point, destination image.Point) int {
+func (grid *Grid) Distance(source *image.Point, destination *image.Point) int {
 	x2 := (destination.X - source.X) * (destination.X - source.X)
 	y2 := (destination.Y - source.Y) * (destination.Y - source.Y)
 	d2 := x2 + y2
 	distance := math.Sqrt(float64(d2))
 
 	return int(math.Trunc(distance))
+}
+
+// Print the world as ascii text.
+func (grid *Grid) Print() {
+	for i := range grid.Matrix {
+		for j := range grid.Matrix[i] {
+
+			switch grid.Matrix[i][j].unit.(type) {
+			case *Fence:
+				fmt.Printf("X")
+				continue
+			}
+
+			switch grid.Matrix[i][j].terrain {
+			case Trees:
+				fmt.Printf("T")
+			case Mountains:
+				fmt.Printf("M")
+			case Grass:
+				fmt.Printf(".")
+			default:
+				fmt.Printf(".")
+			}
+		} //j
+		fmt.Println("")
+	} //i
 }

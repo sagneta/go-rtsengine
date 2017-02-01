@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"image"
 	"log"
 	"rtsengine"
 )
@@ -36,8 +37,30 @@ func main() {
 
 	world := rtsengine.NewWorld(50, 50)
 	world.GenerateSimple()
-	world.Print()
+	//world.Print()
 
 	pool := rtsengine.Pool{}
 	pool.Generate(10000)
+
+	path := rtsengine.AStarPathing{}
+
+	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 30})
+
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	for e := pathList.Front(); e != nil; e = e.Next() {
+		square := e.Value.(*rtsengine.Square)
+		world.Grid.Set(&square.Locus, &rtsengine.Fence{})
+	}
+
+	world.Print()
+
+	for e := pathList.Front(); e != nil; e = e.Next() {
+		square := e.Value.(*rtsengine.Square)
+		square.Print()
+	}
+
 }

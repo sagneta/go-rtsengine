@@ -20,6 +20,7 @@ import (
 
 // Pool will pool several types of structures.
 type Pool struct {
+	// Coroutine Synchronization
 	muFarms     sync.Mutex
 	muArchers   sync.Mutex
 	muCastles   sync.Mutex
@@ -34,7 +35,9 @@ type Pool struct {
 	muWalls     sync.Mutex
 	muWoodpiles sync.Mutex
 	muPeasants  sync.Mutex
+	muSquares   sync.Mutex
 
+	// Units
 	farms     []Farm
 	archers   []Archer
 	castles   []Castle
@@ -49,6 +52,9 @@ type Pool struct {
 	walls     []Wall
 	woodpiles []WoodPile
 	peasants  []Peasant
+
+	// Misc
+	squares []Square
 }
 
 // Generate a pool of all internal structures of maximum length
@@ -68,6 +74,7 @@ func (pool *Pool) Generate(items int) {
 	pool.walls = make([]Wall, items)
 	pool.woodpiles = make([]WoodPile, items)
 	pool.peasants = make([]Peasant, items)
+	pool.squares = make([]Square, items)
 
 	for i := range pool.farms {
 		pool.farms[i].Deallocate()
@@ -84,6 +91,7 @@ func (pool *Pool) Generate(items int) {
 		pool.walls[i].Deallocate()
 		pool.woodpiles[i].Deallocate()
 		pool.peasants[i].Deallocate()
+		pool.squares[i].Deallocate()
 	}
 }
 
@@ -514,6 +522,37 @@ func (pool *Pool) Peasants(n int) []*Peasant {
 		log.Print("We failed to allocate a Peasant!")
 		for ; j < n; j++ {
 			items[j] = &Peasant{}
+			items[j].Allocate()
+		}
+	}
+
+	return items
+}
+
+// Squares allocated n at a time.
+func (pool *Pool) Squares(n int) []*Square {
+
+	items := make([]*Square, n)
+
+	pool.muSquares.Lock()
+	defer pool.muSquares.Unlock()
+
+	j := 0
+	for i := range pool.squares {
+		if !pool.squares[i].IsAllocated() {
+			pool.squares[i].Allocate()
+			items[j] = &pool.squares[i]
+			j++
+		}
+		if j >= n {
+			break
+		}
+	}
+
+	if j < n {
+		//log.Print("We failed to allocate a Square!")
+		for ; j < n; j++ {
+			items[j] = &Square{}
 			items[j].Allocate()
 		}
 	}
