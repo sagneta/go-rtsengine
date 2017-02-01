@@ -71,7 +71,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			if destination.Eq(successor.Locus) {
 				closedList.PushBack(q)
 				closedList.PushBack(successor)
-				return closedList, nil
+				return path.optimizePath(pool, closedList), nil
 			}
 
 			//successor.g = q.g + distance between successor and q
@@ -114,11 +114,48 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 		pool.Free(square)
 	}
 
-	return closedList, nil
+	return path.optimizePath(pool, closedList), nil
 }
 
-//func (path *AStarPathing
-//var m map[string]int
+// optimizePath will optimize the path list passed as a parameter. Any culled
+// nodes are freed from the pool.
+//
+// A path list will contain duplicates at each _position_. Thus you want to
+// iterate over the list and remove duplicates at each _position_ leaving the
+// square with the least F in the path list.
+// For F ties only one is chosen.
+func (path *AStarPathing) optimizePath(pool *Pool, l *list.List) *list.List {
+	var m map[int]*Square
+
+	m = make(map[int]*Square)
+	for e := l.Front(); e != nil; e = e.Next() {
+		square := e.Value.(*Square)
+
+		p, ok := m[square.Position]
+
+		if !ok {
+			m[square.Position] = square
+		} else {
+			if p.F <= square.F {
+				pool.Free(square)
+			} else {
+				m[square.Position] = square
+				pool.Free(p)
+			}
+		}
+
+	}
+	result := list.New()
+
+	length := len(m)
+	for i := 0; i < length; i++ {
+		result.PushBack(m[i])
+	}
+
+	return result
+}
+
+//
 
 // skipSuccessor will scan list l and if the list l contains an element with a smaller
 // F than the successor at the same position, returns TRUE.
