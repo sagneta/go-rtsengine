@@ -27,9 +27,21 @@ type Acre struct {
 func (acre *Acre) Set(newUnit IUnit) error {
 	acre.muSet.Lock()
 	defer acre.muSet.Unlock()
-	if acre.unit != nil {
-		return fmt.Errorf("Unit collision in acre")
+	if acre.Collision() {
+		return fmt.Errorf("Unit collision in acre.")
 	}
 	acre.unit = newUnit
 	return nil
+}
+
+// Collision returns true if the locus is already occupied
+// by any other unit OR the terrain is inaccessible such as
+// Mountains and Trees.
+func (acre *Acre) Collision() bool {
+	return acre.unit != nil || acre.terrain == Trees || acre.terrain == Mountains
+}
+
+// Occupied returns true if this acre is occupied by a unit and false otherwise.
+func (acre *Acre) Occupied() bool {
+	return acre.unit != nil
 }

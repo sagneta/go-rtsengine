@@ -89,8 +89,7 @@ func (grid *Grid) Set(locus *image.Point, unit IUnit) error {
 // by any other unit OR the terrain is inaccessible such as
 // Mountains and Trees.
 func (grid *Grid) Collision(locus *image.Point) bool {
-	acre := grid.Matrix[locus.X][locus.Y]
-	return acre.unit != nil || acre.terrain == Trees || acre.terrain == Mountains
+	return grid.Matrix[locus.X][locus.Y].Collision()
 }
 
 // Distance between two points.
