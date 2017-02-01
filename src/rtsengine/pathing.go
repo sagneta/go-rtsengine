@@ -59,7 +59,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 
 		// generate q's 8 successors and set their parents to q
 		successors := path.constructSuccessor(pool, q)
-		for _, successor := range successors {
+		for i, successor := range successors {
 
 			// ensure it is in the grid and there isn't a collision
 			if !grid.In(&successor.Locus) || grid.Collision(&successor.Locus) {
@@ -71,6 +71,8 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			if destination.Eq(successor.Locus) {
 				closedList.PushBack(q)
 				closedList.PushBack(successor)
+				path.freeList(pool, openList)
+				path.freeArray(pool, i+1, successors)
 				return path.optimizePath(pool, closedList), nil
 			}
 
@@ -109,12 +111,29 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	} // openList non empty
 
 	// Free all the remaining successors in the open list.
-	for e := openList.Front(); e != nil; e = e.Next() {
+	path.freeList(pool, openList)
+
+	return path.optimizePath(pool, closedList), nil
+}
+
+// freeArray will free all squares in array from i .. len(squares)-1
+func (path *AStarPathing) freeArray(pool *Pool, i int, squares []*Square) {
+	if i >= len(squares) {
+		return
+	}
+
+	for ; i < len(squares); i++ {
+		pool.Free(squares[i])
+	}
+}
+
+// freeList will free every Square in the list l
+func (path *AStarPathing) freeList(pool *Pool, l *list.List) {
+	// Free all the remaining successors in the open list.
+	for e := l.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*Square)
 		pool.Free(square)
 	}
-
-	return path.optimizePath(pool, closedList), nil
 }
 
 // optimizePath will optimize the path list passed as a parameter. Any culled

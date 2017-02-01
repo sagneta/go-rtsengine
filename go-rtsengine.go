@@ -44,7 +44,7 @@ func main() {
 
 	path := rtsengine.AStarPathing{}
 
-	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 30})
+	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 10})
 
 	if err != nil {
 		log.Print(err)
@@ -61,6 +61,8 @@ func main() {
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)
 		square.Print()
+		pool.Free(square)
 	}
 
+	pool.PrintAllocatedSquares()
 }

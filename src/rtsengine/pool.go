@@ -1,6 +1,7 @@
 package rtsengine
 
 import (
+	"fmt"
 	"log"
 	"sync"
 )
@@ -20,6 +21,8 @@ import (
 
 // Pool will pool several types of structures.
 type Pool struct {
+	r int
+
 	// Coroutine Synchronization
 	muFarms     sync.Mutex
 	muArchers   sync.Mutex
@@ -60,6 +63,8 @@ type Pool struct {
 // Generate a pool of all internal structures of maximum length
 // items.
 func (pool *Pool) Generate(items int) {
+	pool.r = 0
+
 	pool.farms = make([]Farm, items)
 	pool.archers = make([]Archer, items)
 	pool.castles = make([]Castle, items)
@@ -561,8 +566,26 @@ func (pool *Pool) Squares(n int) []*Square {
 }
 
 // Free will deallocate the object and return it to the pool
+func (pool *Pool) Free(object IPoolable) {
+	object.Deallocate()
+	pool.r++
+}
+
+/*
 func (pool *Pool) Free(objects ...IPoolable) {
 	for _, object := range objects {
 		object.Deallocate()
 	}
+}
+*/
+
+// PrintAllocatedSquares prints the number of still allocatd squares in the pool
+func (pool *Pool) PrintAllocatedSquares() {
+	j := 0
+	for i := range pool.squares {
+		if pool.squares[i].IsAllocated() {
+			j++
+		}
+	}
+	fmt.Printf("\nSquares still allocated: %d  r(%d)\n", j, pool.r)
 }
