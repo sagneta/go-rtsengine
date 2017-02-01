@@ -53,7 +53,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 
 	// While the open list is not empty
 	for openList.Len() > 0 {
-		//find the node with the least f on the open list, call it "q"
+		//find the square with the least f on the open list, call it "q"
 		//remove q from the open list
 		q = path.leastF(openList)
 
@@ -86,21 +86,21 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			// successor.f = successor.g + successor.h
 			successor.F = successor.G + successor.H
 
-			//  if a node with the same position as successor is in the OPEN list
-			//  which has a lower f than successor, skip this successor
+			//  if a square with the same position as successor is in the OPEN list
+			//  exists and has a lower f than successor, skip this successor
 			if path.skipSuccessor(successor, openList) {
 				pool.Free(successor)
 				continue
 			}
 
-			// if a node with the same position as successor is in the CLOSED list \
-			// which has a lower f than successor, skip this successor
+			// if a square with the same position as successor is in the CLOSED list
+			// exists has a lower f than successor, skip this successor
 			if path.skipSuccessor(successor, closedList) {
 				pool.Free(successor)
 				continue
 			}
 
-			// otherwise, add the node to the open list
+			// otherwise, add the square to the open list
 			openList.PushBack(successor)
 
 		} // for successors
@@ -137,7 +137,7 @@ func (path *AStarPathing) freeList(pool *Pool, l *list.List) {
 }
 
 // optimizePath will optimize the path list passed as a parameter. Any culled
-// nodes are freed from the pool.
+// squares are freed from the pool.
 //
 // A path list will contain duplicates at each _position_. Thus you want to
 // iterate over the list and remove duplicates at each _position_ leaving the
