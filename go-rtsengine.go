@@ -56,7 +56,7 @@ func main() {
 
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)
-		world.Grid.Set(&square.Locus, &rtsengine.Fence{})
+		_ = world.Grid.Set(&square.Locus, &rtsengine.Fence{})
 	}
 
 	world.Print()

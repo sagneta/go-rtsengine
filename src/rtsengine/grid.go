@@ -81,8 +81,8 @@ func (grid *Grid) Add(unit IUnit, location *image.Point) error {
 }
 
 // Set the unit at locus within this grid.
-func (grid *Grid) Set(locus *image.Point, unit IUnit) {
-	grid.Matrix[locus.X][locus.Y].unit = unit
+func (grid *Grid) Set(locus *image.Point, unit IUnit) error {
+	return grid.Matrix[locus.X][locus.Y].Set(unit)
 }
 
 // Collision returns true if the locus is already occupied
