@@ -92,7 +92,7 @@ func (grid *Grid) Collision(locus *image.Point) bool {
 	return grid.Matrix[locus.X][locus.Y].Collision()
 }
 
-// Distance between two points.
+// Distance between two points using a floating point operation.
 func (grid *Grid) Distance(source *image.Point, destination *image.Point) int {
 	x2 := (destination.X - source.X) * (destination.X - source.X)
 	y2 := (destination.Y - source.Y) * (destination.Y - source.Y)
@@ -102,14 +102,9 @@ func (grid *Grid) Distance(source *image.Point, destination *image.Point) int {
 	return int(math.Trunc(distance))
 }
 
-// DistanceInteger is the distance algorithm using integer arithmatic
+// DistanceInteger is the distance algorithm using integer arithmetic. Don't use intermediate variables.
 func (grid *Grid) DistanceInteger(source *image.Point, destination *image.Point) int {
-	x2 := (destination.X - source.X) * (destination.X - source.X)
-	y2 := (destination.Y - source.Y) * (destination.Y - source.Y)
-	d2 := x2 + y2
-	return int(grid.SqrtHDU32(uint32(d2)))
-
-	//return int(math.Trunc(distance))
+	return int(grid.SqrtHDU32(uint32((destination.X-source.X)*(destination.X-source.X) + (destination.Y-source.Y)*(destination.Y-source.Y))))
 }
 
 // Print the world as ascii text.

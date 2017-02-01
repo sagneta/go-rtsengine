@@ -46,7 +46,8 @@ func main() {
 	path := rtsengine.AStarPathing{}
 
 	start := time.Now()
-	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 10})
+	//pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 10})
+	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{45, 45})
 	elapsed := time.Since(start)
 
 	if err != nil {
