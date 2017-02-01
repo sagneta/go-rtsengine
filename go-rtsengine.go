@@ -5,6 +5,7 @@ import (
 	"image"
 	"log"
 	"rtsengine"
+	"time"
 )
 
 /*
@@ -44,7 +45,9 @@ func main() {
 
 	path := rtsengine.AStarPathing{}
 
+	start := time.Now()
 	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 10})
+	elapsed := time.Since(start)
 
 	if err != nil {
 		log.Print(err)
@@ -65,4 +68,6 @@ func main() {
 	}
 
 	pool.PrintAllocatedSquares()
+
+	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
 }

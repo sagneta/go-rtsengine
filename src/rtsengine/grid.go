@@ -103,6 +103,16 @@ func (grid *Grid) Distance(source *image.Point, destination *image.Point) int {
 	return int(math.Trunc(distance))
 }
 
+// DistanceInteger is the distance algorithm using integer arithmatic
+func (grid *Grid) DistanceInteger(source *image.Point, destination *image.Point) int {
+	x2 := (destination.X - source.X) * (destination.X - source.X)
+	y2 := (destination.Y - source.Y) * (destination.Y - source.Y)
+	d2 := x2 + y2
+	return int(grid.SqrtHDU32(uint32(d2)))
+
+	//return int(math.Trunc(distance))
+}
+
 // Print the world as ascii text.
 func (grid *Grid) Print() {
 	for i := range grid.Matrix {
@@ -127,4 +137,24 @@ func (grid *Grid) Print() {
 		} //j
 		fmt.Println("")
 	} //i
+}
+
+// SqrtHDU32 is the integer square root for unsigned 32 bit values.
+func (grid *Grid) SqrtHDU32(x uint32) uint32 {
+	//Using uint guarantees native word width
+	var t, b, r uint
+	t = uint(x)
+	p := uint(1 << 30)
+	for p > t {
+		p >>= 2
+	}
+	for ; p != 0; p >>= 2 {
+		b = r | p
+		r >>= 1
+		if t >= b {
+			t -= b
+			r |= p
+		}
+	}
+	return uint32(r)
 }

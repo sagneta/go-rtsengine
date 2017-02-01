@@ -25,11 +25,6 @@ func NewWorld(width int, height int) *World {
 	// When the worldLocation is 0,0 then the grid IS the world.
 	world.GenerateGrid(image.Point{0, 0}, width, height)
 
-	// Generate the entire world semi-randomly
-	// We will need some configuration parameters
-	// to control this behavior.
-	world.Matrix[0][0].terrain = Trees
-
 	return &world
 }
 

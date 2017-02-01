@@ -4,7 +4,6 @@ import (
 	"container/list"
 	"fmt"
 	"image"
-	"sync"
 )
 
 /*
@@ -19,7 +18,7 @@ import (
 type AStarPathing struct {
 	// We need to only path-find one at a time otherwise
 	// if we path-find as the world changes it will end badly.
-	muPathing sync.Mutex
+	//muPathing sync.Mutex
 }
 
 // FindPath will find a path between source and destination Points and
@@ -77,11 +76,11 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			}
 
 			//successor.g = q.g + distance between successor and q
-			D := grid.Distance(&q.Locus, &successor.Locus)
+			D := grid.DistanceInteger(&q.Locus, &successor.Locus)
 			successor.G = q.G + D
 
 			// successor.h = distance from goal to successor
-			successor.H = grid.Distance(&successor.Locus, destination)
+			successor.H = grid.DistanceInteger(&successor.Locus, destination)
 
 			// successor.f = successor.g + successor.h
 			successor.F = successor.G + successor.H
