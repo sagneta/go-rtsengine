@@ -10,4 +10,13 @@ package rtsengine
 // IPlayer encapsulates are particular mechanic managed by the game.
 type IPlayer interface {
 	name() string
+
+	// Initialized UDPWire to listen upon
+	listen(wire *UDPWire)
+
+	// TRUE if human player
+	isHuman() bool
+
+	// TRUE if current has network connection
+	isWireAlive() bool
 }

@@ -36,9 +36,9 @@ func (acre *Acre) Set(newUnit IUnit) error {
 
 // Collision returns true if the locus is already occupied
 // by any other unit OR the terrain is inaccessible such as
-// Mountains and Trees.
+// Mountains, Water and Trees.
 func (acre *Acre) Collision() bool {
-	return acre.unit != nil || acre.terrain == Trees || acre.terrain == Mountains
+	return acre.unit != nil || acre.terrain == Trees || acre.terrain == Mountains || acre.terrain == Water
 }
 
 // Occupied returns true if this acre is occupied by a unit and false otherwise.

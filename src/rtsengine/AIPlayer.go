@@ -2,18 +2,15 @@ package rtsengine
 
 import "image"
 
-// HumanPlayer implements the IPlayer interface for a human player
-type HumanPlayer struct {
+// AIPlayer will implement and Machine Intelligent Player
+type AIPlayer struct {
 	// Structures common to all players.
 	BasePlayer
-
-	// Live UDPWire to communicate with UI
-	Wire *UDPWire
 }
 
-// NewHumanPlayer constructs a HumanPlayer
-func NewHumanPlayer(description string, worldLocation image.Point, width int, height int) *HumanPlayer {
-	player := HumanPlayer{}
+// NewAIPlayer constructs a AIPlayer
+func NewAIPlayer(description string, worldLocation image.Point, width int, height int) *AIPlayer {
+	player := AIPlayer{}
 
 	player.description = description
 	player.GenerateView(worldLocation, width, height)
@@ -26,17 +23,16 @@ func NewHumanPlayer(description string, worldLocation image.Point, width int, he
 /////////////////////////////////////////////////////////////////////////
 //                           IPlayer interface                         //
 /////////////////////////////////////////////////////////////////////////
-func (player *HumanPlayer) listen(wire *UDPWire) {
-	player.Wire = wire
+func (player *AIPlayer) listen(wire *UDPWire) {
+	// Does nothing beyond satisfying the interface.
 }
 
-func (player *HumanPlayer) isHuman() bool {
-	return true
+func (player *AIPlayer) isHuman() bool {
+	return false
 }
 
-func (player *HumanPlayer) isWireAlive() bool {
-	// Best guess
-	return player.Wire != nil
+func (player *AIPlayer) isWireAlive() bool {
+	return false
 }
 
 /////////////////////////////////////////////////////////////////////////
