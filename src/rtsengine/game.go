@@ -82,13 +82,13 @@ func NewGame(
 	i := 0
 	for ; i < noOfHumanPlayers; i++ {
 		// The world point needs to be inserted into a random location
-		game.Players[i] = NewHumanPlayer(fmt.Sprintf("Human Player %d", i), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing)
+		game.Players[i] = NewHumanPlayer(fmt.Sprintf("Human Player %d", i), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing, game.OurWorld)
 	}
 
 	// Create Machine Intelligent Players
 	for j := 0; j < noOfAIPlayers; j++ {
 		// The world point needs to be inserted into a random location
-		game.Players[i] = NewAIPlayer(fmt.Sprintf("AI Player %d", j), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing)
+		game.Players[i] = NewAIPlayer(fmt.Sprintf("AI Player %d", j), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing, game.OurWorld)
 		i++
 	}
 

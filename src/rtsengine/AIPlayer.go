@@ -9,13 +9,14 @@ type AIPlayer struct {
 }
 
 // NewAIPlayer constructs a AIPlayer
-func NewAIPlayer(description string, worldLocation image.Point, width int, height int, pool *Pool, pathing *AStarPathing) *AIPlayer {
+func NewAIPlayer(description string, worldLocation image.Point, width int, height int, pool *Pool, pathing *AStarPathing, world *World) *AIPlayer {
 	player := AIPlayer{}
 
 	player.description = description
 	player.GenerateView(worldLocation, width, height)
 	player.ItemPool = pool
 	player.Pathing = pathing
+	player.OurWorld = world
 
 	// Add mechanics
 

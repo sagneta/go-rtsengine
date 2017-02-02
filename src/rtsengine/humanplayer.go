@@ -12,13 +12,14 @@ type HumanPlayer struct {
 }
 
 // NewHumanPlayer constructs a HumanPlayer
-func NewHumanPlayer(description string, worldLocation image.Point, width int, height int, pool *Pool, pathing *AStarPathing) *HumanPlayer {
+func NewHumanPlayer(description string, worldLocation image.Point, width int, height int, pool *Pool, pathing *AStarPathing, world *World) *HumanPlayer {
 	player := HumanPlayer{}
 
 	player.description = description
 	player.GenerateView(worldLocation, width, height)
 	player.ItemPool = pool
 	player.Pathing = pathing
+	player.OurWorld = world
 
 	// Add mechanics
 

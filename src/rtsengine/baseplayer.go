@@ -5,7 +5,13 @@ import "fmt"
 // BasePlayer maintains all structures common to all kinds of players.
 // Presently there are two players {HumanPlayer, AIPlayer}
 type BasePlayer struct {
+	// The world map that maintains the terrain and units.
+	OurWorld *World
+
+	// Our view (projection) onto that world
 	View
+
+	// Map of units for this player
 	UnitMap
 
 	// Name of this player
