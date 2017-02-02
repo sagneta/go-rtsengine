@@ -8,7 +8,8 @@ package rtsengine
 // Cavalry is an IUnit that maintains a horse unit
 type Cavalry struct {
 	Poolable
-	Health
+	HealthAndAttack
+	Movement
 	owner IPlayer
 }
 

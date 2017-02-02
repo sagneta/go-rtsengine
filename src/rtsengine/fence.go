@@ -8,7 +8,7 @@ package rtsengine
 // Fence is an IUnit that maintains a wood fence
 type Fence struct {
 	Poolable
-	Health
+	HealthAndAttack
 	owner IPlayer
 }
 

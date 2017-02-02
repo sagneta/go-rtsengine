@@ -8,7 +8,8 @@ package rtsengine
 // Infantry is an IUnit that maintains a foot soldier unit. Like a century or company
 type Infantry struct {
 	Poolable
-	Health
+	HealthAndAttack
+	Movement
 	owner IPlayer
 }
 

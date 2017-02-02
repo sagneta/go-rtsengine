@@ -8,7 +8,7 @@ package rtsengine
 // Tower is an IUnit that maintains a military watch tower with some defensive capability
 type Tower struct {
 	Poolable
-	Health
+	HealthAndAttack
 	owner IPlayer
 }
 

@@ -8,7 +8,7 @@ package rtsengine
 // StoneQuarry is an IUnit that maintains a stone quarry
 type StoneQuarry struct {
 	Poolable
-	Health
+	HealthAndAttack
 	owner IPlayer
 }
 

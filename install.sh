@@ -1,5 +1,6 @@
 #!/bin/sh
 # Install development libraries I use for emacs.
+go get golang.org/x/tools/cmd/gorename
 go get github.com/rogpeppe/godef
 go get -u github.com/ptrv/goflycheck
 go get -u github.com/dougm/goflymake

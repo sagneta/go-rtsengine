@@ -9,7 +9,7 @@ package rtsengine
 // fortification like an abatis.
 type Wall struct {
 	Poolable
-	Health
+	HealthAndAttack
 	owner IPlayer
 }
 

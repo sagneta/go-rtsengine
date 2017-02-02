@@ -8,7 +8,7 @@ package rtsengine
 // WoodPile is an IUnit that maintains a wood pile that provides wood.
 type WoodPile struct {
 	Poolable
-	Health
+	HealthAndAttack
 	owner IPlayer
 }
 

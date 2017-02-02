@@ -8,7 +8,7 @@ package rtsengine
 // Castle is an IUnit that maintains a military fortification
 type Castle struct {
 	Poolable
-	Health
+	HealthAndAttack
 	owner IPlayer
 }
 
