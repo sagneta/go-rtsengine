@@ -26,7 +26,7 @@ type Grid struct {
 // grid onto the world at worldLocation
 func (grid *Grid) GenerateGrid(worldLocation image.Point, width int, height int) {
 	grid.WorldOrigin = worldLocation
-	grid.Span = image.Rect(0, 0, width, height)
+	grid.Span = image.Rect(0, 0, height, width)
 
 	// allocate 2d array row per row.
 	grid.Matrix = make([][]Acre, height)

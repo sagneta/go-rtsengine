@@ -3,6 +3,8 @@ package rtsengine
 import (
 	"fmt"
 	"image"
+	"math/rand"
+	"time"
 )
 
 // Game is an actual game with UDP ports and IPlayers
@@ -43,7 +45,7 @@ func NewGame(
 	playerViewWidth int, playerViewHeight int,
 
 	// Width and Height in Acres of our world.
-	worldWidth int, worldHeight int) *Game {
+	worldWidth int, worldHeight int) (*Game, error) {
 
 	// This instance
 	game := Game{}
@@ -67,22 +69,80 @@ func NewGame(
 
 	// Create Players
 	game.Players = make([]IPlayer, noOfAIPlayers+noOfHumanPlayers)
+
+	// Situate player bases onto the world without overlapping.
+	rects, error := game.SituateHomeBases(noOfAIPlayers+noOfHumanPlayers, playerViewWidth, playerViewHeight)
+
+	if error != nil {
+		return nil, fmt.Errorf("Failed to situate home bases into world grid. Please reduce number of players and/or increase world size")
+	}
+
 	// Create Human Players
 	i := 0
 	for ; i < noOfHumanPlayers; i++ {
 		// The world point needs to be inserted into a random location
-		game.Players[i] = NewHumanPlayer(fmt.Sprintf("Human Player %d", i), image.Point{0, 0}, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing)
+		game.Players[i] = NewHumanPlayer(fmt.Sprintf("Human Player %d", i), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing)
 	}
 
 	// Create Machine Intelligent Players
 	for j := 0; j < noOfAIPlayers; j++ {
 		// The world point needs to be inserted into a random location
-		game.Players[i] = NewAIPlayer(fmt.Sprintf("AI Player %d", j), image.Point{0, 0}, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing)
+		game.Players[i] = NewAIPlayer(fmt.Sprintf("AI Player %d", j), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing)
+		i++
 	}
 
 	// Add mechanics
 
-	return &game
+	return &game, nil
+}
+
+// SituateHomeBases will construct home bases in the proper
+// locations on the world. That is within the world but not overlapping one another.
+// It's possible for large numbers of players on a too small grid this heuristic will not converge
+// and an error will be returned.
+func (game *Game) SituateHomeBases(noOfPlayers int, playerViewWidth int, playerViewHeight int) ([]*image.Rectangle, error) {
+	playerRects := make([]*image.Rectangle, noOfPlayers)
+
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+
+OUTER:
+	for i, j := 0, 0; i < noOfPlayers; j++ {
+
+		// No convergence?
+		if j >= 1000 {
+			return nil, fmt.Errorf("Not enough space in world grid to insert player grids.")
+		}
+
+		// Random point within the world
+		randomRect := image.Rect(r1.Intn(game.OurWorld.Span.Dx()), r1.Intn(game.OurWorld.Span.Dy()), playerViewHeight, playerViewWidth)
+
+		// If no players yet just add it and continue.
+		if i == 0 {
+			playerRects[i] = &randomRect
+			i++
+			continue
+		}
+
+		// Ensure no overlaps with existing player rects
+		for _, r := range playerRects {
+			// End of array.
+			if r == nil {
+				break
+			}
+
+			// two player home grids overlap. Try again...
+			if r.Overlaps(randomRect) {
+				continue OUTER
+			}
+		}
+
+		// no overlap!
+		playerRects[i] = &randomRect
+		i++
+	}
+
+	return playerRects, nil
 }
 
 // Start will start the game.
