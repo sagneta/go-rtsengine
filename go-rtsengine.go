@@ -36,6 +36,8 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
+	rtsengine.NewGame("Game test", 10000, 1, 1, 50, 50, 100, 100)
+
 	world := rtsengine.NewWorld(50, 50)
 	world.GenerateSimple()
 	//world.Print()

@@ -11,8 +11,14 @@ type BasePlayer struct {
 	// Name of this player
 	description string
 
+	// Our master pool for frequently used items
+	ItemPool *Pool
+
 	// The automated mechanics of this particular user
 	Mechanics []IMechanic
+
+	// Pathing systems
+	Pathing *AStarPathing
 }
 
 // IPlayer Interface

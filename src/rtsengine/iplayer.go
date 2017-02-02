@@ -19,4 +19,10 @@ type IPlayer interface {
 
 	// TRUE if current has network connection
 	isWireAlive() bool
+
+	// Invoke to cause the player to begin play immediately.
+	start()
+
+	// Invoke to cause the player to stop play immediately.
+	stop()
 }

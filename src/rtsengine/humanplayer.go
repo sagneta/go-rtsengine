@@ -12,11 +12,13 @@ type HumanPlayer struct {
 }
 
 // NewHumanPlayer constructs a HumanPlayer
-func NewHumanPlayer(description string, worldLocation image.Point, width int, height int) *HumanPlayer {
+func NewHumanPlayer(description string, worldLocation image.Point, width int, height int, pool *Pool, pathing *AStarPathing) *HumanPlayer {
 	player := HumanPlayer{}
 
 	player.description = description
 	player.GenerateView(worldLocation, width, height)
+	player.ItemPool = pool
+	player.Pathing = pathing
 
 	// Add mechanics
 
@@ -37,6 +39,14 @@ func (player *HumanPlayer) isHuman() bool {
 func (player *HumanPlayer) isWireAlive() bool {
 	// Best guess
 	return player.Wire != nil
+}
+
+func (player *HumanPlayer) start() {
+
+}
+
+func (player *HumanPlayer) stop() {
+
 }
 
 /////////////////////////////////////////////////////////////////////////

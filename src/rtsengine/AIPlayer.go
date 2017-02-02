@@ -9,11 +9,13 @@ type AIPlayer struct {
 }
 
 // NewAIPlayer constructs a AIPlayer
-func NewAIPlayer(description string, worldLocation image.Point, width int, height int) *AIPlayer {
+func NewAIPlayer(description string, worldLocation image.Point, width int, height int, pool *Pool, pathing *AStarPathing) *AIPlayer {
 	player := AIPlayer{}
 
 	player.description = description
 	player.GenerateView(worldLocation, width, height)
+	player.ItemPool = pool
+	player.Pathing = pathing
 
 	// Add mechanics
 
@@ -33,6 +35,14 @@ func (player *AIPlayer) isHuman() bool {
 
 func (player *AIPlayer) isWireAlive() bool {
 	return false
+}
+
+func (player *AIPlayer) start() {
+
+}
+
+func (player *AIPlayer) stop() {
+
 }
 
 /////////////////////////////////////////////////////////////////////////
