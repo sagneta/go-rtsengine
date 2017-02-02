@@ -36,20 +36,13 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
-	rtsengine.NewGame("Game test", 10000, 1, 1, 50, 50, 100, 100)
-
-	world := rtsengine.NewWorld(50, 50)
-	world.GenerateSimple()
-	//world.Print()
-
-	pool := rtsengine.Pool{}
-	pool.Generate(10000)
-
-	path := rtsengine.AStarPathing{}
-
+	game, err := rtsengine.NewGame("Game test", 10000, 1, 1, 50, 50, 80, 80)
+	if err != nil {
+		log.Print(err)
+		return
+	}
 	start := time.Now()
-	//pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{30, 10})
-	pathList, err := path.FindPath(&pool, &world.Grid, &image.Point{10, 10}, &image.Point{45, 45})
+	pathList, err := game.FindPath(&image.Point{10, 10}, &image.Point{45, 45})
 	elapsed := time.Since(start)
 
 	if err != nil {
@@ -59,18 +52,18 @@ func main() {
 
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)
-		_ = world.Grid.Set(&square.Locus, &rtsengine.Fence{})
+		_ = game.OurWorld.Grid.Set(&square.Locus, &rtsengine.Fence{})
 	}
 
-	world.Print()
+	game.OurWorld.Print()
 
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)
 		square.Print()
-		pool.Free(square)
+		game.ItemPool.Free(square)
 	}
 
-	pool.PrintAllocatedSquares()
+	game.ItemPool.PrintAllocatedSquares()
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
 }
