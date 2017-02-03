@@ -75,10 +75,13 @@ func (player *HumanPlayer) listenForWireCommands() {
 		packet.Print()
 
 		switch packet.Command {
+
+		// Set the View to equial the entire world. Used for testing.
 		case FullView:
 			player.View.Span = player.OurWorld.Grid.Span
 			player.View.WorldOrigin = player.OurWorld.Grid.WorldOrigin
 
+			// Return all non empty or non grass acres in the view.
 		case PartialRefreshPlayerToUI:
 			for i := 0; i < player.View.Span.Dx(); i++ {
 				for j := 0; j < player.View.Span.Dy(); j++ {
