@@ -10,4 +10,8 @@ go get -u github.com/golang/lint/golint
 go get -u github.com/nsf/gocode
 go get -u github.com/alecthomas/gometalinter
 gometalinter --install --update
+
+
+#Install libraries used by this library
+go get -u github.com/nsf/termbox-go
 echo 'Done'

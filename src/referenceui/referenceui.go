@@ -5,10 +5,22 @@ import (
 	"fmt"
 	"net"
 	"rtsengine"
+	"unicode/utf8"
+
+	termbox "github.com/nsf/termbox-go"
 )
 
 func main() {
-	fmt.Print("Reference UI")
+
+	uni, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
+	fmt.Println(uni)
+
+	fmt.Printf("Reference UI \xF0\x9F\x8F\xAF  Castle %c", uni)
+
+	// A Canvas is a 2D array of Cells, used for drawing.
+	// The structure of a Canvas is an array of columns.
+	// This is so it can be addrssed canvas[x][y].
+	type Canvas [][]termbox.Cell
 
 	var packet rtsengine.WirePacket
 
