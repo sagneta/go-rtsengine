@@ -11,8 +11,8 @@ package rtsengine
 type IPlayer interface {
 	name() string
 
-	// Initialized UDPWire to listen upon
-	listen(wire *UDPWire)
+	// Initialized TCPWire to listen upon
+	listen(wire *TCPWire)
 
 	// TRUE if human player
 	isHuman() bool
@@ -21,7 +21,7 @@ type IPlayer interface {
 	isWireAlive() bool
 
 	// Invoke to cause the player to begin play immediately.
-	start()
+	start() error
 
 	// Invoke to cause the player to stop play immediately.
 	stop()

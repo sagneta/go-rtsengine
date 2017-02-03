@@ -2,9 +2,11 @@ package rtsengine
 
 import (
 	"container/list"
+	"encoding/json"
 	"fmt"
 	"image"
 	"math/rand"
+	"net"
 	"time"
 )
 
@@ -95,6 +97,35 @@ func NewGame(
 	// Add mechanics
 
 	return &game, nil
+}
+
+// AcceptNetConnections will accept connections from UI's (humans presumably) and
+// assign them a player. Once all humanplayers are accepted this method returns
+// WITHOUT starting the game. We are waiting at this point ready to go.
+func (game *Game) AcceptNetConnections() error {
+
+	for !game.ReadyToGo() {
+		// listen to incoming tcp connections
+		listener, err := net.Listen("tcp", ":8080")
+		if err != nil {
+			return err
+		}
+
+		// Accept and if successful assign to player
+		conn, err := listener.Accept()
+		if err != nil {
+			continue
+		}
+
+		for _, player := range game.Players {
+			if player.isHuman() && !player.isWireAlive() {
+				player.listen(&TCPWire{conn, json.NewDecoder(conn), json.NewEncoder(conn)})
+				break
+			}
+		}
+	}
+
+	return nil
 }
 
 // SituateHomeBases will construct home bases in the proper

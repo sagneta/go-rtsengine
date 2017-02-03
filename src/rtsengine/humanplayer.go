@@ -1,14 +1,17 @@
 package rtsengine
 
-import "image"
+import (
+	"fmt"
+	"image"
+)
 
 // HumanPlayer implements the IPlayer interface for a human player
 type HumanPlayer struct {
 	// Structures common to all players.
 	BasePlayer
 
-	// Live UDPWire to communicate with UI
-	Wire *UDPWire
+	// Live TCPWire to communicate with UI
+	Wire *TCPWire
 }
 
 // NewHumanPlayer constructs a HumanPlayer
@@ -29,7 +32,7 @@ func NewHumanPlayer(description string, worldLocation image.Point, width int, he
 /////////////////////////////////////////////////////////////////////////
 //                           IPlayer interface                         //
 /////////////////////////////////////////////////////////////////////////
-func (player *HumanPlayer) listen(wire *UDPWire) {
+func (player *HumanPlayer) listen(wire *TCPWire) {
 	player.Wire = wire
 }
 
@@ -42,8 +45,13 @@ func (player *HumanPlayer) isWireAlive() bool {
 	return player.Wire != nil
 }
 
-func (player *HumanPlayer) start() {
+func (player *HumanPlayer) start() error {
 
+	if !player.isWireAlive() {
+		return fmt.Errorf("Failed: This player does not have an active wire connection.")
+	}
+
+	return nil
 }
 
 func (player *HumanPlayer) stop() {

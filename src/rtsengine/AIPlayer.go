@@ -26,7 +26,7 @@ func NewAIPlayer(description string, worldLocation image.Point, width int, heigh
 /////////////////////////////////////////////////////////////////////////
 //                           IPlayer interface                         //
 /////////////////////////////////////////////////////////////////////////
-func (player *AIPlayer) listen(wire *UDPWire) {
+func (player *AIPlayer) listen(wire *TCPWire) {
 	// Does nothing beyond satisfying the interface.
 }
 
@@ -38,8 +38,9 @@ func (player *AIPlayer) isWireAlive() bool {
 	return false
 }
 
-func (player *AIPlayer) start() {
+func (player *AIPlayer) start() error {
 
+	return nil
 }
 
 func (player *AIPlayer) stop() {
