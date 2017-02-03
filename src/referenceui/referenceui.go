@@ -3,24 +3,114 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"rtsengine"
 	"unicode/utf8"
 
+	"github.com/JoelOtter/termloop"
 	termbox "github.com/nsf/termbox-go"
+
+	tl "github.com/JoelOtter/termloop"
 )
 
+// ScreenController on our screen
+type ScreenController struct {
+	*tl.Entity
+	prevX int
+	prevY int
+	level *tl.BaseLevel
+
+	screenWidth  int
+	screenHeight int
+}
+
+// Tick satisfies Entity interface.
+func (player *ScreenController) Tick(event tl.Event) {
+	if event.Type == tl.EventKey { // Is it a keyboard event?
+		x, y := player.Position()
+		switch event.Key { // If so, switch on the pressed key.
+		case tl.KeyArrowRight:
+			player.SetPosition(x+1, y)
+		case tl.KeyArrowLeft:
+			player.SetPosition(x-1, y)
+		case tl.KeyArrowUp:
+			player.SetPosition(x, y-1)
+		case tl.KeyArrowDown:
+			player.SetPosition(x, y+1)
+		}
+	} else {
+		switch event.Type {
+		case tl.EventResize:
+			log.Print("resized")
+			//fmt.Printf("We resized to width(%d) height(%d)", event.Width, event.Height)
+			//panic(nil)
+		default:
+			break
+		}
+
+	}
+}
+
+// Draw the screen. Allows for scrolling
+func (player *ScreenController) Draw(screen *tl.Screen) {
+	screenWidth, screenHeight := screen.Size()
+
+	player.screenWidth = screenWidth
+	player.screenHeight = screenHeight
+
+	/*
+		if player.screenHeight == -1 {
+			player.screenWidth = screenWidth
+			player.screenHeight = screenHeight
+		} else if player.screenHeight != screenHeight {
+			panic(nil)
+		}
+
+	*/
+	//x, y := player.Position()
+	//player.level.SetOffset(screenWidth/2-x, screenHeight/2-y)
+	// We need to make sure and call Draw on the underlying Entity.
+	player.Entity.Draw(screen)
+
+}
+
 func main() {
-
-	uni, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
-	fmt.Println(uni)
-
-	fmt.Printf("Reference UI \xF0\x9F\x8F\xAF  Castle %c", uni)
+	// Ruin network communication etcetera
+	castle, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
+	//fmt.Printf("Reference UI \xF0\x9F\x8F\xAF  Castle %c", castle)
 
 	// A Canvas is a 2D array of Cells, used for drawing.
 	// The structure of a Canvas is an array of columns.
 	// This is so it can be addrssed canvas[x][y].
 	type Canvas [][]termbox.Cell
+
+	game := termloop.NewGame()
+
+	screen := game.Screen()
+	screenWidth, screenHeight := screen.Size()
+
+	level := tl.NewBaseLevel(tl.Cell{
+		Bg: tl.ColorGreen,
+		Fg: tl.ColorBlack,
+		Ch: '.',
+	})
+
+	screenController := ScreenController{
+		Entity:       tl.NewEntity(1, 1, 1, 1),
+		level:        level,
+		screenWidth:  screenWidth,
+		screenHeight: screenHeight,
+	}
+	// Set the character at position (0, 0) on the entity.
+	screenController.SetCell(0, 0, &tl.Cell{Fg: tl.ColorRed, Ch: castle})
+	level.AddEntity(&screenController)
+
+	// Lake
+	level.AddEntity(tl.NewRectangle(10, 10, 50, 20, tl.ColorBlue))
+
+	game.Screen().SetLevel(level)
+	game.Start()
 
 	var packet rtsengine.WirePacket
 

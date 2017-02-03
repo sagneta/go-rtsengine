@@ -27,6 +27,9 @@ const (
 
 	// ResourceUpdate means the current tally of resources of a player should be sent over the wire to the ui.
 	ResourceUpdate
+
+	// ScrollView scrolls the view to the new x and y which is ToX and ToY
+	ScrollView
 )
 
 // WirePacket is a packet of data that can be JSON marshalled/unmarshalled
@@ -37,7 +40,7 @@ type WirePacket struct {
 	// Used in MoveUnit, NewUnitAdded, NewUnitAdded, CancelMove, UnitStateRefresh, UnitDestroyed
 	CurrentX, CurrentY int
 
-	// Used in MoveUnit Command
+	// Used in MoveUnit and ScrollView Command
 	ToX, ToY int
 
 	// Used in ResourceUpdate

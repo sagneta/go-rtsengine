@@ -14,4 +14,5 @@ gometalinter --install --update
 
 #Install libraries used by this library
 go get -u github.com/nsf/termbox-go
+go get -u github.com/JoelOtter/termloop
 echo 'Done'
