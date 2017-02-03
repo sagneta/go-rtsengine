@@ -16,3 +16,7 @@ type Peasant struct {
 func (unit *Peasant) name() string {
 	return "Peasant"
 }
+
+func (unit *Peasant) unitType() UnitType {
+	return UnitPeasant
+}

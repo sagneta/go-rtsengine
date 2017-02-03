@@ -15,3 +15,7 @@ type Farm struct {
 func (farm *Farm) name() string {
 	return "Farm"
 }
+
+func (farm *Farm) unitType() UnitType {
+	return UnitFarm
+}

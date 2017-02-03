@@ -16,3 +16,7 @@ type Catapult struct {
 func (unit *Catapult) name() string {
 	return "Catapult"
 }
+
+func (unit *Catapult) unitType() UnitType {
+	return UnitCatapult
+}

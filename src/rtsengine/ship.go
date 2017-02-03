@@ -16,3 +16,7 @@ type Ship struct {
 func (unit *Ship) name() string {
 	return "Ship"
 }
+
+func (unit *Ship) unitType() UnitType {
+	return UnitShip
+}

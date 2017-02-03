@@ -16,3 +16,7 @@ type Wall struct {
 func (unit *Wall) name() string {
 	return "Wall"
 }
+
+func (unit *Wall) unitType() UnitType {
+	return UnitWall
+}

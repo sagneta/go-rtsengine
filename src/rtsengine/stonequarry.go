@@ -15,3 +15,7 @@ type StoneQuarry struct {
 func (unit *StoneQuarry) name() string {
 	return "StoneQuarry"
 }
+
+func (unit *StoneQuarry) unitType() UnitType {
+	return UnitStoneQuarry
+}

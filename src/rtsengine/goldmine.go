@@ -15,3 +15,7 @@ type Goldmine struct {
 func (unit *Goldmine) name() string {
 	return "Goldmine"
 }
+
+func (unit *Goldmine) unitType() UnitType {
+	return UnitGoldMine
+}

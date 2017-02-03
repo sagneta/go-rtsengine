@@ -16,3 +16,7 @@ type Cavalry struct {
 func (unit *Cavalry) name() string {
 	return "Cavalry"
 }
+
+func (unit *Cavalry) unitType() UnitType {
+	return UnitCavalry
+}

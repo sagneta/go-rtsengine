@@ -15,3 +15,7 @@ type WoodPile struct {
 func (unit *WoodPile) name() string {
 	return "WoodPile"
 }
+
+func (unit *WoodPile) unitType() UnitType {
+	return UnitWoodPile
+}

@@ -15,3 +15,7 @@ type Castle struct {
 func (unit *Castle) name() string {
 	return "Castle"
 }
+
+func (unit *Castle) unitType() UnitType {
+	return UnitCastle
+}

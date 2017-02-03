@@ -15,3 +15,7 @@ type Fence struct {
 func (unit *Fence) name() string {
 	return "Fence"
 }
+
+func (unit *Fence) unitType() UnitType {
+	return UnitFence
+}

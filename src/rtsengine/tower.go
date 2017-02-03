@@ -15,3 +15,7 @@ type Tower struct {
 func (unit *Tower) name() string {
 	return "Tower"
 }
+
+func (unit *Tower) unitType() UnitType {
+	return UnitTower
+}

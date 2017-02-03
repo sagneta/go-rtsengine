@@ -37,6 +37,12 @@ const (
 type WirePacket struct {
 	Command WireCommand
 
+	// The tarrain at CurrentX and CurrentY
+	LocalTerrain Terrain
+
+	// The Type of Unit if any. <=0 means no unit
+	Unit UnitType
+
 	// Used in MoveUnit, NewUnitAdded, NewUnitAdded, CancelMove, UnitStateRefresh, UnitDestroyed
 	CurrentX, CurrentY int
 
@@ -48,6 +54,9 @@ type WirePacket struct {
 
 	// UnitStateRefresh
 	Life int
+
+	// RefreshPlayerToUI View coordinates
+	Width, Height, WorldX, WorldY int
 }
 
 // Print will dump the contents of the packet

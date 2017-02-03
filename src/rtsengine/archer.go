@@ -16,3 +16,7 @@ type Archer struct {
 func (unit *Archer) name() string {
 	return "Archer"
 }
+
+func (unit *Archer) unitType() UnitType {
+	return UnitArcher
+}

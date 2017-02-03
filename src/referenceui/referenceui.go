@@ -75,6 +75,7 @@ func (player *ScreenController) Draw(screen *tl.Screen) {
 
 }
 
+// Assume grass is the default.
 func main() {
 	// Ruin network communication etcetera
 	castle, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")

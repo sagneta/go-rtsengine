@@ -15,3 +15,7 @@ type HomeStead struct {
 func (unit *HomeStead) name() string {
 	return "HomeStead"
 }
+
+func (unit *HomeStead) unitType() UnitType {
+	return UnitHomeStead
+}

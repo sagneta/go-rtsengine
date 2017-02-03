@@ -15,3 +15,7 @@ type Armory struct {
 func (unit *Armory) name() string {
 	return "Armory"
 }
+
+func (unit *Armory) unitType() UnitType {
+	return UnitArmory
+}
