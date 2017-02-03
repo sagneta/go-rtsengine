@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"rtsengine"
+	"time"
 	"unicode/utf8"
 
 	"github.com/JoelOtter/termloop"
@@ -77,6 +79,10 @@ func (player *ScreenController) Draw(screen *tl.Screen) {
 
 // Assume grass is the default.
 func main() {
+	testNetwork()
+
+	time.Sleep(time.Second * 60)
+
 	// Ruin network communication etcetera
 	castle, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
 	//fmt.Printf("Reference UI \xF0\x9F\x8F\xAF  Castle %c", castle)
@@ -113,11 +119,10 @@ func main() {
 	game.Screen().SetLevel(level)
 	game.Start()
 
-	var packet rtsengine.WirePacket
+}
 
-	packet.Command = rtsengine.RefreshPlayerToUI
-	packet.ToX = -1
-	packet.ToY = -2
+func testNetwork() {
+	var packet rtsengine.WirePacket
 
 	conn, err := net.Dial("tcp", "localhost:8080")
 	if err != nil {
@@ -127,6 +132,18 @@ func main() {
 	defer conn.Close()
 
 	encoder := json.NewEncoder(conn)
+	decoder := json.NewDecoder(conn)
+
+	packet.Command = rtsengine.FullView
+	err = encoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
+
+	packet.Command = rtsengine.PartialRefreshPlayerToUI
+	packet.ToX = -1
+	packet.ToY = -2
 
 	err = encoder.Encode(&packet)
 	if err != nil {
@@ -134,4 +151,12 @@ func main() {
 		return
 	}
 
+	for {
+		if err := decoder.Decode(&packet); err == io.EOF {
+			fmt.Println("\n\nEOF was detected. Connection lost.")
+			return
+		}
+		packet.Print()
+		fmt.Println("")
+	}
 }

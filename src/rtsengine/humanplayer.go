@@ -72,7 +72,57 @@ func (player *HumanPlayer) listenForWireCommands() {
 			fmt.Println("\n\nEOF was detected. Connection lost.")
 			return
 		}
-
 		packet.Print()
-	}
+
+		switch packet.Command {
+		case FullView:
+			player.View.Span = player.OurWorld.Grid.Span
+			player.View.WorldOrigin = player.OurWorld.Grid.WorldOrigin
+
+		case PartialRefreshPlayerToUI:
+			for i := 0; i < player.View.Span.Dx(); i++ {
+				for j := 0; j < player.View.Span.Dy(); j++ {
+
+					// Convert View point to world and get acre in world.
+					worldPoint := player.View.ToWorldPoint(&image.Point{i, j})
+					if !player.OurWorld.In(&worldPoint) {
+						continue
+					}
+					ourAcre := player.OurWorld.Matrix[worldPoint.X][worldPoint.Y]
+
+					if ourAcre.IsOccupiedOrNotGrass() {
+						packet.Clear()
+
+						// Use View Coordinates
+						packet.CurrentX = i
+						packet.CurrentY = j
+						packet.LocalTerrain = ourAcre.terrain
+						if ourAcre.Occupied() {
+							packet.Unit = ourAcre.unit.unitType()
+						}
+
+						//packet.Life = ourAcre.unit.
+						packet.WorldWidth = player.OurWorld.Grid.Span.Dy()
+						packet.WorldHeight = player.OurWorld.Grid.Span.Dx()
+						packet.WorldX = 0
+						packet.WorldY = 0
+
+						packet.ViewWidth = player.View.Span.Dy()
+						packet.ViewHeight = player.View.Span.Dx()
+						packet.ViewX = player.View.WorldOrigin.X
+						packet.ViewY = player.View.WorldOrigin.Y
+
+						if err := player.Wire.JSONEncoder.Encode(&packet); err == io.EOF {
+							fmt.Println("\n\nEOF was detected. Connection lost.")
+							return
+						}
+
+					}
+				}
+			}
+
+		} //switch
+
+	} // for ever
+
 }

@@ -45,3 +45,8 @@ func (acre *Acre) Collision() bool {
 func (acre *Acre) Occupied() bool {
 	return acre.unit != nil
 }
+
+// IsOccupiedOrNotGrass returns true if the terrains is occupied or at least not grass.
+func (acre *Acre) IsOccupiedOrNotGrass() bool {
+	return acre.Occupied() || acre.terrain != Grass
+}
