@@ -66,4 +66,9 @@ func main() {
 	game.ItemPool.PrintAllocatedSquares()
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
+
+	game.AcceptNetConnections()
+	game.Start()
+
+	time.Sleep(time.Second * 60)
 }

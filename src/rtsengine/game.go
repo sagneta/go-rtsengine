@@ -180,7 +180,11 @@ OUTER:
 // Start will start the game.
 func (game *Game) Start() {
 	for _, player := range game.Players {
-		player.start()
+		err := player.start()
+		if err != nil {
+			fmt.Printf("Player %s has failed", player.name())
+			// Return this error?
+		}
 	}
 }
 

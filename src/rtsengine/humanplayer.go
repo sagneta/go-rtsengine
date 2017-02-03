@@ -3,6 +3,7 @@ package rtsengine
 import (
 	"fmt"
 	"image"
+	"io"
 )
 
 // HumanPlayer implements the IPlayer interface for a human player
@@ -51,6 +52,7 @@ func (player *HumanPlayer) start() error {
 		return fmt.Errorf("Failed: This player does not have an active wire connection.")
 	}
 
+	go player.listenForWireCommands()
 	return nil
 }
 
@@ -61,3 +63,16 @@ func (player *HumanPlayer) stop() {
 /////////////////////////////////////////////////////////////////////////
 //                           IPlayer interface                         //
 /////////////////////////////////////////////////////////////////////////
+
+func (player *HumanPlayer) listenForWireCommands() {
+	var packet WirePacket
+	for {
+
+		if err := player.Wire.JSONDecoder.Decode(&packet); err == io.EOF {
+			fmt.Println("\n\nEOF was detected. Connection lost.")
+			return
+		}
+
+		packet.Print()
+	}
+}

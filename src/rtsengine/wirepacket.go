@@ -1,5 +1,7 @@
 package rtsengine
 
+import "fmt"
+
 // WireCommand enumeration
 type WireCommand byte
 
@@ -43,4 +45,9 @@ type WirePacket struct {
 
 	// UnitStateRefresh
 	Life int
+}
+
+// Print will dump the contents of the packet
+func (p *WirePacket) Print() {
+	fmt.Printf("Command(%d) CurrentX(%d) CurrentY(%d) ToX(%d) ToY(%d) Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d)", p.Command, p.CurrentX, p.CurrentY, p.ToX, p.ToY, p.Gold, p.Wood, p.Food, p.Stone, p.Life)
 }
