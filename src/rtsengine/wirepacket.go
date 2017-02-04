@@ -75,6 +75,7 @@ type WirePacket struct {
 	WorldWidth, WorldHeight, WorldX, WorldY int // World Coordinates
 
 	// For the View. The ViewX and ViewY are in world coordinates
+	// FullView uses these.
 	ViewWidth, ViewHeight, ViewX, ViewY int
 }
 

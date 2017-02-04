@@ -88,8 +88,7 @@ func (player *HumanPlayer) listenForWireCommands() {
 
 		// Set the View to equial the entire world. Used for testing.
 		case FullView:
-			player.View.Span = player.OurWorld.Grid.Span
-			player.View.WorldOrigin = player.OurWorld.Grid.WorldOrigin
+			player.fullView()
 
 			// Return all non empty or non grass acres in the view.
 		case PartialRefreshPlayerToUI:
@@ -103,8 +102,29 @@ func (player *HumanPlayer) listenForWireCommands() {
 	} // for ever
 }
 
+func (player *HumanPlayer) fullView() error {
+	packetArray := make([]WirePacket, 1)
+
+	// Set the player to the world coordinates
+	player.View.Span = player.OurWorld.Grid.Span
+	player.View.WorldOrigin = player.OurWorld.Grid.WorldOrigin
+
+	packetArray[0].Command = FullView
+	packetArray[0].ViewX = 0
+	packetArray[0].ViewY = 0
+	packetArray[0].ViewHeight = player.OurWorld.Grid.Span.Dx()
+	packetArray[0].ViewWidth = player.OurWorld.Grid.Span.Dy()
+
+	if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
+		fmt.Println("\n\nEOF was detected. Connection lost.")
+		return err
+	}
+
+	return nil
+}
+
 func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
-	var packet WirePacket
+	var packetArray []WirePacket
 
 	for i := 0; i < player.View.Span.Dx(); i++ {
 		for j := 0; j < player.View.Span.Dy(); j++ {
@@ -121,6 +141,7 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 				continue
 			}
 
+			packet := WirePacket{}
 			packet.Clear()
 
 			// Use View Coordinates
@@ -143,10 +164,14 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			packet.ViewX = player.View.WorldOrigin.X
 			packet.ViewY = player.View.WorldOrigin.Y
 
-			if err := player.Wire.JSONEncoder.Encode(&packet); err == io.EOF {
-				fmt.Println("\n\nEOF was detected. Connection lost.")
-				return
-			}
+			packetArray = append(packetArray, packet)
+
 		}
 	}
+
+	if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
+		fmt.Println("\n\nEOF was detected. Connection lost.")
+		return
+	}
+
 }

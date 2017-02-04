@@ -141,6 +141,16 @@ func testNetwork() {
 		return
 	}
 
+	var packetArray []rtsengine.WirePacket
+	if err := decoder.Decode(&packetArray); err == io.EOF {
+		fmt.Println("\n\nEOF was detected. Connection lost.")
+		return
+	}
+
+	for _, p := range packetArray {
+		fmt.Printf("Set View to width(%d) height(%d)\n\n", p.ViewWidth, p.ViewHeight)
+	}
+
 	packet.Command = rtsengine.PartialRefreshPlayerToUI
 	packet.ToX = -1
 	packet.ToY = -2
@@ -151,12 +161,15 @@ func testNetwork() {
 		return
 	}
 
-	for {
-		if err := decoder.Decode(&packet); err == io.EOF {
-			fmt.Println("\n\nEOF was detected. Connection lost.")
-			return
-		}
-		packet.Print()
+	var packetArray2 []rtsengine.WirePacket
+	if err := decoder.Decode(&packetArray2); err == io.EOF {
+		fmt.Println("\n\nEOF was detected. Connection lost.")
+		return
+	}
+
+	for _, p := range packetArray2 {
+		p.Print()
 		fmt.Println("")
 	}
+
 }
