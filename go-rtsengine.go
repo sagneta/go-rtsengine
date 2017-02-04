@@ -69,7 +69,12 @@ func main() {
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
 
-	game.AcceptNetConnections()
+	err = game.AcceptNetConnections()
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
 	game.Start()
 
 	time.Sleep(time.Second * 60)

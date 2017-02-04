@@ -57,20 +57,30 @@ func (player *HumanPlayer) start() error {
 }
 
 func (player *HumanPlayer) stop() {
-
+	if player.isWireAlive() {
+		// Will stop the listenForWireCommands coroutine
+		err := player.Wire.Connection.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+		player.Wire = nil
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 //                           IPlayer interface                         //
 /////////////////////////////////////////////////////////////////////////
 
+// listenForWireCommands will listend for commands from a human player
+// and will perform the proper command responses.
 func (player *HumanPlayer) listenForWireCommands() {
 	var packet WirePacket
 	for {
 
+		// Blocking call
 		if err := player.Wire.JSONDecoder.Decode(&packet); err == io.EOF {
 			fmt.Println("\n\nEOF was detected. Connection lost.")
-			return
+			return // stops this coroutine
 		}
 		packet.Print()
 
