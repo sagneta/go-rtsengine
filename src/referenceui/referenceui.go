@@ -8,10 +8,8 @@ import (
 	"net"
 	"rtsengine"
 	"time"
-	"unicode/utf8"
 
 	"github.com/JoelOtter/termloop"
-	termbox "github.com/nsf/termbox-go"
 
 	tl "github.com/JoelOtter/termloop"
 )
@@ -19,9 +17,10 @@ import (
 // ScreenController on our screen
 type ScreenController struct {
 	*tl.Entity
+	level *tl.BaseLevel
+
 	prevX int
 	prevY int
-	level *tl.BaseLevel
 
 	screenWidth  int
 	screenHeight int
@@ -77,47 +76,140 @@ func (player *ScreenController) Draw(screen *tl.Screen) {
 
 }
 
-// Assume grass is the default.
-func main() {
-	testNetwork()
+// Acre is an entity on our screen.
+type Acre struct {
+	*tl.Entity
+	level *tl.BaseLevel
 
-	time.Sleep(time.Second * 60)
+	// Terrain
+	LocalTerrain rtsengine.Terrain
+
+	// Unit information if any
+	UnitID int
+	Unit   rtsengine.UnitType
+	Life   int
+
+	// Screen coordinates
+	X int
+	Y int
+}
+
+// ReferenceUI which is the master struct for our Game UI
+type ReferenceUI struct {
+	// TermLoop
+	game             *tl.Game
+	level            *tl.BaseLevel
+	screenController ScreenController
+
+	// Communication
+	Connection  net.Conn
+	JSONDecoder *json.Decoder
+	JSONEncoder *json.Encoder
+}
+
+// Start will instantiate the UI and attempt to talk to a rtsengine.
+func (ui *ReferenceUI) Start() {
+	//testNetwork()
+
+	//time.Sleep(time.Second * 60)
 
 	// Ruin network communication etcetera
-	castle, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
+	//castle, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
 	//fmt.Printf("Reference UI \xF0\x9F\x8F\xAF  Castle %c", castle)
 
-	// A Canvas is a 2D array of Cells, used for drawing.
-	// The structure of a Canvas is an array of columns.
-	// This is so it can be addrssed canvas[x][y].
-	type Canvas [][]termbox.Cell
+	ui.game = termloop.NewGame()
 
-	game := termloop.NewGame()
-
-	screen := game.Screen()
+	screen := ui.game.Screen()
 	screenWidth, screenHeight := screen.Size()
 
-	level := tl.NewBaseLevel(tl.Cell{
+	ui.level = tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorGreen,
 		Fg: tl.ColorBlack,
 		Ch: '.',
 	})
 
-	screenController := ScreenController{
+	ui.screenController = ScreenController{
 		Entity:       tl.NewEntity(1, 1, 1, 1),
-		level:        level,
+		level:        ui.level,
 		screenWidth:  screenWidth,
 		screenHeight: screenHeight,
 	}
+
 	// Set the character at position (0, 0) on the entity.
-	screenController.SetCell(0, 0, &tl.Cell{Fg: tl.ColorRed, Ch: castle})
-	level.AddEntity(&screenController)
+	ui.screenController.SetCell(0, 0, &tl.Cell{Fg: tl.ColorRed, Ch: '.'})
+	ui.level.AddEntity(&ui.screenController)
+
+	// Dial up the rtsengine.
+	conn, err := net.Dial("tcp", "localhost:8080")
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
+
+	ui.Connection = conn
+	ui.JSONEncoder = json.NewEncoder(ui.Connection)
+	ui.JSONDecoder = json.NewDecoder(ui.Connection)
 
 	// Lake
-	level.AddEntity(tl.NewRectangle(10, 10, 50, 20, tl.ColorBlue))
+	//level.AddEntity(tl.NewRectangle(10, 10, 50, 20, tl.ColorBlue))
 
-	game.Screen().SetLevel(level)
-	game.Start()
+	go ui.listenForWireCommands()
+	go ui.communicationPreamble()
+
+	// Start the game.
+	//ui.game.Screen().SetLevel(ui.level)
+	//ui.game.Start()
+
+	time.Sleep(time.Second * 60)
+}
+
+func (ui *ReferenceUI) listenForWireCommands() {
+	for {
+		var packetArray []rtsengine.WirePacket
+		if err := ui.JSONDecoder.Decode(&packetArray); err == io.EOF {
+			fmt.Println("\n\nEOF was detected. Connection lost.")
+			return
+		}
+
+		switch packetArray[0].Command {
+		// Set the View to equial the entire world. Used for testing.
+		case rtsengine.FullView:
+			ui.screenController.screenWidth = packetArray[0].ViewWidth
+			ui.screenController.screenHeight = packetArray[0].ViewHeight
+			fmt.Printf("Full View Received.\n %d", len(packetArray))
+
+		case rtsengine.PartialRefreshPlayerToUI:
+			for _, p := range packetArray {
+				p.Print()
+				fmt.Println("")
+			}
+		}
+
+	}
+}
+
+func (ui *ReferenceUI) communicationPreamble() {
+	time.Sleep(time.Second * 2)
+
+	var packet rtsengine.WirePacket
+
+	// Send full View to set our UI to the entire view of the game for testing.
+	packet.Command = rtsengine.FullView
+	err := ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
+
+	// Force a partial refresh to place the initial acres and units on our screen.
+	packet.Command = rtsengine.PartialRefreshPlayerToUI
+	packet.ToX = -1
+	packet.ToY = -2
+	err = ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
 
 }
 
@@ -172,4 +264,11 @@ func testNetwork() {
 		fmt.Println("")
 	}
 
+}
+
+// Assume grass is the default.
+func main() {
+	ui := ReferenceUI{}
+
+	ui.Start()
 }

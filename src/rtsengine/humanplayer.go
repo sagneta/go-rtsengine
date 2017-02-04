@@ -142,7 +142,13 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			}
 
 			packet := WirePacket{}
-			packet.Clear()
+			//packet.Clear()
+
+			if isPartial {
+				packet.Command = PartialRefreshPlayerToUI
+			} else {
+				packet.Command = FullRefreshPlayerToUI
+			}
 
 			// Use View Coordinates
 			packet.CurrentX = i
