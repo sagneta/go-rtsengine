@@ -130,9 +130,9 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			if ourAcre.Occupied() {
 				packet.Unit = ourAcre.unit.unitType()
 				packet.UnitID = ourAcre.unit.id()
+				packet.Life = ourAcre.unit.life()
 			}
 
-			//packet.Life = ourAcre.unit.
 			packet.WorldWidth = player.OurWorld.Grid.Span.Dy()
 			packet.WorldHeight = player.OurWorld.Grid.Span.Dx()
 			packet.WorldX = 0

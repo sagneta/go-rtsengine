@@ -20,6 +20,11 @@ type HealthAndAttack struct {
 	AttackRange int
 }
 
+// IPlayer
+func (health *HealthAndAttack) life() int {
+	return health.Life
+}
+
 // IsHealthy returns TRUE if this unit has >=40% of its Hitpoints
 func (health *HealthAndAttack) IsHealthy() bool {
 	return health.Life > int(float32(health.HitPoints)*0.40)

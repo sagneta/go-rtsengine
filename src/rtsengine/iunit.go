@@ -51,4 +51,5 @@ type IUnit interface {
 	name() string
 	unitType() UnitType
 	id() int
+	life() int
 }
