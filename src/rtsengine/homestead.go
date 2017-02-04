@@ -7,9 +7,7 @@ package rtsengine
 
 // HomeStead is an IUnit that maintains a homestead that generates peasants
 type HomeStead struct {
-	Poolable
-	HealthAndAttack
-	owner IPlayer
+	BaseUnit
 }
 
 func (unit *HomeStead) name() string {

@@ -7,10 +7,8 @@ package rtsengine
 
 // Infantry is an IUnit that maintains a foot soldier unit. Like a century or company
 type Infantry struct {
-	Poolable
-	HealthAndAttack
+	BaseUnit
 	Movement
-	owner IPlayer
 }
 
 func (unit *Infantry) name() string {

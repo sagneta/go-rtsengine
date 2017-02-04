@@ -7,9 +7,7 @@ package rtsengine
 
 // Fence is an IUnit that maintains a wood fence
 type Fence struct {
-	Poolable
-	HealthAndAttack
-	owner IPlayer
+	BaseUnit
 }
 
 func (unit *Fence) name() string {

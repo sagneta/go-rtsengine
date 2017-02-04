@@ -7,9 +7,7 @@ package rtsengine
 
 // Castle is an IUnit that maintains a military fortification
 type Castle struct {
-	Poolable
-	HealthAndAttack
-	owner IPlayer
+	BaseUnit
 }
 
 func (unit *Castle) name() string {

@@ -50,4 +50,5 @@ type IUnit interface {
 	IPoolable
 	name() string
 	unitType() UnitType
+	id() int
 }

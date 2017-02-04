@@ -7,9 +7,7 @@ package rtsengine
 
 // StoneQuarry is an IUnit that maintains a stone quarry
 type StoneQuarry struct {
-	Poolable
-	HealthAndAttack
-	owner IPlayer
+	BaseUnit
 }
 
 func (unit *StoneQuarry) name() string {

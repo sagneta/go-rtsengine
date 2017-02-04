@@ -8,6 +8,7 @@ package rtsengine
 // Armory is an IUnit that maintains an Armory that produces combat units
 type Armory struct {
 	Poolable
+	AutoNumber
 	HealthAndAttack
 	owner IPlayer
 }

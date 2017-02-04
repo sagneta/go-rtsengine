@@ -8,9 +8,7 @@ package rtsengine
 // Wall is an IUnit that maintains a stone (masonry) wall or defensive
 // fortification like an abatis.
 type Wall struct {
-	Poolable
-	HealthAndAttack
-	owner IPlayer
+	BaseUnit
 }
 
 func (unit *Wall) name() string {

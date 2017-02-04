@@ -52,7 +52,9 @@ func main() {
 
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)
-		_ = game.OurWorld.Grid.Set(&square.Locus, &rtsengine.Fence{})
+		fence := rtsengine.Fence{}
+		fence.Initialize()
+		_ = game.OurWorld.Grid.Set(&square.Locus, &fence)
 	}
 
 	game.OurWorld.Print()

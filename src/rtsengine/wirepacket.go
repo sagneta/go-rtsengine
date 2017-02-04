@@ -17,9 +17,9 @@ const (
 	// UnitDestroyed means just that. That means dead and should be removed.
 	UnitDestroyed
 
-	// RefreshPlayerToUI means a screen refresh inwhich every acre of a player's view
+	// FullRefreshPlayerToUI means a screen refresh inwhich every acre of a player's view
 	// is sent over the wire.
-	RefreshPlayerToUI
+	FullRefreshPlayerToUI
 
 	// PartialRefreshPlayerToUI means a screen refresh inwhich every unit and non-grass acre
 	// is sent over the wire. Tha means the UI should assume missing acres are grass
@@ -52,6 +52,9 @@ type WirePacket struct {
 
 	// The tarrain at CurrentX and CurrentY
 	LocalTerrain Terrain
+
+	// Unit ID. <= 0 if no ID
+	UnitID int
 
 	// The Type of Unit if any. <=0 means no unit
 	Unit UnitType
@@ -97,10 +100,11 @@ func (p *WirePacket) Clear() {
 	p.ViewHeight = 0
 	p.ViewX = 0
 	p.ViewY = 0
+	p.UnitID = 0
 
 }
 
 // Print will dump the contents of the packet
 func (p *WirePacket) Print() {
-	fmt.Printf("Command(%d) CurrentX(%d) CurrentY(%d) ToX(%d) ToY(%d) Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d) Terrain(%d) UnitType(%d)", p.Command, p.CurrentX, p.CurrentY, p.ToX, p.ToY, p.Gold, p.Wood, p.Food, p.Stone, p.Life, p.LocalTerrain, p.Unit)
+	fmt.Printf("ID(%d) Command(%d) CurrentX(%d) CurrentY(%d) ToX(%d) ToY(%d) Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d) Terrain(%d) UnitType(%d)", p.UnitID, p.Command, p.CurrentX, p.CurrentY, p.ToX, p.ToY, p.Gold, p.Wood, p.Food, p.Stone, p.Life, p.LocalTerrain, p.Unit)
 }

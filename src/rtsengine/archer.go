@@ -7,10 +7,8 @@ package rtsengine
 
 // Archer is an IUnit that maintains a range unit of some sort
 type Archer struct {
-	Poolable
-	HealthAndAttack
+	BaseUnit
 	Movement
-	owner IPlayer
 }
 
 func (unit *Archer) name() string {
