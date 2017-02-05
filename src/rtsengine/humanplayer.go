@@ -154,10 +154,14 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			packet.CurrentX = i
 			packet.CurrentY = j
 			packet.LocalTerrain = ourAcre.terrain
+
+			// if occupied use the unit id else use the acre id
 			if ourAcre.Occupied() {
 				packet.Unit = ourAcre.unit.unitType()
 				packet.UnitID = ourAcre.unit.id()
 				packet.Life = ourAcre.unit.life()
+			} else {
+				packet.UnitID = ourAcre.id()
 			}
 
 			packet.WorldWidth = player.OurWorld.Grid.Span.Dy()

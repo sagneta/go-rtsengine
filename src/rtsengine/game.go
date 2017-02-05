@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
-	"math/rand"
 	"net"
-	"time"
 )
 
 // Game is an actual game with UDP ports and IPlayers
@@ -135,8 +133,8 @@ func (game *Game) AcceptNetConnections() error {
 func (game *Game) SituateHomeBases(noOfPlayers int, playerViewWidth int, playerViewHeight int) ([]*image.Rectangle, error) {
 	playerRects := make([]*image.Rectangle, noOfPlayers)
 
-	s1 := rand.NewSource(time.Now().UnixNano())
-	r1 := rand.New(s1)
+	//s1 := rand.NewSource(time.Now().UnixNano())
+	//r1 := rand.New(s1)
 
 OUTER:
 	for i, j := 0, 0; i < noOfPlayers; j++ {
@@ -147,7 +145,8 @@ OUTER:
 		}
 
 		// Random point within the world
-		randomRect := image.Rect(r1.Intn(game.OurWorld.Span.Dx()), r1.Intn(game.OurWorld.Span.Dy()), playerViewHeight, playerViewWidth)
+		//randomRect := image.Rect(r1.Intn(game.OurWorld.Span.Dx()), r1.Intn(game.OurWorld.Span.Dy()), playerViewHeight, playerViewWidth)
+		randomRect := image.Rect(0, 0, playerViewHeight, playerViewWidth)
 
 		// If no players yet just add it and continue.
 		if i == 0 {

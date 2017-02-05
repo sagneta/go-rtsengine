@@ -34,6 +34,11 @@ func (grid *Grid) GenerateGrid(worldLocation image.Point, width int, height int)
 		grid.Matrix[i] = make([]Acre, width)
 	}
 
+	for i := range grid.Matrix {
+		for j := range grid.Matrix[i] {
+			grid.Matrix[i][j].Initialize()
+		}
+	}
 }
 
 // ToGridPoint Converts world coordinates to grid coordinates

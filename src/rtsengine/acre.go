@@ -16,6 +16,7 @@ just two.
 type Acre struct {
 	terrain Terrain
 	unit    IUnit
+	AutoNumber
 
 	// Synchronizes setting of a unit into this acre
 	muSet sync.Mutex
