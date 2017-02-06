@@ -187,6 +187,10 @@ OUTER:
 
 // Start will start the game.
 func (game *Game) Start() {
+
+	// List for command on the command channel
+	go game.CommandChannelHandler()
+
 	for _, player := range game.Players {
 		err := player.start()
 		if err != nil {
