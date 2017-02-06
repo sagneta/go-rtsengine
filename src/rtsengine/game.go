@@ -30,6 +30,9 @@ type Game struct {
 
 	// Pathing systems
 	Pathing *AStarPathing
+
+	// Command channel
+	CommandChannel chan *WirePacket
 }
 
 // NewGame constructs a new game according to the parameters.
@@ -57,6 +60,10 @@ func NewGame(
 
 	// Instantiate the pathing system
 	game.Pathing = &AStarPathing{}
+
+	// The command channel that accepts WirePacket commands
+	// and performs the necessary operation.
+	game.CommandChannel = make(chan *WirePacket, 500)
 
 	// Used for display so we have some idea what games are being played.
 	// Make this very descriptive and long. Like '4 Human Players, Fog of War, World(500,500)'
@@ -191,6 +198,7 @@ func (game *Game) Start() {
 
 // Stop will stop the game.
 func (game *Game) Stop() {
+	close(game.CommandChannel)
 	for _, player := range game.Players {
 		player.stop()
 	}
@@ -231,5 +239,15 @@ func (game *Game) GenerateUnits(player IPlayer) {
 	err := game.OurWorld.Add(infantry[0], &worldCenter)
 	if err != nil {
 		fmt.Print(err)
+	}
+}
+
+// CommandChannelHandler will handle the command channel and dispatch
+// the wire packets.
+func (game *Game) CommandChannelHandler() {
+	for packet := range game.CommandChannel {
+		for _, player := range game.Players {
+			_ = player.dispatch(packet)
+		}
 	}
 }

@@ -31,4 +31,7 @@ type IPlayer interface {
 
 	// Returns this player's view
 	PlayerUnits() *UnitMap
+
+	// Dispatch a wirepacket to this player
+	dispatch(packet *WirePacket) error
 }

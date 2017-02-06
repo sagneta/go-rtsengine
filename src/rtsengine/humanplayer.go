@@ -83,26 +83,60 @@ func (player *HumanPlayer) listenForWireCommands() {
 			return // stops this coroutine
 		}
 		packet.Print()
-
-		switch packet.Command {
-
-		// Set the View to equal the entire world. Used for testing.
-		case FullView:
-			if err := player.fullView(); err == io.EOF {
-				fmt.Println("\n\nEOF was detected. Connection lost.")
-				return // stops this coroutine
-			}
-
-			// Return all non empty or non grass acres in the view.
-		case PartialRefreshPlayerToUI:
-			player.refreshPlayerToUI(true)
-
-		case FullRefreshPlayerToUI:
-			player.refreshPlayerToUI(false)
-
-		} //switch
+		err := player.dispatch(&packet)
+		if err != nil {
+			// Stop the cooroutine
+			return
+		}
 
 	} // for ever
+}
+
+func (player *HumanPlayer) dispatch(packet *WirePacket) error {
+	switch packet.Command {
+	case MoveUnit:
+		worldPoint := image.Point{packet.WorldX, packet.WorldY}
+		if player.In(&worldPoint) {
+			packetArray := make([]WirePacket, 1)
+			packetArray[0].Command = packet.Command
+			viewPoint := player.ToViewPoint(&worldPoint)
+			packetArray[0].CurrentX = viewPoint.X
+			packetArray[0].CurrentY = viewPoint.Y
+			packetArray[0].ToX = viewPoint.X
+			packetArray[0].ToY = viewPoint.Y
+
+			packetArray[0].UnitID = packet.UnitID
+			packetArray[0].LocalTerrain = packet.LocalTerrain
+
+			packetArray[0].ViewX = worldPoint.X
+			packetArray[0].ViewY = worldPoint.Y
+			packetArray[0].ViewWidth = packet.ViewWidth
+			packetArray[0].ViewHeight = packet.ViewHeight
+
+			if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
+				fmt.Println("\n\nEOF was detected. Connection lost.")
+				return err
+			}
+
+		}
+
+	// Set the View to equal the entire world. Used for testing.
+	case FullView:
+		if err := player.fullView(); err == io.EOF {
+			fmt.Println("\n\nEOF was detected. Connection lost.")
+			return err
+		}
+
+		// Return all non empty or non grass acres in the view.
+	case PartialRefreshPlayerToUI:
+		player.refreshPlayerToUI(true)
+
+	case FullRefreshPlayerToUI:
+		player.refreshPlayerToUI(false)
+
+	} //switch
+
+	return nil
 }
 
 func (player *HumanPlayer) fullView() error {
