@@ -113,13 +113,7 @@ type ReferenceUI struct {
 
 // Start will instantiate the UI and attempt to talk to a rtsengine.
 func (ui *ReferenceUI) Start() {
-	//testNetwork()
-
 	//time.Sleep(time.Second * 60)
-
-	// Ruin network communication etcetera
-	//castle, _ := utf8.DecodeRuneInString("\xF0\x9F\x8F\xAF")
-	//fmt.Printf("Reference UI \xF0\x9F\x8F\xAF  Castle %c", castle)
 
 	ui.acreMap = make(map[int]*Acre)
 
@@ -181,11 +175,18 @@ func (ui *ReferenceUI) listenForWireCommands() {
 		}
 
 		switch packetArray[0].Command {
+		case rtsengine.MoveUnit:
+			acre, ok := ui.acreMap[packetArray[0].UnitID]
+			if ok {
+				acre.X = packetArray[0].ToY
+				acre.Y = packetArray[0].ToX
+				acre.SetPosition(acre.X, acre.Y)
+			}
+
 		// Set the View to equial the entire world. Used for testing.
 		case rtsengine.FullView:
 			ui.screenController.screenWidth = packetArray[0].ViewWidth
 			ui.screenController.screenHeight = packetArray[0].ViewHeight
-			//fmt.Printf("Full View Received.\n %d", len(packetArray))
 
 		case rtsengine.PartialRefreshPlayerToUI:
 			ui.handleRefreshPlayerToUI(packetArray)
@@ -226,15 +227,17 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 			var cell tl.Cell
 			switch acre.LocalTerrain {
 			case rtsengine.Mountains:
-				r, _ := utf8.DecodeRuneInString("\xF0\x9F\x97\xBB")
-				cell = tl.Cell{Fg: tl.ColorBlack, Ch: r}
+				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x97\xBB")
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: '^'}
 
 			case rtsengine.Trees:
 				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x8C\xB2")
-				cell = tl.Cell{Fg: tl.ColorWhite, Ch: '.'}
+				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 'T'}
 			}
 
 			switch acre.Unit {
+			case rtsengine.UnitInfantry:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'S'}
 			case rtsengine.UnitFence:
 				r, _ := utf8.DecodeRuneInString("\xE2\xAC\x9B")
 				cell = tl.Cell{Fg: tl.ColorBlack, Ch: r}
@@ -265,20 +268,18 @@ func (ui *ReferenceUI) communicationPreamble() {
 	var packet rtsengine.WirePacket
 
 	// Send full View to set our UI to the entire view of the game for testing.
-	/*
-		packet.Command = rtsengine.FullView
-		err := ui.JSONEncoder.Encode(&packet)
-		if err != nil {
-			fmt.Println("Unexpected wire error", err)
-			return
-		}
-	*/
+	packet.Command = rtsengine.FullView
+	err := ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
 
 	// Force a partial refresh to place the initial acres and units on our screen.
 	packet.Command = rtsengine.PartialRefreshPlayerToUI
 	packet.ToX = -1
 	packet.ToY = -2
-	err := ui.JSONEncoder.Encode(&packet)
+	err = ui.JSONEncoder.Encode(&packet)
 	if err != nil {
 		fmt.Println("Unexpected wire error", err)
 		return

@@ -86,9 +86,12 @@ func (player *HumanPlayer) listenForWireCommands() {
 
 		switch packet.Command {
 
-		// Set the View to equial the entire world. Used for testing.
+		// Set the View to equal the entire world. Used for testing.
 		case FullView:
-			player.fullView()
+			if err := player.fullView(); err == io.EOF {
+				fmt.Println("\n\nEOF was detected. Connection lost.")
+				return // stops this coroutine
+			}
 
 			// Return all non empty or non grass acres in the view.
 		case PartialRefreshPlayerToUI:

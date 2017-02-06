@@ -45,3 +45,8 @@ func (view *View) In(worldPoint *image.Point) bool {
 func (view *View) Overlaps(other *View) bool {
 	return view.Span.Overlaps(other.Span)
 }
+
+// Center returns the x,y center of this View.
+func (view *View) Center() image.Point {
+	return image.Point{view.Span.Min.X + (view.Span.Dx() / 2), view.Span.Min.Y + (view.Span.Dy() / 2)}
+}

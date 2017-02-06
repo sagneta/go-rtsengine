@@ -9,4 +9,7 @@ package rtsengine
 // IMechanic encapsulates are particular mechanic managed by the game.
 type IMechanic interface {
 	name() string
+
+	// Begins the mechanic
+	start()
 }

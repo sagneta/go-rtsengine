@@ -38,3 +38,13 @@ func (player *BasePlayer) DumpUnits() {
 		fmt.Printf("Player %s UNITS: key[%s] value[%s]\n", player.name(), k, v.name())
 	}
 }
+
+// PlayerView returns the view associated with this player
+func (player *BasePlayer) PlayerView() *View {
+	return &player.View
+}
+
+// PlayerUnits returns the player unit map for this player.
+func (player *BasePlayer) PlayerUnits() *UnitMap {
+	return &player.UnitMap
+}

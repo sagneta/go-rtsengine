@@ -25,4 +25,10 @@ type IPlayer interface {
 
 	// Invoke to cause the player to stop play immediately.
 	stop()
+
+	// Returns this player's view
+	PlayerView() *View
+
+	// Returns this player's view
+	PlayerUnits() *UnitMap
 }

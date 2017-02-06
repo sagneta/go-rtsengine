@@ -83,6 +83,7 @@ func NewGame(
 	for ; i < noOfHumanPlayers; i++ {
 		// The world point needs to be inserted into a random location
 		game.Players[i] = NewHumanPlayer(fmt.Sprintf("Human Player %d", i), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing, game.OurWorld)
+		game.GenerateUnits(game.Players[i])
 	}
 
 	// Create Machine Intelligent Players
@@ -90,6 +91,7 @@ func NewGame(
 		// The world point needs to be inserted into a random location
 		game.Players[i] = NewAIPlayer(fmt.Sprintf("AI Player %d", j), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing, game.OurWorld)
 		i++
+		game.GenerateUnits(game.Players[i])
 	}
 
 	// Add mechanics
@@ -211,4 +213,23 @@ func (game *Game) ReadyToGo() bool {
 // FindPath finds a path from source to destination within this game's world and return it as a list of Squares
 func (game *Game) FindPath(source *image.Point, destination *image.Point) (*list.List, error) {
 	return game.Pathing.FindPath(game.ItemPool, &game.OurWorld.Grid, source, destination)
+}
+
+// GenerateUnits will construct the starting units per player.
+func (game *Game) GenerateUnits(player IPlayer) {
+	infantry := game.ItemPool.Infantry(1)
+	infantry[0].owner = player
+	infantry[0].HitPoints = 100
+	infantry[0].Life = 100
+	infantry[0].AttackPoints = 2
+	infantry[0].AttackRange = 1
+
+	view := player.PlayerView()
+	viewCenter := view.Center()
+	worldCenter := view.ToWorldPoint(&viewCenter)
+
+	err := game.OurWorld.Add(infantry[0], &worldCenter)
+	if err != nil {
+		fmt.Print(err)
+	}
 }

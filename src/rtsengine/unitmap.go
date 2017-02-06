@@ -19,3 +19,10 @@ func (unitmap *UnitMap) Add(unit IUnit) {
 func (unitmap *UnitMap) AllUnits() map[IUnit]IUnit {
 	return unitmap.Map
 }
+
+// AddAll units to the UniMap.
+func (unitmap *UnitMap) AddAll(objects ...IUnit) {
+	for _, object := range objects {
+		unitmap.Add(object)
+	}
+}
