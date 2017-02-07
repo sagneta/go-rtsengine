@@ -1,6 +1,9 @@
 package rtsengine
 
-import "time"
+import (
+	"image"
+	"time"
+)
 
 // Movement maintains state of the movement capabilities of a unit
 // Stationary only units like a Home or Fence lack this structure.
@@ -12,6 +15,12 @@ type Movement struct {
 	// Thus if this was 500 that would be 2 movements potentially per second.
 	// 1000 would be one movement per second etcetera.
 	DeltaInMillis int64
+
+	// Destination in world coordinates if a move is in progress.
+	MovementDestination *image.Point
+
+	// Current location in world coordinates
+	CurrentLocation *image.Point
 }
 
 // CanMove returns true if this unit may move now given the current time.

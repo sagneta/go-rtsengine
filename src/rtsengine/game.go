@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"math/rand"
 	"net"
+	"time"
 )
 
 // Game is an actual game with UDP ports and IPlayers
@@ -240,10 +242,27 @@ func (game *Game) GenerateUnits(player IPlayer) {
 	viewCenter := view.Center()
 	worldCenter := view.ToWorldPoint(&viewCenter)
 
+	// Now set a desintation point for a test
+	infantry[0].LastMovement = time.Now()
+	infantry[0].DeltaInMillis = 1000
+
+	r1 := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for {
+		destination := image.Point{r1.Intn(game.OurWorld.Span.Dx()), r1.Intn(game.OurWorld.Span.Dy())}
+		if game.OurWorld.In(&destination) {
+			infantry[0].MovementDestination = &destination
+			break
+		}
+	}
+
 	err := game.OurWorld.Add(infantry[0], &worldCenter)
 	if err != nil {
 		fmt.Print(err)
 	}
+
+	infantry[0].CurrentLocation = &worldCenter
+
+	player.PlayerUnits().Add(infantry[0])
 }
 
 // CommandChannelHandler will handle the command channel and dispatch

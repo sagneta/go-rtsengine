@@ -61,7 +61,7 @@ func (grid *Grid) Overlaps(other *Grid) bool {
 	return grid.Span.Overlaps(other.Span)
 }
 
-// Remove will eliminate a unit from the grid where-ever it is fine.
+// Remove will eliminate a unit from the grid where-ever it is found.
 // The algorithm presently is brute force.
 func (grid *Grid) Remove(unit IUnit) {
 	for i := range grid.Matrix {
@@ -71,6 +71,11 @@ func (grid *Grid) Remove(unit IUnit) {
 			}
 		}
 	}
+}
+
+// RemoveAt will remove the unit at location
+func (grid *Grid) RemoveAt(unit IUnit, location *image.Point) {
+	grid.Matrix[location.X][location.Y].unit = nil
 }
 
 // Add will place the unit in the grid at location. Error is returned

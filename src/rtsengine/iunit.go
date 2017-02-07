@@ -52,4 +52,5 @@ type IUnit interface {
 	unitType() UnitType
 	id() int
 	life() int
+	movement() *Movement
 }

@@ -8,7 +8,6 @@ package rtsengine
 // Cavalry is an IUnit that maintains a horse unit
 type Cavalry struct {
 	BaseUnit
-	Movement
 }
 
 func (unit *Cavalry) name() string {

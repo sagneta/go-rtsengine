@@ -25,6 +25,8 @@ func NewHumanPlayer(description string, worldLocation image.Point, width int, he
 	player.Pathing = pathing
 	player.OurWorld = world
 
+	player.Map = make(map[IUnit]IUnit)
+
 	// Add mechanics
 
 	return &player
