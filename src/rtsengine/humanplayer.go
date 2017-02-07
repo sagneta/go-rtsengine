@@ -97,20 +97,14 @@ func (player *HumanPlayer) listenForWireCommands() {
 func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 	switch packet.Command {
 	case MoveUnit:
-		fmt.Println("Move Unit")
-		worldPoint := image.Point{packet.WorldX, packet.WorldY}
-		if player.In(&worldPoint) {
-
+		if player.In(&image.Point{packet.WorldX, packet.WorldY}) {
 			packetArray := make([]WirePacket, 1)
 			packetArray[0] = *packet
 
-			fmt.Println(packetArray[0].CurrentX)
-			fmt.Println("Sending the Move Unit")
 			if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
 				fmt.Println("\n\nEOF was detected. Connection lost.")
 				return err
 			}
-
 		}
 
 	// Set the View to equal the entire world. Used for testing.

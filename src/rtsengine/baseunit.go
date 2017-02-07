@@ -1,9 +1,6 @@
 package rtsengine
 
-import (
-	"fmt"
-	"math"
-)
+import "math"
 
 // BaseUnit composes all the structures necessary for any unit.
 type BaseUnit struct {
@@ -38,8 +35,8 @@ func (unit *BaseUnit) newWirePacket(command WireCommand, channel chan *WirePacke
 		packet.Command = command
 		viewPoint := unit.owner.PlayerView().ToViewPoint(unit.CurrentLocation)
 
-		fmt.Print("VIEWPOINT: ")
-		fmt.Println(viewPoint)
+		//fmt.Print("VIEWPOINT: ")
+		//fmt.Println(viewPoint)
 		packet.CurrentX = viewPoint.X
 		packet.CurrentY = viewPoint.Y
 		packet.ToX = viewPoint.X
