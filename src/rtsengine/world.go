@@ -64,4 +64,11 @@ func (world *World) GenerateSimple() {
 	world.Matrix[0][3].terrain = Trees
 	world.Matrix[0][4].terrain = Trees
 
+	centerPoint := world.Center()
+	world.Matrix[centerPoint.X][centerPoint.Y].terrain = Grass
+}
+
+// Center returns the x,y center of this View.
+func (world *World) Center() image.Point {
+	return image.Point{world.Span.Min.X + (world.Span.Dx() / 2), world.Span.Min.Y + (world.Span.Dy() / 2)}
 }

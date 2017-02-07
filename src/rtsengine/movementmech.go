@@ -22,6 +22,11 @@ type MovementMechanic struct {
 	OurGame *Game
 }
 
+// NewMovementMechanic factory
+func NewMovementMechanic(world *World, cc chan *WirePacket, players []IPlayer, pathing *AStarPathing, ourgame *Game) *MovementMechanic {
+	return &MovementMechanic{world, cc, players, pathing, ourgame}
+}
+
 func (m *MovementMechanic) name() string {
 	return "MovementMechanic"
 }
@@ -39,6 +44,7 @@ func (m *MovementMechanic) start() {
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
 						if err != nil {
 							fmt.Print(err)
+							continue
 						}
 
 						m.OurWorld.RemoveAt(v, movement.CurrentLocation)
@@ -51,6 +57,7 @@ func (m *MovementMechanic) start() {
 
 							m.OurWorld.Add(v, &square.Locus)
 							movement.CurrentLocation = &square.Locus
+							break
 						}
 					}
 					movement.UpdateLastMovement()

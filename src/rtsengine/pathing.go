@@ -27,9 +27,15 @@ type AStarPathing struct {
 func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, destination *image.Point) (*list.List, error) {
 
 	// Check if both source and destination are not colliding
-	if !grid.In(source) || grid.Collision(source) {
-		return nil, fmt.Errorf("Source not in grid or collision! (%d,%d)", source.X, source.Y)
+	if !grid.In(source) {
+		return nil, fmt.Errorf("Source not in grid! (%d,%d)", source.X, source.Y)
 	}
+
+	/*
+		if grid.Collision(source) {
+			return nil, fmt.Errorf("Source collision! (%d,%d)", source.X, source.Y)
+		}
+	*/
 
 	if !grid.In(destination) || grid.Collision(destination) {
 		return nil, fmt.Errorf("Destination not in grid or collision! (%d,%d)", destination.X, destination.Y)

@@ -104,6 +104,9 @@ func NewGame(
 	}
 
 	// Add mechanics
+	movemech := NewMovementMechanic(game.OurWorld, game.CommandChannel, game.Players, game.Pathing, &game)
+	game.Mechanics = make([]IMechanic, 1)
+	game.Mechanics[0] = movemech
 
 	return &game, nil
 }
@@ -192,6 +195,10 @@ func (game *Game) Start() {
 
 	// List for command on the command channel
 	go game.CommandChannelHandler()
+
+	for _, mech := range game.Mechanics {
+		go mech.start()
+	}
 
 	for _, player := range game.Players {
 		err := player.start()
