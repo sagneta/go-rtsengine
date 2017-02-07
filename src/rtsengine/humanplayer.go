@@ -102,19 +102,23 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 		if player.In(&worldPoint) {
 
 			packetArray := make([]WirePacket, 1)
-			packetArray[0].Command = packet.Command
-			packetArray[0].CurrentX = packet.CurrentX
-			packetArray[0].CurrentY = packet.CurrentY
-			packetArray[0].ToX = packet.ToX
-			packetArray[0].ToY = packet.ToY
 
-			packetArray[0].UnitID = packet.UnitID
-			packetArray[0].LocalTerrain = packet.LocalTerrain
+			packetArray[0] = *packet
+			/*
+				packetArray[0].Command = packet.Command
+				packetArray[0].CurrentX = packet.CurrentX
+				packetArray[0].CurrentY = packet.CurrentY
+				packetArray[0].ToX = packet.ToX
+				packetArray[0].ToY = packet.ToY
 
-			packetArray[0].ViewX = packet.ViewX
-			packetArray[0].ViewY = packet.ViewY
-			packetArray[0].ViewWidth = packet.ViewWidth
-			packetArray[0].ViewHeight = packet.ViewHeight
+				packetArray[0].UnitID = packet.UnitID
+				packetArray[0].LocalTerrain = packet.LocalTerrain
+
+				packetArray[0].ViewX = packet.ViewX
+				packetArray[0].ViewY = packet.ViewY
+				packetArray[0].ViewWidth = packet.ViewWidth
+				packetArray[0].ViewHeight = packet.ViewHeight
+			*/
 
 			fmt.Println(packetArray[0].CurrentX)
 			fmt.Println("Sending the Move Unit")
