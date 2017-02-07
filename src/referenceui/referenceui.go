@@ -8,7 +8,6 @@ import (
 	"net"
 	"rtsengine"
 	"time"
-	"unicode/utf8"
 
 	"github.com/JoelOtter/termloop"
 
@@ -176,11 +175,15 @@ func (ui *ReferenceUI) listenForWireCommands() {
 
 		switch packetArray[0].Command {
 		case rtsengine.MoveUnit:
+			//fmt.Print("MoveUnit")
+			//fmt.Println(packetArray[0].ToY)
+			//fmt.Println(packetArray[0].ToX)
 			acre, ok := ui.acreMap[packetArray[0].UnitID]
 			if ok {
 				acre.X = packetArray[0].ToY
 				acre.Y = packetArray[0].ToX
 				acre.SetPosition(acre.X, acre.Y)
+				//acre.Draw(ui.game.Screen())
 			}
 
 		// Set the View to equial the entire world. Used for testing.
@@ -239,8 +242,8 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 			case rtsengine.UnitInfantry:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'S'}
 			case rtsengine.UnitFence:
-				r, _ := utf8.DecodeRuneInString("\xE2\xAC\x9B")
-				cell = tl.Cell{Fg: tl.ColorBlack, Ch: r}
+				//r, _ := utf8.DecodeRuneInString("\xE2\xAC\x9B")
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'X'}
 
 				//			default:
 				//				r, _ := utf8.DecodeRuneInString("\xF0\x9F\x92\x82")

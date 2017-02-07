@@ -38,8 +38,10 @@ func (m *MovementMechanic) start() {
 			unitmap := player.PlayerUnits()
 			for _, v := range unitmap.Map {
 				movement := v.movement()
-				if movement.CanMove() {
 
+				// Can/Should we move this unit?
+				if movement.CanMove() {
+					// As long as the MovementDestination exists and is different than the current location (obviously)
 					if movement.CurrentLocation != nil && movement.MovementDestination != nil && !movement.CurrentLocation.Eq(*movement.MovementDestination) {
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
 						if err != nil {
@@ -47,20 +49,28 @@ func (m *MovementMechanic) start() {
 							continue
 						}
 
+						// Remove the unit from the world and skip through the A* path
 						m.OurWorld.RemoveAt(v, movement.CurrentLocation)
 						for e := pathList.Front(); e != nil; e = e.Next() {
 							square := e.Value.(*Square)
 
+							// Skip the current location
 							if square.Locus.Eq(*movement.CurrentLocation) {
 								continue
 							}
 
-							m.OurWorld.Add(v, &square.Locus)
+							// Ok take the next point and use that and move to that point.
+							// That will be our new current destination
+							_ = m.OurWorld.Add(v, &square.Locus)
 							movement.CurrentLocation = &square.Locus
 							break
 						}
+						// Update the last movement time (right now).
+						v.newWirePacket(MoveUnit, m.CommandChannel)
+						movement.UpdateLastMovement()
+						fmt.Print(movement.CurrentLocation)
+						fmt.Println(movement.MovementDestination)
 					}
-					movement.UpdateLastMovement()
 				} // move?
 			} // Units...
 		} // Players...

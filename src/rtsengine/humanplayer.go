@@ -97,24 +97,27 @@ func (player *HumanPlayer) listenForWireCommands() {
 func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 	switch packet.Command {
 	case MoveUnit:
+		fmt.Println("Move Unit")
 		worldPoint := image.Point{packet.WorldX, packet.WorldY}
 		if player.In(&worldPoint) {
+
 			packetArray := make([]WirePacket, 1)
 			packetArray[0].Command = packet.Command
-			viewPoint := player.ToViewPoint(&worldPoint)
-			packetArray[0].CurrentX = viewPoint.X
-			packetArray[0].CurrentY = viewPoint.Y
-			packetArray[0].ToX = viewPoint.X
-			packetArray[0].ToY = viewPoint.Y
+			packetArray[0].CurrentX = packet.CurrentX
+			packetArray[0].CurrentY = packet.CurrentY
+			packetArray[0].ToX = packet.ToX
+			packetArray[0].ToY = packet.ToY
 
 			packetArray[0].UnitID = packet.UnitID
 			packetArray[0].LocalTerrain = packet.LocalTerrain
 
-			packetArray[0].ViewX = worldPoint.X
-			packetArray[0].ViewY = worldPoint.Y
+			packetArray[0].ViewX = packet.ViewX
+			packetArray[0].ViewY = packet.ViewY
 			packetArray[0].ViewWidth = packet.ViewWidth
 			packetArray[0].ViewHeight = packet.ViewHeight
 
+			fmt.Println(packetArray[0].CurrentX)
+			fmt.Println("Sending the Move Unit")
 			if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
 				fmt.Println("\n\nEOF was detected. Connection lost.")
 				return err
