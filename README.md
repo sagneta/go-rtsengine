@@ -1,7 +1,7 @@
 
 # GO-RTSENGINE
 
-An RTS engine written in golang. Detaches the engine from the UI via a UDP API. Any UI could be hung off of this. 
+An RTS engine written in golang. Detaches the engine from the UI via a TCP/IP API. Any UI could be hung off of this. 
 Tailored for large numbers of simultaneous players within a large world. I am writing this basically to 
 continue to improve my golang skills and prevent professional boredom. 
 
