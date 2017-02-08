@@ -12,4 +12,6 @@ type IMechanic interface {
 
 	// Begins the mechanic
 	start()
+
+	stop()
 }

@@ -212,9 +212,15 @@ func (game *Game) Start() {
 // Stop will stop the game.
 func (game *Game) Stop() {
 	close(game.CommandChannel)
+
 	for _, player := range game.Players {
 		player.stop()
 	}
+
+	for _, mechanic := range game.Mechanics {
+		mechanic.stop()
+	}
+
 }
 
 // ReadyToGo returns true if we are ready to start a game.

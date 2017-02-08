@@ -78,4 +78,6 @@ func main() {
 	game.Start()
 
 	time.Sleep(time.Second * 60)
+
+	game.Stop()
 }

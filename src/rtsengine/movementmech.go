@@ -20,24 +20,30 @@ type MovementMechanic struct {
 	Pathing *AStarPathing
 
 	OurGame *Game
+
+	evah bool
 }
 
 // NewMovementMechanic factory
 func NewMovementMechanic(world *World, cc chan *WirePacket, players []IPlayer, pathing *AStarPathing, ourgame *Game) *MovementMechanic {
-	return &MovementMechanic{world, cc, players, pathing, ourgame}
+	return &MovementMechanic{world, cc, players, pathing, ourgame, true}
 }
 
 func (m *MovementMechanic) name() string {
 	return "MovementMechanic"
 }
 
+func (m *MovementMechanic) stop() {
+	m.evah = false
+}
+
 func (m *MovementMechanic) start() {
 
-	for {
+	for m.evah {
 		for _, player := range m.Players {
 			unitmap := player.PlayerUnits()
-			for _, v := range unitmap.Map {
-				movement := v.movement()
+			for _, unit := range unitmap.Map {
+				movement := unit.movement()
 
 				// Can/Should we move this unit?
 				if movement.CanMove() {
@@ -50,7 +56,7 @@ func (m *MovementMechanic) start() {
 						}
 
 						// Remove the unit from the world and skip through the A* path
-						m.OurWorld.RemoveAt(v, movement.CurrentLocation)
+						m.OurWorld.RemoveAt(unit, movement.CurrentLocation)
 						for e := pathList.Front(); e != nil; e = e.Next() {
 							square := e.Value.(*Square)
 
@@ -61,20 +67,20 @@ func (m *MovementMechanic) start() {
 
 							// Ok take the next point and use that and move to that point.
 							// That will be our new current destination
-							_ = m.OurWorld.Add(v, &square.Locus)
+							_ = m.OurWorld.Add(unit, &square.Locus)
 							movement.CurrentLocation = &square.Locus
 							break
 						}
 						// Update the last movement time (right now).
-						v.newWirePacket(MoveUnit, m.CommandChannel)
+						unit.sendPacketToChannel(MoveUnit, m.CommandChannel)
 						movement.UpdateLastMovement()
-						fmt.Print(movement.CurrentLocation)
-						fmt.Println(movement.MovementDestination)
+						//fmt.Print(movement.CurrentLocation)
+						//fmt.Println(movement.MovementDestination)
 					}
 				} // move?
 			} // Units...
 		} // Players...
 
 		time.Sleep(time.Millisecond * 500)
-	}
+	} // eva...
 }

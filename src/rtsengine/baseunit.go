@@ -27,30 +27,34 @@ func (unit *BaseUnit) movement() *Movement {
 	return &unit.Movement
 }
 
-func (unit *BaseUnit) newWirePacket(command WireCommand, channel chan *WirePacket) *WirePacket {
-	packet := WirePacket{}
-
+// sendPacketToChannel will do just that. :)
+func (unit *BaseUnit) sendPacketToChannel(command WireCommand, channel chan *WirePacket) {
 	switch command {
 	case MoveUnit:
-		packet.Command = command
-		viewPoint := unit.owner.PlayerView().ToViewPoint(unit.CurrentLocation)
-
-		//fmt.Print("VIEWPOINT: ")
-		//fmt.Println(viewPoint)
-		packet.CurrentX = viewPoint.X
-		packet.CurrentY = viewPoint.Y
-		packet.ToX = viewPoint.X
-		packet.ToY = viewPoint.Y
-
-		packet.UnitID = unit.id()
-
-		packet.ViewX = unit.owner.PlayerView().WorldOrigin.X
-		packet.ViewY = unit.owner.PlayerView().WorldOrigin.Y
-		packet.ViewWidth = unit.owner.PlayerView().Span.Dx()
-		packet.ViewHeight = unit.owner.PlayerView().Span.Dx()
-
-		channel <- &packet
+		channel <- unit.fillOutUnit(&WirePacket{}, command)
 	}
+}
 
-	return nil
+// fillOutUnit will fill out the packet and return a reference to that same packet.
+// This method does most of the work. Some command specific mutations will need to be
+// done elsewhere.
+func (unit *BaseUnit) fillOutUnit(packet *WirePacket, command WireCommand) *WirePacket {
+	packet.Command = command
+	viewPoint := unit.owner.PlayerView().ToViewPoint(unit.CurrentLocation)
+
+	packet.CurrentX = viewPoint.X
+	packet.CurrentY = viewPoint.Y
+	packet.ToX = viewPoint.X
+	packet.ToY = viewPoint.Y
+
+	packet.UnitID = unit.id()
+
+	packet.ViewX = unit.owner.PlayerView().WorldOrigin.X
+	packet.ViewY = unit.owner.PlayerView().WorldOrigin.Y
+	packet.ViewWidth = unit.owner.PlayerView().Span.Dx()
+	packet.ViewHeight = unit.owner.PlayerView().Span.Dx()
+
+	packet.Life = unit.Life
+
+	return packet
 }

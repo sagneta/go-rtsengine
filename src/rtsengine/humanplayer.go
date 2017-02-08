@@ -80,7 +80,7 @@ func (player *HumanPlayer) listenForWireCommands() {
 	for {
 
 		// Blocking call
-		if err := player.Wire.JSONDecoder.Decode(&packet); err == io.EOF {
+		if player.Wire.ReceiveCheckEOF(&packet) {
 			fmt.Println("\n\nEOF was detected. Connection lost.")
 			return // stops this coroutine
 		}
@@ -101,7 +101,7 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 			packetArray := make([]WirePacket, 1)
 			packetArray[0] = *packet
 
-			if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
+			if err := player.Wire.Send(packetArray); err == io.EOF {
 				fmt.Println("\n\nEOF was detected. Connection lost.")
 				return err
 			}
@@ -139,7 +139,7 @@ func (player *HumanPlayer) fullView() error {
 	packetArray[0].ViewHeight = player.OurWorld.Grid.Span.Dx()
 	packetArray[0].ViewWidth = player.OurWorld.Grid.Span.Dy()
 
-	if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
+	if err := player.Wire.Send(packetArray); err == io.EOF {
 		fmt.Println("\n\nEOF was detected. Connection lost.")
 		return err
 	}
@@ -166,7 +166,6 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			}
 
 			packet := WirePacket{}
-			//packet.Clear()
 
 			if isPartial {
 				packet.Command = PartialRefreshPlayerToUI
@@ -203,9 +202,6 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 		}
 	}
 
-	if err := player.Wire.JSONEncoder.Encode(&packetArray); err == io.EOF {
-		fmt.Println("\n\nEOF was detected. Connection lost.")
-		return
-	}
+	_ = player.Wire.Send(packetArray)
 
 }

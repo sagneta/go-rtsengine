@@ -53,5 +53,5 @@ type IUnit interface {
 	id() int
 	life() int
 	movement() *Movement
-	newWirePacket(command WireCommand, channel chan *WirePacket) *WirePacket
+	sendPacketToChannel(command WireCommand, channel chan *WirePacket)
 }
