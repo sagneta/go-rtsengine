@@ -19,26 +19,39 @@ type ScreenController struct {
 	*tl.Entity
 	level *tl.BaseLevel
 
-	prevX int
-	prevY int
+	Xdiff int
+	Ydiff int
 
 	screenWidth  int
 	screenHeight int
+
+	ui *ReferenceUI
 }
 
 // Tick satisfies Entity interface.
-func (player *ScreenController) Tick(event tl.Event) {
+func (controller *ScreenController) Tick(event tl.Event) {
 	if event.Type == tl.EventKey { // Is it a keyboard event?
-		x, y := player.Position()
 		switch event.Key { // If so, switch on the pressed key.
 		case tl.KeyArrowRight:
-			player.SetPosition(x+1, y)
+			controller.Ydiff = 1
+			controller.Xdiff = 0
+			controller.ui.scrollView()
+
 		case tl.KeyArrowLeft:
-			player.SetPosition(x-1, y)
+			controller.Ydiff = -1
+			controller.Xdiff = 0
+			controller.ui.scrollView()
+
 		case tl.KeyArrowUp:
-			player.SetPosition(x, y-1)
+			controller.Xdiff = -1
+			controller.Ydiff = 0
+			controller.ui.scrollView()
+
 		case tl.KeyArrowDown:
-			player.SetPosition(x, y+1)
+			controller.Xdiff = 1
+			controller.Ydiff = 0
+			controller.ui.scrollView()
+
 		}
 	} else {
 		switch event.Type {
@@ -132,6 +145,7 @@ func (ui *ReferenceUI) Start() {
 		level:        ui.level,
 		screenWidth:  screenWidth,
 		screenHeight: screenHeight,
+		ui:           ui,
 	}
 
 	// Set the character at position (0, 0) on the entity.
@@ -183,7 +197,6 @@ func (ui *ReferenceUI) listenForWireCommands() {
 				acre.X = packetArray[0].ToY
 				acre.Y = packetArray[0].ToX
 				acre.SetPosition(acre.X, acre.Y)
-				//acre.Draw(ui.game.Screen())
 			}
 
 		// Set the View to equial the entire world. Used for testing.
@@ -288,6 +301,20 @@ func (ui *ReferenceUI) communicationPreamble() {
 		return
 	}
 
+}
+
+func (ui *ReferenceUI) scrollView() {
+	var packet rtsengine.WirePacket
+
+	// Send full View to set our UI to the entire view of the game for testing.
+	packet.Command = rtsengine.ScrollView
+	packet.CurrentX = ui.screenController.Xdiff
+	packet.CurrentY = ui.screenController.Ydiff
+	err := ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
 }
 
 // Assume grass is the default.

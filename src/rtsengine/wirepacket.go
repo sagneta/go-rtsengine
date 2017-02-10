@@ -59,7 +59,7 @@ type WirePacket struct {
 	// The Type of Unit if any. <=0 means no unit
 	Unit UnitType
 
-	// Used in MoveUnit, NewUnitAdded, NewUnitAdded, CancelMove, UnitStateRefresh, UnitDestroyed
+	// Used in MoveUnit, NewUnitAdded, NewUnitAdded, CancelMove, UnitStateRefresh, UnitDestroyed, ScrollView
 	CurrentX, CurrentY int // View Coordinates
 
 	// Used in MoveUnit and ScrollView Command
