@@ -56,5 +56,7 @@ func (unit *BaseUnit) fillOutUnit(packet *WirePacket, command WireCommand) *Wire
 
 	packet.Life = unit.Life
 
+	packet.WorldX = unit.CurrentLocation.X
+	packet.WorldY = unit.CurrentLocation.Y
 	return packet
 }

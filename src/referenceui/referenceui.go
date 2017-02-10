@@ -284,18 +284,19 @@ func (ui *ReferenceUI) communicationPreamble() {
 	var packet rtsengine.WirePacket
 
 	// Send full View to set our UI to the entire view of the game for testing.
-	packet.Command = rtsengine.FullView
-	err := ui.JSONEncoder.Encode(&packet)
-	if err != nil {
-		fmt.Println("Unexpected wire error", err)
-		return
-	}
-
+	/*
+		packet.Command = rtsengine.FullView
+		err := ui.JSONEncoder.Encode(&packet)
+		if err != nil {
+			fmt.Println("Unexpected wire error", err)
+			return
+		}
+	*/
 	// Force a partial refresh to place the initial acres and units on our screen.
 	packet.Command = rtsengine.PartialRefreshPlayerToUI
 	packet.ToX = -1
 	packet.ToY = -2
-	err = ui.JSONEncoder.Encode(&packet)
+	err := ui.JSONEncoder.Encode(&packet)
 	if err != nil {
 		fmt.Println("Unexpected wire error", err)
 		return

@@ -36,7 +36,7 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
-	game, err := rtsengine.NewGame("Game test", 10000, 1, 0, 50, 50, 80, 80)
+	game, err := rtsengine.NewGame("Game test", 10000, 1, 0, 50, 50, 100, 100)
 	if err != nil {
 		log.Print(err)
 		return
