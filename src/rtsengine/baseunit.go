@@ -7,7 +7,7 @@ type BaseUnit struct {
 	Poolable
 	AutoNumber
 	HealthAndAttack
-	owner IPlayer
+	Owner IPlayer
 	Movement
 }
 
@@ -27,6 +27,10 @@ func (unit *BaseUnit) movement() *Movement {
 	return &unit.Movement
 }
 
+func (unit *BaseUnit) owner() IPlayer {
+	return unit.Owner
+}
+
 // sendPacketToChannel will do just that. :)
 func (unit *BaseUnit) sendPacketToChannel(command WireCommand, channel chan *WirePacket) {
 	switch command {
@@ -40,17 +44,17 @@ func (unit *BaseUnit) sendPacketToChannel(command WireCommand, channel chan *Wir
 // done elsewhere.
 func (unit *BaseUnit) fillOutUnit(packet *WirePacket, command WireCommand) *WirePacket {
 	packet.Command = command
-	viewPoint := unit.owner.PlayerView().ToViewPoint(unit.CurrentLocation)
+	viewPoint := unit.Owner.PlayerView().ToViewPoint(unit.CurrentLocation)
 
 	packet.CurrentX = viewPoint.X
 	packet.CurrentY = viewPoint.Y
 
 	packet.UnitID = unit.id()
 
-	packet.ViewX = unit.owner.PlayerView().WorldOrigin.X
-	packet.ViewY = unit.owner.PlayerView().WorldOrigin.Y
-	packet.ViewWidth = unit.owner.PlayerView().Span.Dx()
-	packet.ViewHeight = unit.owner.PlayerView().Span.Dx()
+	packet.ViewX = unit.Owner.PlayerView().WorldOrigin.X
+	packet.ViewY = unit.Owner.PlayerView().WorldOrigin.Y
+	packet.ViewWidth = unit.Owner.PlayerView().Span.Dx()
+	packet.ViewHeight = unit.Owner.PlayerView().Span.Dx()
 
 	packet.Life = unit.Life
 

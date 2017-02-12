@@ -27,6 +27,8 @@ func NewHumanPlayer(description string, worldLocation image.Point, width int, he
 
 	player.Map = make(map[IUnit]IUnit)
 
+	player.AutoNumber.Initialize()
+
 	// Add mechanics
 
 	return &player
@@ -83,7 +85,7 @@ func (player *HumanPlayer) listenForWireCommands() {
 			fmt.Println("\n\nEOF was detected. Connection lost.")
 			return // stops this coroutine
 		}
-		packet.Print()
+		//packet.Print()
 		err := player.dispatch(&packet)
 		if err != nil {
 			// Stop the cooroutine
@@ -95,6 +97,17 @@ func (player *HumanPlayer) listenForWireCommands() {
 
 func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 	switch packet.Command {
+	case WhoAmI:
+		packet.PlayerName = player.name()
+		packet.PlayerID = player.id()
+		packetArray := make([]WirePacket, 1)
+		packetArray[0] = *packet
+
+		if err := player.Wire.Send(packetArray); err == io.EOF {
+			fmt.Println("\n\nEOF was detected. Connection lost.")
+			return err
+		}
+
 	case ScrollView:
 		// TODO: Ensure the scroll is within the world.
 		X1 := player.WorldOrigin.X + packet.CurrentX
@@ -194,6 +207,9 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 				packet.Unit = ourAcre.unit.unitType()
 				packet.UnitID = ourAcre.unit.id()
 				packet.Life = ourAcre.unit.life()
+				if ourAcre.unit.owner() != nil { // Is there an owner?
+					packet.OwnerPlayerID = ourAcre.unit.owner().id()
+				}
 			} else {
 				packet.UnitID = ourAcre.id()
 			}

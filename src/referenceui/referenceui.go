@@ -109,6 +109,10 @@ type ReferenceUI struct {
 
 	// Current viewable acres
 	acreMap map[int]*Acre
+
+	// This player information
+	playerName string // name of this player
+	playerID   int    // unique ID of this player
 }
 
 // Start will instantiate the UI and attempt to talk to a rtsengine.
@@ -176,6 +180,11 @@ func (ui *ReferenceUI) listenForWireCommands() {
 		}
 
 		switch packetArray[0].Command {
+		case rtsengine.WhoAmI:
+			ui.playerName = packetArray[0].PlayerName
+			ui.playerID = packetArray[0].PlayerID
+			//fmt.Printf("PlayerID(%d) PlayerName(%s)\n", ui.playerID, ui.playerName)
+
 		case rtsengine.MoveUnit:
 			//fmt.Print("MoveUnit")
 			//fmt.Println(packetArray[0].CurrentY)
@@ -271,6 +280,14 @@ func (ui *ReferenceUI) communicationPreamble() {
 
 	var packet rtsengine.WirePacket
 
+	// WhoAmI? Get user information for this connection.
+	packet.Command = rtsengine.WhoAmI
+	err := ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
+
 	// Send full View to set our UI to the entire view of the game for testing.
 	/*
 		packet.Command = rtsengine.FullView
@@ -282,7 +299,7 @@ func (ui *ReferenceUI) communicationPreamble() {
 	*/
 	// Force a partial refresh to place the initial acres and units on our screen.
 	packet.Command = rtsengine.PartialRefreshPlayerToUI
-	err := ui.JSONEncoder.Encode(&packet)
+	err = ui.JSONEncoder.Encode(&packet)
 	if err != nil {
 		fmt.Println("Unexpected wire error", err)
 		return

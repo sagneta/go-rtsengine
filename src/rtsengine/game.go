@@ -245,7 +245,7 @@ func (game *Game) FindPath(source *image.Point, destination *image.Point) (*list
 // GenerateUnits will construct the starting units per player.
 func (game *Game) GenerateUnits(player IPlayer) {
 	infantry := game.ItemPool.Infantry(1)
-	infantry[0].owner = player
+	infantry[0].Owner = player
 	infantry[0].HitPoints = 100
 	infantry[0].Life = 100
 	infantry[0].AttackPoints = 2

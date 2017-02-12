@@ -43,6 +43,9 @@ const (
 
 	// FullView will set the view to the entire World. Used mostly for testing.
 	FullView
+
+	// WhoAmI queries the rtsengine to return information on the current user connection.
+	WhoAmI
 )
 
 // WirePacket is a packet of data that can be JSON marshalled/unmarshalled
@@ -55,6 +58,10 @@ type WirePacket struct {
 
 	// Unit ID. <= 0 if no ID
 	UnitID int
+
+	// Is the unique ID of the player that owns the unit.
+	// OwnerPlayerID  <= 0 if no ID and thus the unit is owned by nobody.
+	OwnerPlayerID int
 
 	// The Type of Unit if any. <=0 means no unit
 	Unit UnitType
@@ -74,6 +81,11 @@ type WirePacket struct {
 	// For the View. The ViewX and ViewY are in world coordinates
 	// FullView uses these.
 	ViewWidth, ViewHeight, ViewX, ViewY int
+
+	// WhoAmI fills this in and nothing more.
+	PlayerName string // name of this player
+	PlayerID   int    // unique ID of this player
+
 }
 
 // Clear will reinitialize the structure for reuse.

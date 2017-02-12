@@ -25,6 +25,9 @@ type BasePlayer struct {
 
 	// Pathing systems
 	Pathing *AStarPathing
+
+	// Each player has a unique auto number.
+	AutoNumber
 }
 
 // IPlayer Interface

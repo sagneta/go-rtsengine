@@ -11,6 +11,9 @@ package rtsengine
 type IPlayer interface {
 	name() string
 
+	// unique id for this player
+	id() int
+
 	// Initialized TCPWire to listen upon
 	listen(wire *TCPWire)
 
