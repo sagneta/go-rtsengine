@@ -98,9 +98,15 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 	switch packet.Command {
 	case ScrollView:
 		// TODO: Ensure the scroll is within the world.
-		player.WorldOrigin.X += packet.CurrentX
-		player.WorldOrigin.Y += packet.CurrentY
-		player.refreshPlayerToUI(true)
+		X1 := player.WorldOrigin.X + packet.CurrentX
+		Y1 := player.WorldOrigin.Y + packet.CurrentY
+		point := image.Rect(X1, Y1, X1+player.Span.Dx(), Y1+player.Span.Dy())
+
+		if point.In(player.OurWorld.Span) {
+			player.WorldOrigin.X += packet.CurrentX
+			player.WorldOrigin.Y += packet.CurrentY
+			player.refreshPlayerToUI(true)
+		}
 
 	case MoveUnit:
 		if player.In(&image.Point{packet.WorldX, packet.WorldY}) {
