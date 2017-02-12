@@ -62,9 +62,6 @@ type WirePacket struct {
 	// Used in MoveUnit, NewUnitAdded, NewUnitAdded, CancelMove, UnitStateRefresh, UnitDestroyed, ScrollView
 	CurrentX, CurrentY int // View Coordinates
 
-	// Used in MoveUnit and ScrollView Command
-	ToX, ToY int // View Coordinates
-
 	// Used in ResourceUpdate
 	Gold, Wood, Food, Stone int
 
@@ -86,8 +83,6 @@ func (p *WirePacket) Clear() {
 	p.LocalTerrain = Grass
 	p.CurrentX = 0
 	p.CurrentY = 0
-	p.ToX = 0
-	p.ToY = 0
 	p.Gold = 0
 	p.Wood = 0
 	p.Food = 0
@@ -107,5 +102,5 @@ func (p *WirePacket) Clear() {
 
 // Print will dump the contents of the packet
 func (p *WirePacket) Print() {
-	fmt.Printf("ID(%d) Command(%d) CurrentX(%d) CurrentY(%d) ToX(%d) ToY(%d) Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d) Terrain(%d) UnitType(%d)", p.UnitID, p.Command, p.CurrentX, p.CurrentY, p.ToX, p.ToY, p.Gold, p.Wood, p.Food, p.Stone, p.Life, p.LocalTerrain, p.Unit)
+	fmt.Printf("ID(%d) Command(%d) CurrentX(%d) CurrentY(%d)  Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d) Terrain(%d) UnitType(%d)", p.UnitID, p.Command, p.CurrentX, p.CurrentY, p.Gold, p.Wood, p.Food, p.Stone, p.Life, p.LocalTerrain, p.Unit)
 }

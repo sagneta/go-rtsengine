@@ -78,7 +78,6 @@ func (player *HumanPlayer) stop() {
 func (player *HumanPlayer) listenForWireCommands() {
 	var packet WirePacket
 	for {
-
 		// Blocking call
 		if player.Wire.ReceiveCheckEOF(&packet) {
 			fmt.Println("\n\nEOF was detected. Connection lost.")

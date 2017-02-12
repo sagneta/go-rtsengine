@@ -66,26 +66,14 @@ func (controller *ScreenController) Tick(event tl.Event) {
 	}
 }
 
-// Draw the screen. Allows for scrolling
-func (player *ScreenController) Draw(screen *tl.Screen) {
+// Draw the screen.
+func (controller *ScreenController) Draw(screen *tl.Screen) {
 	screenWidth, screenHeight := screen.Size()
 
-	player.screenWidth = screenWidth
-	player.screenHeight = screenHeight
-
-	/*
-		if player.screenHeight == -1 {
-			player.screenWidth = screenWidth
-			player.screenHeight = screenHeight
-		} else if player.screenHeight != screenHeight {
-			panic(nil)
-		}
-
-	*/
-	//x, y := player.Position()
-	//player.level.SetOffset(screenWidth/2-x, screenHeight/2-y)
+	controller.screenWidth = screenWidth
+	controller.screenHeight = screenHeight
 	// We need to make sure and call Draw on the underlying Entity.
-	player.Entity.Draw(screen)
+	controller.Entity.Draw(screen)
 
 }
 
@@ -190,12 +178,12 @@ func (ui *ReferenceUI) listenForWireCommands() {
 		switch packetArray[0].Command {
 		case rtsengine.MoveUnit:
 			//fmt.Print("MoveUnit")
-			//fmt.Println(packetArray[0].ToY)
-			//fmt.Println(packetArray[0].ToX)
+			//fmt.Println(packetArray[0].CurrentY)
+			//fmt.Println(packetArray[0].CurrentX)
 			acre, ok := ui.acreMap[packetArray[0].UnitID]
 			if ok {
-				acre.X = packetArray[0].ToY
-				acre.Y = packetArray[0].ToX
+				acre.X = packetArray[0].CurrentY
+				acre.Y = packetArray[0].CurrentX
 				acre.SetPosition(acre.X, acre.Y)
 			}
 
@@ -294,8 +282,6 @@ func (ui *ReferenceUI) communicationPreamble() {
 	*/
 	// Force a partial refresh to place the initial acres and units on our screen.
 	packet.Command = rtsengine.PartialRefreshPlayerToUI
-	packet.ToX = -1
-	packet.ToY = -2
 	err := ui.JSONEncoder.Encode(&packet)
 	if err != nil {
 		fmt.Println("Unexpected wire error", err)

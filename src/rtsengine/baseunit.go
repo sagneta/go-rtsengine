@@ -44,8 +44,6 @@ func (unit *BaseUnit) fillOutUnit(packet *WirePacket, command WireCommand) *Wire
 
 	packet.CurrentX = viewPoint.X
 	packet.CurrentY = viewPoint.Y
-	packet.ToX = viewPoint.X
-	packet.ToY = viewPoint.Y
 
 	packet.UnitID = unit.id()
 
