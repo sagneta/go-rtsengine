@@ -100,10 +100,8 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 	case WhoAmI:
 		packet.PlayerName = player.name()
 		packet.PlayerID = player.id()
-		packetArray := make([]WirePacket, 1)
-		packetArray[0] = *packet
 
-		if err := player.Wire.Send(packetArray); err == io.EOF {
+		if err := player.Wire.SendAll(packet); err == io.EOF {
 			fmt.Println("\n\nEOF was detected. Connection lost.")
 			return err
 		}
@@ -122,10 +120,7 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 
 	case MoveUnit:
 		if player.In(&image.Point{packet.WorldX, packet.WorldY}) {
-			packetArray := make([]WirePacket, 1)
-			packetArray[0] = *packet
-
-			if err := player.Wire.Send(packetArray); err == io.EOF {
+			if err := player.Wire.SendAll(packet); err == io.EOF {
 				fmt.Println("\n\nEOF was detected. Connection lost.")
 				return err
 			}

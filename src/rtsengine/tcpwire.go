@@ -38,3 +38,13 @@ func (wire *TCPWire) Send(packetArray []WirePacket) error {
 func (wire *TCPWire) SendCheckEOF(packetArray []WirePacket) bool {
 	return wire.JSONEncoder.Encode(&packetArray) == io.EOF
 }
+
+// SendAll will send N number of packets in a single send over the wire.
+func (wire *TCPWire) SendAll(packets ...*WirePacket) error {
+	packetArray := make([]WirePacket, len(packets))
+
+	for i, packet := range packets {
+		packetArray[i] = *packet
+	}
+	return wire.Send(packetArray)
+}
