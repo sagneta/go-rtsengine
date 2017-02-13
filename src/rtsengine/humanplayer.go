@@ -25,7 +25,7 @@ func NewHumanPlayer(description string, worldLocation image.Point, width int, he
 	player.Pathing = pathing
 	player.OurWorld = world
 
-	player.Map = make(map[IUnit]IUnit)
+	player.Map = make(map[int]IUnit)
 
 	player.AutoNumber.Initialize()
 
@@ -116,6 +116,15 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 			player.WorldOrigin.X += packet.CurrentX
 			player.WorldOrigin.Y += packet.CurrentY
 			player.refreshPlayerToUI(true)
+		}
+
+	case PathUnitToLocation:
+		if packet.UnitID > 0 {
+			unit := player.Map[packet.UnitID]
+			destinationWorld := player.ToWorldPoint(&image.Point{packet.CurrentX, packet.CurrentY})
+			if unit != nil && player.In(&destinationWorld) {
+				unit.movement().MovementDestination = &destinationWorld
+			}
 		}
 
 	case MoveUnit:

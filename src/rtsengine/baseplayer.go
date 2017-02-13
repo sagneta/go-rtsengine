@@ -38,7 +38,7 @@ func (player *BasePlayer) name() string {
 // DumpUnits demonstrates how to do that precisely.
 func (player *BasePlayer) DumpUnits() {
 	for k, v := range player.AllUnits() {
-		fmt.Printf("Player %s UNITS: key[%s] value[%s]\n", player.name(), k, v.name())
+		fmt.Printf("Player %s UNITS: key[%d] value[%s]\n", player.name(), k, v.name())
 	}
 }
 

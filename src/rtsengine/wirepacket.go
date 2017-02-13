@@ -8,8 +8,13 @@ type WireCommand byte
 const (
 	// NOOP is the no operation
 	NOOP WireCommand = iota + 1
-	// MoveUnit moves unit to and fro
+
+	// MoveUnit moves unit to and fro. The rts-engine produces this command
 	MoveUnit
+
+	// PathUnitToLocation will set the destination of a unit to the CurrentX, CurrentY
+	// does starting a pathing operation for the unit. Used by both client and rts-engine.
+	PathUnitToLocation
 
 	// NewUnitAdded means a new unit has been generated and added to the world.
 	NewUnitAdded

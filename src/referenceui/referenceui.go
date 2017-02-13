@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"rtsengine"
 	"time"
@@ -26,44 +25,76 @@ type ScreenController struct {
 	screenHeight int
 
 	ui *ReferenceUI
+
+	// Last Unit Selection Information
+	UnitID int
+	MouseX int
+	MouseY int
 }
 
 // Tick satisfies Entity interface.
 func (controller *ScreenController) Tick(event tl.Event) {
-	if event.Type == tl.EventKey { // Is it a keyboard event?
-		switch event.Key { // If so, switch on the pressed key.
-		case tl.KeyArrowRight:
-			controller.Ydiff = 1
-			controller.Xdiff = 0
-			controller.ui.scrollView()
+	switch event.Key { // If so, switch on the pressed key.
+	case tl.KeyArrowRight:
+		controller.Ydiff = 1
+		controller.Xdiff = 0
+		controller.ui.scrollView()
 
-		case tl.KeyArrowLeft:
-			controller.Ydiff = -1
-			controller.Xdiff = 0
-			controller.ui.scrollView()
+	case tl.KeyArrowLeft:
+		controller.Ydiff = -1
+		controller.Xdiff = 0
+		controller.ui.scrollView()
 
-		case tl.KeyArrowUp:
-			controller.Xdiff = -1
-			controller.Ydiff = 0
-			controller.ui.scrollView()
+	case tl.KeyArrowUp:
+		controller.Xdiff = -1
+		controller.Ydiff = 0
+		controller.ui.scrollView()
 
-		case tl.KeyArrowDown:
-			controller.Xdiff = 1
-			controller.Ydiff = 0
-			controller.ui.scrollView()
+	case tl.KeyArrowDown:
+		controller.Xdiff = 1
+		controller.Ydiff = 0
+		controller.ui.scrollView()
 
+	case tl.MouseRight, tl.MouseLeft:
+		acre := controller.ui.findAcre(event.MouseX, event.MouseY)
+		if acre != nil {
+			if acre.UnitID > 0 {
+				switch acre.Unit {
+				case rtsengine.UnitInfantry,
+					rtsengine.UnitCavalry,
+					rtsengine.UnitPeasant,
+					rtsengine.UnitShip,
+					rtsengine.UnitCatapult,
+					rtsengine.UnitArcher:
+					// New Unit Selection?
+					if controller.UnitID != acre.UnitID {
+						controller.UnitID = acre.UnitID
+						controller.MouseX = event.MouseX
+						controller.MouseY = event.MouseY
+					}
+				}
+			}
+		} else if controller.UnitID > 0 {
+			id := controller.UnitID
+			controller.UnitID = 0
+			controller.MouseX = event.MouseX
+			controller.MouseY = event.MouseY
+			controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
 		}
-	} else {
-		switch event.Type {
-		case tl.EventResize:
-			log.Print("resized")
-			//fmt.Printf("We resized to width(%d) height(%d)", event.Width, event.Height)
-			//panic(nil)
-		default:
-			break
-		}
-
 	}
+
+	/*
+			switch event.Type {
+			case tl.EventResize:
+				log.Print("resized")
+				//fmt.Printf("We resized to width(%d) height(%d)", event.Width, event.Height)
+				//panic(nil)
+			default:
+				break
+			}
+
+		}
+	*/
 }
 
 // Draw the screen.
@@ -74,7 +105,6 @@ func (controller *ScreenController) Draw(screen *tl.Screen) {
 	controller.screenHeight = screenHeight
 	// We need to make sure and call Draw on the underlying Entity.
 	controller.Entity.Draw(screen)
-
 }
 
 // Acre is an entity on our screen.
@@ -307,6 +337,22 @@ func (ui *ReferenceUI) communicationPreamble() {
 
 }
 
+// pathUnitToLocation will request that unitID be pathed to X,Y
+func (ui *ReferenceUI) pathUnitToLocation(UnitID int, X int, Y int) {
+	var packet rtsengine.WirePacket
+
+	// Send full View to set our UI to the entire view of the game for testing.
+	packet.Command = rtsengine.PathUnitToLocation
+	packet.CurrentX = Y
+	packet.CurrentY = X
+	packet.UnitID = UnitID
+	err := ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
+}
+
 func (ui *ReferenceUI) scrollView() {
 	var packet rtsengine.WirePacket
 
@@ -319,6 +365,16 @@ func (ui *ReferenceUI) scrollView() {
 		fmt.Println("Unexpected wire error", err)
 		return
 	}
+}
+
+// findAcre will find the acre at X and Y and return nil if not found.
+func (ui *ReferenceUI) findAcre(X int, Y int) *Acre {
+	for _, v := range ui.acreMap {
+		if v.X == X && v.Y == Y {
+			return v
+		}
+	}
+	return nil
 }
 
 // Assume grass is the default.
