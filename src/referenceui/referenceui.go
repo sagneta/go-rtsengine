@@ -57,8 +57,11 @@ func (controller *ScreenController) Tick(event tl.Event) {
 
 	case tl.MouseRight, tl.MouseLeft:
 		acre := controller.ui.findAcre(event.MouseX, event.MouseY)
+
+		// Does our acre exist?
 		if acre != nil {
-			if acre.UnitID > 0 {
+			if acre.UnitID > 0 { // has a Unit?
+				// Moveable unit?
 				switch acre.Unit {
 				case rtsengine.UnitInfantry,
 					rtsengine.UnitCavalry,
@@ -74,7 +77,7 @@ func (controller *ScreenController) Tick(event tl.Event) {
 					}
 				}
 			}
-		} else if controller.UnitID > 0 {
+		} else if controller.UnitID > 0 { // was there a previous selection of a unit?
 			id := controller.UnitID
 			controller.UnitID = 0
 			controller.MouseX = event.MouseX
@@ -213,12 +216,8 @@ func (ui *ReferenceUI) listenForWireCommands() {
 		case rtsengine.WhoAmI:
 			ui.playerName = packetArray[0].PlayerName
 			ui.playerID = packetArray[0].PlayerID
-			//fmt.Printf("PlayerID(%d) PlayerName(%s)\n", ui.playerID, ui.playerName)
 
 		case rtsengine.MoveUnit:
-			//fmt.Print("MoveUnit")
-			//fmt.Println(packetArray[0].CurrentY)
-			//fmt.Println(packetArray[0].CurrentX)
 			acre, ok := ui.acreMap[packetArray[0].UnitID]
 			if ok {
 				acre.X = packetArray[0].CurrentY
@@ -233,12 +232,6 @@ func (ui *ReferenceUI) listenForWireCommands() {
 
 		case rtsengine.PartialRefreshPlayerToUI:
 			ui.handleRefreshPlayerToUI(packetArray)
-			/*
-				for _, p := range packetArray {
-					p.Print()
-					fmt.Println("")
-				}
-			*/
 		}
 
 	}
@@ -353,6 +346,7 @@ func (ui *ReferenceUI) pathUnitToLocation(UnitID int, X int, Y int) {
 	}
 }
 
+// scrollView will scroll this player view within the world.
 func (ui *ReferenceUI) scrollView() {
 	var packet rtsengine.WirePacket
 
@@ -368,6 +362,7 @@ func (ui *ReferenceUI) scrollView() {
 }
 
 // findAcre will find the acre at X and Y and return nil if not found.
+// Presently this is an O(N) search.
 func (ui *ReferenceUI) findAcre(X int, Y int) *Acre {
 	for _, v := range ui.acreMap {
 		if v.X == X && v.Y == Y {
