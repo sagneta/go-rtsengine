@@ -56,36 +56,8 @@ func (controller *ScreenController) Tick(event tl.Event) {
 		controller.ui.scrollView()
 
 	case tl.MouseRight, tl.MouseLeft:
-		acre := controller.ui.findAcre(event.MouseX, event.MouseY)
-
-		// Does our acre exist?
-		if acre != nil {
-			if acre.UnitID > 0 { // has a Unit?
-				// Moveable unit?
-				switch acre.Unit {
-				case rtsengine.UnitInfantry,
-					rtsengine.UnitCavalry,
-					rtsengine.UnitPeasant,
-					rtsengine.UnitShip,
-					rtsengine.UnitCatapult,
-					rtsengine.UnitArcher:
-					// New Unit Selection?
-					if controller.UnitID != acre.UnitID {
-						controller.UnitID = acre.UnitID
-						controller.MouseX = event.MouseX
-						controller.MouseY = event.MouseY
-					}
-				}
-			}
-		} else if controller.UnitID > 0 { // was there a previous selection of a unit?
-			id := controller.UnitID
-			controller.UnitID = 0
-			controller.MouseX = event.MouseX
-			controller.MouseY = event.MouseY
-			controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
-		}
+		controller.HandleMouseDown(&event)
 	}
-
 	/*
 			switch event.Type {
 			case tl.EventResize:
@@ -98,6 +70,38 @@ func (controller *ScreenController) Tick(event tl.Event) {
 
 		}
 	*/
+}
+
+// HandleMouseDown for entire screen.
+func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
+	acre := controller.ui.findAcre(event.MouseX, event.MouseY)
+
+	// Does our acre exist?
+	if acre != nil {
+		if acre.UnitID > 0 { // has a Unit?
+			// Moveable unit?
+			switch acre.Unit {
+			case rtsengine.UnitInfantry,
+				rtsengine.UnitCavalry,
+				rtsengine.UnitPeasant,
+				rtsengine.UnitShip,
+				rtsengine.UnitCatapult,
+				rtsengine.UnitArcher:
+				// New Unit Selection?
+				if controller.UnitID != acre.UnitID {
+					controller.UnitID = acre.UnitID
+					controller.MouseX = event.MouseX
+					controller.MouseY = event.MouseY
+				}
+			}
+		}
+	} else if controller.UnitID > 0 { // was there a previous selection of a unit?
+		id := controller.UnitID
+		controller.UnitID = 0
+		controller.MouseX = event.MouseX
+		controller.MouseY = event.MouseY
+		controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
+	}
 }
 
 // Draw the screen.
