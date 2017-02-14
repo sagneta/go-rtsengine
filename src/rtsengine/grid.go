@@ -103,13 +103,10 @@ func (grid *Grid) Collision(locus *image.Point) bool {
 }
 
 // Distance between two points using a floating point operation.
-func (grid *Grid) Distance(source *image.Point, destination *image.Point) int {
+func (grid *Grid) Distance(source *image.Point, destination *image.Point) float64 {
 	x2 := (destination.X - source.X) * (destination.X - source.X)
 	y2 := (destination.Y - source.Y) * (destination.Y - source.Y)
-	d2 := x2 + y2
-	distance := math.Sqrt(float64(d2)) + 0.5
-
-	return int(math.Trunc(distance))
+	return math.Sqrt(float64(x2 + y2))
 }
 
 // DistanceInteger is the distance algorithm using integer arithmetic. Don't use intermediate variables.

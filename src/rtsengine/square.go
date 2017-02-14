@@ -19,7 +19,7 @@ type Square struct {
 	// g is the cost it takes to get to this Square
 	// h is our guess (heuristic) as to how much it'll cost to reach the goal from that node
 	// f = g + h so f is the final cost. The lower the better.
-	F, G, H int
+	F, G, H float64
 
 	// Position (also known as a neihborhood
 	Position int
@@ -27,5 +27,5 @@ type Square struct {
 
 // Print will dump the contents of this Square
 func (s *Square) Print() {
-	fmt.Printf("Locus(%d,%d) Position(%d) F(%d) G(%d) H(%d)\n", s.Locus.X, s.Locus.Y, s.Position, s.F, s.G, s.H)
+	fmt.Printf("Locus(%d,%d) Position(%d) F(%f) G(%f) H(%f)\n", s.Locus.X, s.Locus.Y, s.Position, s.F, s.G, s.H)
 }
