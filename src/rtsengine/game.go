@@ -114,11 +114,11 @@ func NewGame(
 // AcceptNetConnections will accept connections from UI's (humans presumably) and
 // assign them a player. Once all humanplayers are accepted this method returns
 // WITHOUT starting the game. We are waiting at this point ready to go.
-func (game *Game) AcceptNetConnections() error {
+func (game *Game) AcceptNetConnections(host string, port int) error {
 
 	for !game.ReadyToGo() {
 		// listen to incoming tcp connections
-		listener, err := net.Listen("tcp", ":8080")
+		listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
 		if err != nil {
 			return err
 		}

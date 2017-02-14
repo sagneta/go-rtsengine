@@ -75,7 +75,7 @@ func main() {
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
 
-	err = game.AcceptNetConnections()
+	err = game.AcceptNetConnections(*cargs.host, *cargs.port)
 	if err != nil {
 		log.Print(err)
 		return
