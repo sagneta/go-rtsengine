@@ -88,6 +88,7 @@ func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
 				rtsengine.UnitCatapult,
 				rtsengine.UnitArcher:
 				// New Unit Selection?
+				//fmt.Println("Found the unit")
 				if controller.UnitID != acre.UnitID {
 					controller.UnitID = acre.UnitID
 					controller.MouseX = event.MouseX
@@ -100,6 +101,7 @@ func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
 		controller.UnitID = 0
 		controller.MouseX = event.MouseX
 		controller.MouseY = event.MouseY
+		//fmt.Println("Path to unit")
 		controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
 	}
 }

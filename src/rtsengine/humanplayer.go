@@ -122,8 +122,10 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 		if packet.UnitID > 0 {
 			unit := player.Map[packet.UnitID]
 			destinationWorld := player.ToWorldPoint(&image.Point{packet.CurrentX, packet.CurrentY})
+			fmt.Println("PathUnitToLocation")
 			if unit != nil && player.In(&destinationWorld) {
 				unit.movement().MovementDestination = &destinationWorld
+				fmt.Println("Begin the path....")
 			}
 		}
 
