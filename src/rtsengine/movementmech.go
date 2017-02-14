@@ -79,8 +79,7 @@ func (m *MovementMechanic) start() {
 
 						// Free all squares to the pool.
 						for e := pathList.Front(); e != nil; e = e.Next() {
-							square := e.Value.(*Square)
-							m.OurGame.ItemPool.Free(square)
+							m.OurGame.ItemPool.Free(e.Value.(*Square))
 						}
 					}
 				} // move?
