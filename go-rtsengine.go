@@ -10,7 +10,6 @@ import (
 
 /*
  Main entry point for the go rtsengine.
-
 */
 
 type flags struct {
@@ -40,11 +39,13 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
-	game, err := rtsengine.NewGame("Game test", 10000, 1, 0, 50, 50, *cargs.width, *cargs.height)
+	game, err := rtsengine.NewGame("Game Test", 10000, 1, 0, 50, 50, *cargs.width, *cargs.height)
 	if err != nil {
 		log.Print(err)
 		return
 	}
+
+	// Construct a fence with the pathing as a simple test.
 	start := time.Now()
 	pathList, err := game.FindPath(&image.Point{10, 10}, &image.Point{45, 45})
 	elapsed := time.Since(start)
@@ -61,16 +62,7 @@ func main() {
 		_ = game.OurWorld.Grid.Set(&square.Locus, &fence)
 	}
 
-	//game.OurWorld.Print()
-
 	game.FreeList(pathList)
-	/*
-		for e := pathList.Front(); e != nil; e = e.Next() {
-			square := e.Value.(*rtsengine.Square)
-			//square.Print()
-			game.ItemPool.Free(square)
-		}
-	*/
 	game.ItemPool.PrintAllocatedSquares()
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
