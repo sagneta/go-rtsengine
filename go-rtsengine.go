@@ -83,7 +83,5 @@ func main() {
 
 	game.Start()
 
-	//time.Sleep(time.Second * 60)
 	select {} // wait forever without eating CPU.
-	//game.Stop()
 }
