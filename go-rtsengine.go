@@ -65,7 +65,7 @@ func main() {
 
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)
-		square.Print()
+		//square.Print()
 		game.ItemPool.Free(square)
 	}
 
