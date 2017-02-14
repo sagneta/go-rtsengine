@@ -268,27 +268,61 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 			}
 
 			var cell tl.Cell
+
 			switch acre.LocalTerrain {
+			case rtsengine.Snow:
+				cell = tl.Cell{Fg: tl.ColorWhite, Ch: ' '}
+
+			case rtsengine.Sand:
+				cell = tl.Cell{Fg: tl.ColorYellow, Ch: ' '}
+
+			case rtsengine.Water:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: ' '}
+
 			case rtsengine.Mountains:
 				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x97\xBB")
 				cell = tl.Cell{Fg: tl.ColorBlack, Ch: '^'}
 
 			case rtsengine.Trees:
 				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x8C\xB2")
-				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 'T'}
+				//r, _ := utf8.DecodeRuneInString("\xC2\xAE")
+				cell = tl.Cell{Fg: tl.ColorWhite, Bg: tl.ColorGreen, Ch: 'T'}
 			}
 
 			switch acre.Unit {
 			case rtsengine.UnitInfantry:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'S'}
+
+			case rtsengine.UnitArmory:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'A'}
+
+			case rtsengine.UnitCastle:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'C'}
+
+			case rtsengine.UnitGoldMine:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'G'}
+
+			case rtsengine.UnitHomeStead:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'H'}
+
+			case rtsengine.UnitPeasant:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'P'}
+
+			case rtsengine.UnitStoneQuarry:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'S'}
+
+			case rtsengine.UnitShip:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 's'}
+
+			case rtsengine.UnitTower:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 't'}
+
+			case rtsengine.UnitWoodPile:
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'W'}
+
 			case rtsengine.UnitFence:
 				//r, _ := utf8.DecodeRuneInString("\xE2\xAC\x9B")
 				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'X'}
-
-				//			default:
-				//				r, _ := utf8.DecodeRuneInString("\xF0\x9F\x92\x82")
-				//				cell = tl.Cell{Fg: tl.ColorRed, Ch: r}
-
 			}
 			acre.SetCell(0, 0, &cell)
 			ui.level.AddEntity(acre)
