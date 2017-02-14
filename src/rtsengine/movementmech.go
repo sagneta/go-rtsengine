@@ -43,19 +43,14 @@ func (m *MovementMechanic) start() {
 	for m.evah {
 		for _, player := range m.Players {
 			unitmap := player.PlayerUnits()
-			//fmt.Printf("Go through player(%s) units ...\n", player.name())
 			for _, unit := range unitmap.Map {
 				movement := unit.movement()
-
-				//fmt.Println("Found unit to move...")
 
 				// Can/Should we move this unit?
 				if movement.CanMove() {
 					// As long as the MovementDestination exists and is different than the current location (obviously)
 					if movement.CurrentLocation != nil && movement.MovementDestination != nil && !movement.CurrentLocation.Eq(*movement.MovementDestination) {
-						//fmt.Println("Before FindPath")
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
-						//fmt.Println("After FindPath")
 						if err != nil {
 							fmt.Print(err)
 							continue
@@ -78,18 +73,15 @@ func (m *MovementMechanic) start() {
 							break
 						}
 
-						// Free all squares to the pool.
-						for e := pathList.Front(); e != nil; e = e.Next() {
-							square := e.Value.(*Square)
-							//square.Print()
-							m.OurGame.ItemPool.Free(square)
-						}
-
 						// Update the last movement time (right now).
 						unit.sendPacketToChannel(MoveUnit, m.CommandChannel)
 						movement.UpdateLastMovement()
-						//fmt.Print(movement.CurrentLocation)
-						//fmt.Println(movement.MovementDestination)
+
+						// Free all squares to the pool.
+						for e := pathList.Front(); e != nil; e = e.Next() {
+							square := e.Value.(*Square)
+							m.OurGame.ItemPool.Free(square)
+						}
 					}
 				} // move?
 				runtime.Gosched()
