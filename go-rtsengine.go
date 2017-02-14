@@ -63,12 +63,14 @@ func main() {
 
 	//game.OurWorld.Print()
 
-	for e := pathList.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*rtsengine.Square)
-		//square.Print()
-		game.ItemPool.Free(square)
-	}
-
+	game.FreeList(pathList)
+	/*
+		for e := pathList.Front(); e != nil; e = e.Next() {
+			square := e.Value.(*rtsengine.Square)
+			//square.Print()
+			game.ItemPool.Free(square)
+		}
+	*/
 	game.ItemPool.PrintAllocatedSquares()
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)

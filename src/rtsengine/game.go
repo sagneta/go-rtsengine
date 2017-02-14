@@ -242,6 +242,11 @@ func (game *Game) FindPath(source *image.Point, destination *image.Point) (*list
 	return game.Pathing.FindPath(game.ItemPool, &game.OurWorld.Grid, source, destination)
 }
 
+//FreeList will free the list return by FindPath
+func (game *Game) FreeList(l *list.List) {
+	game.Pathing.FreeList(game.ItemPool, l)
+}
+
 // GenerateUnits will construct the starting units per player.
 func (game *Game) GenerateUnits(player IPlayer) {
 	infantry := game.ItemPool.Infantry(1)

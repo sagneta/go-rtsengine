@@ -78,9 +78,7 @@ func (m *MovementMechanic) start() {
 						movement.UpdateLastMovement()
 
 						// Free all squares to the pool.
-						for e := pathList.Front(); e != nil; e = e.Next() {
-							m.OurGame.ItemPool.Free(e.Value.(*Square))
-						}
+						m.OurGame.FreeList(pathList)
 					}
 				} // move?
 				runtime.Gosched()

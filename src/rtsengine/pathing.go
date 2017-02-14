@@ -76,7 +76,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			if destination.Eq(successor.Locus) {
 				closedList.PushBack(q)
 				closedList.PushBack(successor)
-				path.freeList(pool, openList)
+				path.FreeList(pool, openList)
 				path.freeArray(pool, i+1, successors)
 				return path.optimizePath(pool, closedList), nil
 			}
@@ -116,7 +116,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	} // openList non empty
 
 	// Free all the remaining successors in the open list.
-	path.freeList(pool, openList)
+	path.FreeList(pool, openList)
 
 	return path.optimizePath(pool, closedList), nil
 }
@@ -132,12 +132,11 @@ func (path *AStarPathing) freeArray(pool *Pool, i int, squares []*Square) {
 	}
 }
 
-// freeList will free every Square in the list l
-func (path *AStarPathing) freeList(pool *Pool, l *list.List) {
+// FreeList will free every Square in the list l
+func (path *AStarPathing) FreeList(pool *Pool, l *list.List) {
 	// Free all the remaining successors in the open list.
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Square)
-		pool.Free(square)
+		pool.Free(e.Value.(*Square))
 	}
 }
 
