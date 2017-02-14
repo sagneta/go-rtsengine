@@ -18,6 +18,8 @@ type flags struct {
 	host    *string
 	verbose *bool
 	quiet   *bool
+	width   *int
+	height  *int
 }
 
 func main() {
@@ -28,6 +30,8 @@ func main() {
 	cargs.host = flag.String("host", "localhost", "hostname of rts server")
 	cargs.verbose = flag.Bool("verbose", false, "Emit excessive progress reporting during rts server execution .")
 	cargs.quiet = flag.Bool("quiet", false, "Silent testing.")
+	cargs.width = flag.Int("width", 1000, "Width of the world.")
+	cargs.height = flag.Int("height", 1000, "Height of the world.")
 
 	// Command line arguments parsinmg
 	flag.Parse()
@@ -36,7 +40,7 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
-	game, err := rtsengine.NewGame("Game test", 10000, 1, 0, 50, 50, 100, 100)
+	game, err := rtsengine.NewGame("Game test", 10000, 1, 0, 50, 50, *cargs.width, *cargs.height)
 	if err != nil {
 		log.Print(err)
 		return
@@ -57,7 +61,7 @@ func main() {
 		_ = game.OurWorld.Grid.Set(&square.Locus, &fence)
 	}
 
-	game.OurWorld.Print()
+	//game.OurWorld.Print()
 
 	for e := pathList.Front(); e != nil; e = e.Next() {
 		square := e.Value.(*rtsengine.Square)

@@ -45,14 +45,14 @@ func (world *World) GenerateSimple() {
 	r1 := rand.New(s1)
 
 	// Trees
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10000; i++ {
 		xr := r1.Intn(world.Span.Dx())
 		yr := r1.Intn(world.Span.Dy())
 		world.Matrix[xr][yr].terrain = Trees
 	}
 
 	// Mountains
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10000; i++ {
 		xr := r1.Intn(world.Span.Dx())
 		yr := r1.Intn(world.Span.Dy())
 		world.Matrix[xr][yr].terrain = Mountains

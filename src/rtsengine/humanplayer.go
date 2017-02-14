@@ -186,7 +186,7 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			if !player.OurWorld.In(&worldPoint) {
 				continue
 			}
-			ourAcre := player.OurWorld.Matrix[worldPoint.X][worldPoint.Y]
+			ourAcre := &player.OurWorld.Matrix[worldPoint.X][worldPoint.Y]
 
 			// Partial results are sent only for occupied or non grassy areas.
 			if isPartial && !ourAcre.IsOccupiedOrNotGrass() {
