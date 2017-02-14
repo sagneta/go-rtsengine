@@ -162,6 +162,7 @@ func (ui *ReferenceUI) Start() {
 
 	screen := ui.game.Screen()
 	screenWidth, screenHeight := screen.Size()
+	fmt.Printf("w %d h %d\n", screenWidth, screenHeight)
 
 	ui.level = tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorGreen,
@@ -303,7 +304,8 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 
 // communicationPreamble will start the communication with the rtsengine.
 func (ui *ReferenceUI) communicationPreamble() {
-	//time.Sleep(time.Second * 2)
+	// give the UI some time to initialize.
+	time.Sleep(time.Second * 2)
 
 	var packet rtsengine.WirePacket
 
@@ -316,14 +318,16 @@ func (ui *ReferenceUI) communicationPreamble() {
 	}
 
 	// Send full View to set our UI to the entire view of the game for testing.
-	/*
-		packet.Command = rtsengine.FullView
-		err := ui.JSONEncoder.Encode(&packet)
-		if err != nil {
-			fmt.Println("Unexpected wire error", err)
-			return
-		}
-	*/
+	packet.Command = rtsengine.SetView
+
+	// They are flipped for our engine.
+	packet.ViewHeight, packet.ViewWidth = ui.game.Screen().Size()
+	err = ui.JSONEncoder.Encode(&packet)
+	if err != nil {
+		fmt.Println("Unexpected wire error", err)
+		return
+	}
+
 	// Force a partial refresh to place the initial acres and units on our screen.
 	packet.Command = rtsengine.PartialRefreshPlayerToUI
 	err = ui.JSONEncoder.Encode(&packet)

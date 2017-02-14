@@ -142,6 +142,10 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 			return err
 		}
 
+	case SetView:
+		player.View.Span = image.Rect(0, 0, packet.ViewWidth, packet.ViewHeight)
+		//fmt.Printf("w %d h %d\n", packet.ViewWidth, packet.ViewHeight)
+
 		// Return all non empty or non grass acres in the view.
 	case PartialRefreshPlayerToUI:
 		player.refreshPlayerToUI(true)
