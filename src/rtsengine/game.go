@@ -271,7 +271,7 @@ func (game *Game) GenerateUnits(player IPlayer) {
 	/////////////////////////////////////////////////////////////////////////
 	infantry := game.ItemPool.Infantry(1)
 	infantry[0].generate(player)
-	game.AddUnitWithoutCollision(player, infantry[0])
+	game.AddUnitCloseToPoint(player, infantry[0], &viewCenter, 10)
 
 }
 
@@ -285,15 +285,38 @@ func (game *Game) CommandChannelHandler() {
 	}
 }
 
-// AddUnitWithoutCollision will add a unit to this player
+// AddUnit will add a unit to this player
 // without a collision within the view.
-func (game *Game) AddUnitWithoutCollision(player IPlayer, unit IUnit) {
+func (game *Game) AddUnit(player IPlayer, unit IUnit) {
 	view := player.PlayerView()
 
 	var locus *image.Point
 	for {
 		locus = view.RandomPointInView()
-		if game.OurWorld.In(locus) {
+		if game.OurWorld.In(locus) && !game.OurWorld.Collision(locus) {
+			break
+		}
+	}
+
+	err := game.OurWorld.Add(unit, locus)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	unit.movement().CurrentLocation = locus
+
+	player.PlayerUnits().Add(unit)
+}
+
+// AddUnitCloseToPoint will add unit to player no further than radius away from the central point.
+// Will ensure no collisions
+func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image.Point, radius int) {
+	view := player.PlayerView()
+
+	var locus *image.Point
+	for {
+		locus = view.RandomPointClostToPoint(central, radius)
+		if game.OurWorld.In(locus) && !game.OurWorld.Collision(locus) {
 			break
 		}
 	}
