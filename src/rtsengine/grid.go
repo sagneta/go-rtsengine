@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"image"
 	"math"
+	"math/rand"
+	"time"
 )
 
 // Grid maintains an acre grid and its span.
@@ -19,6 +21,9 @@ type Grid struct {
 	// is located in world coordinates. If it is 0,0 then
 	// WorldOrigin == Grid
 	WorldOrigin image.Point
+
+	// Generator Random number generator for this view
+	Generator *rand.Rand
 }
 
 // GenerateGrid will initialize all internal structures.
@@ -27,6 +32,7 @@ type Grid struct {
 func (grid *Grid) GenerateGrid(worldLocation image.Point, width int, height int) {
 	grid.WorldOrigin = worldLocation
 	grid.Span = image.Rect(0, 0, height, width)
+	grid.Generator = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	// allocate 2d array row per row.
 	grid.Matrix = make([][]Acre, height)
@@ -158,4 +164,14 @@ func (grid *Grid) SqrtHDU32(x uint32) uint32 {
 		}
 	}
 	return uint32(r)
+}
+
+// Center returns the x,y center of this Grid.
+func (grid *Grid) Center() image.Point {
+	return image.Point{grid.Span.Min.X + (grid.Span.Dx() / 2), grid.Span.Min.Y + (grid.Span.Dy() / 2)}
+}
+
+//RandomPointInGrid returns a pointer to a point randomly selected within the grid.
+func (grid *Grid) RandomPointInGrid() *image.Point {
+	return &image.Point{grid.Generator.Intn(grid.Span.Max.X), grid.Generator.Intn(grid.Span.Max.Y)}
 }

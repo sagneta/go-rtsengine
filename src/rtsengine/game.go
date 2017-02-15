@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
-	"math/rand"
 	"net"
-	"time"
 )
 
 // Game is an actual game with UDP ports and IPlayers
@@ -249,38 +247,32 @@ func (game *Game) FreeList(l *list.List) {
 
 // GenerateUnits will construct the starting units per player.
 func (game *Game) GenerateUnits(player IPlayer) {
-	infantry := game.ItemPool.Infantry(1)
-	infantry[0].Owner = player
-	infantry[0].HitPoints = 100
-	infantry[0].Life = 100
-	infantry[0].AttackPoints = 2
-	infantry[0].AttackRange = 1
 
+	// Need general information about our grid and our view projection onto the grid.
 	view := player.PlayerView()
 	viewCenter := view.Center()
 	worldCenter := view.ToWorldPoint(&viewCenter)
 
-	// Now set a desintation point for a test
-	infantry[0].LastMovement = time.Now()
-	infantry[0].DeltaInMillis = 1000
+	/////////////////////////////////////////////////////////////////////////
+	//           HomeStead is special. Only one in center location         //
+	/////////////////////////////////////////////////////////////////////////
+	homestead := HomeStead{}
+	homestead.generate(player)
 
-	r1 := rand.New(rand.NewSource(time.Now().UnixNano()))
-	for {
-		destination := image.Point{r1.Intn(game.OurWorld.Span.Dx()), r1.Intn(game.OurWorld.Span.Dy())}
-		if game.OurWorld.In(&destination) {
-			infantry[0].MovementDestination = &destination
-			break
-		}
-	}
-
-	err := game.OurWorld.Add(infantry[0], &worldCenter)
+	err := game.OurWorld.Add(&homestead, &worldCenter)
 	if err != nil {
 		fmt.Print(err)
 	}
+	homestead.CurrentLocation = &worldCenter
+	player.PlayerUnits().Add(&homestead)
 
-	infantry[0].CurrentLocation = &worldCenter
+	/////////////////////////////////////////////////////////////////////////
+	//                               All Units                             //
+	/////////////////////////////////////////////////////////////////////////
+	infantry := game.ItemPool.Infantry(1)
+	infantry[0].generate(player)
+	game.AddUnitWithoutCollision(player, infantry[0])
 
-	player.PlayerUnits().Add(infantry[0])
 }
 
 // CommandChannelHandler will handle the command channel and dispatch
@@ -291,4 +283,27 @@ func (game *Game) CommandChannelHandler() {
 			_ = player.dispatch(packet)
 		}
 	}
+}
+
+// AddUnitWithoutCollision will add a unit to this player
+// without a collision within the view.
+func (game *Game) AddUnitWithoutCollision(player IPlayer, unit IUnit) {
+	view := player.PlayerView()
+
+	var locus *image.Point
+	for {
+		locus = view.RandomPointInView()
+		if game.OurWorld.In(locus) {
+			break
+		}
+	}
+
+	err := game.OurWorld.Add(unit, locus)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	unit.movement().CurrentLocation = locus
+
+	player.PlayerUnits().Add(unit)
 }

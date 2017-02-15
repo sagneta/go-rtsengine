@@ -1,6 +1,10 @@
 package rtsengine
 
-import "image"
+import (
+	"image"
+	"math/rand"
+	"time"
+)
 
 /*
  A View into the world grid
@@ -16,6 +20,9 @@ type View struct {
 	// is located in world coordinates. If it is 0,0 then
 	// WorldOrigin == Grid
 	WorldOrigin image.Point
+
+	// Generator Random number generator for this view
+	Generator *rand.Rand
 }
 
 // GenerateView will initialize all internal structures.
@@ -24,6 +31,8 @@ type View struct {
 func (view *View) GenerateView(worldLocation image.Point, width int, height int) {
 	view.WorldOrigin = worldLocation
 	view.Span = image.Rect(0, 0, height, width)
+
+	view.Generator = rand.New(rand.NewSource(time.Now().UnixNano()))
 }
 
 // ToViewPoint Converts world coordinates to view coordinates
@@ -49,4 +58,9 @@ func (view *View) Overlaps(other *View) bool {
 // Center returns the x,y center of this View.
 func (view *View) Center() image.Point {
 	return image.Point{view.Span.Min.X + (view.Span.Dx() / 2), view.Span.Min.Y + (view.Span.Dy() / 2)}
+}
+
+//RandomPointInView returns a pointer to a point randomly selected within the view.
+func (view *View) RandomPointInView() *image.Point {
+	return &image.Point{view.Generator.Intn(view.Span.Max.X), view.Generator.Intn(view.Span.Max.Y)}
 }
