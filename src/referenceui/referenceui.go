@@ -286,10 +286,16 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 			case rtsengine.Trees:
 				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x8C\xB2")
 				//r, _ := utf8.DecodeRuneInString("\xC2\xAE")
-				cell = tl.Cell{Fg: tl.ColorWhite, Bg: tl.ColorGreen, Ch: 'T'}
+				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 'T'}
 			}
 
 			switch acre.Unit {
+			case rtsengine.UnitFarm:
+				cell = tl.Cell{Fg: tl.ColorYellow, Ch: 'F'}
+
+			case rtsengine.UnitCavalry:
+				cell = tl.Cell{Fg: tl.ColorCyan, Ch: 'Z'}
+
 			case rtsengine.UnitInfantry:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'S'}
 
@@ -300,7 +306,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'C'}
 
 			case rtsengine.UnitGoldMine:
-				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'G'}
+				cell = tl.Cell{Fg: tl.ColorYellow, Ch: 'G'}
 
 			case rtsengine.UnitHomeStead:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'H'}
@@ -309,7 +315,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'P'}
 
 			case rtsengine.UnitStoneQuarry:
-				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'S'}
+				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 's'}
 
 			case rtsengine.UnitShip:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 's'}
@@ -318,7 +324,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 't'}
 
 			case rtsengine.UnitWoodPile:
-				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'W'}
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'w'}
 
 			case rtsengine.UnitFence:
 				//r, _ := utf8.DecodeRuneInString("\xE2\xAC\x9B")

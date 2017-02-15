@@ -273,6 +273,26 @@ func (game *Game) GenerateUnits(player IPlayer) {
 	infantry[0].generate(player)
 	game.AddUnitCloseToPoint(player, infantry[0], &viewCenter, 10)
 
+	farm := game.ItemPool.Farms(1)
+	farm[0].generate(player)
+	game.AddUnitCloseToPoint(player, farm[0], &viewCenter, 10)
+
+	cavalry := game.ItemPool.Cavalry(1)
+	cavalry[0].generate(player)
+	game.AddUnitCloseToPoint(player, cavalry[0], &viewCenter, 20)
+
+	woodpile := game.ItemPool.Woodpiles(1)
+	woodpile[0].generate(player)
+	game.AddUnitCloseToPoint(player, woodpile[0], &viewCenter, 30)
+
+	goldmine := game.ItemPool.Goldmines(1)
+	goldmine[0].generate(player)
+	game.AddUnitCloseToPoint(player, goldmine[0], &viewCenter, 30)
+
+	stonequarry := game.ItemPool.StoneQuarry(1)
+	stonequarry[0].generate(player)
+	game.AddUnitCloseToPoint(player, stonequarry[0], &viewCenter, 30)
+
 }
 
 // CommandChannelHandler will handle the command channel and dispatch
