@@ -52,6 +52,7 @@ func (m *MovementMechanic) start() {
 					if movement.CurrentLocation != nil && movement.MovementDestination != nil && !movement.CurrentLocation.Eq(*movement.MovementDestination) {
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
 						if err != nil {
+							movement.MovementDestination = nil
 							fmt.Print(err)
 							continue
 						}
