@@ -2,6 +2,7 @@ package rtsengine
 
 import (
 	"fmt"
+	"image"
 	"runtime"
 	"time"
 )
@@ -50,10 +51,14 @@ func (m *MovementMechanic) start() {
 				if movement.CanMove() {
 					// As long as the MovementDestination exists and is different than the current location (obviously)
 					if movement.CurrentLocation != nil && movement.MovementDestination != nil && !movement.CurrentLocation.Eq(*movement.MovementDestination) {
+						//fmt.Printf("Move Unit(%d) in movementmech to %s. \n", unit.id(), movement.MovementDestination)
+
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
 						if err != nil {
-							movement.MovementDestination = nil
+							movement.MovementDestination = nil // stop further movement
 							fmt.Print(err)
+							// Free all squares to the pool.
+							m.OurGame.FreeList(pathList)
 							continue
 						}
 
@@ -68,9 +73,11 @@ func (m *MovementMechanic) start() {
 							}
 
 							// Ok take the next point and use that and move to that point.
-							// That will be our new current destination
-							_ = m.OurWorld.Add(unit, &square.Locus)
-							movement.CurrentLocation = &square.Locus
+							// That will be our new current destination.
+							// Ensure to use a copy of the square as the square is pooled.
+							newLocation := image.Pt(square.Locus.X, square.Locus.Y)
+							_ = m.OurWorld.Add(unit, &newLocation)
+							movement.CurrentLocation = &newLocation
 							break
 						}
 
