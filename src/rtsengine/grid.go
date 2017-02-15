@@ -115,6 +115,22 @@ func (grid *Grid) Distance(source *image.Point, destination *image.Point) float6
 	return math.Sqrt(float64(x2 + y2))
 }
 
+// DistanceManhattan is described here: http://www.policyalmanac.org/games/heuristics.htm
+func (grid *Grid) DistanceManhattan(source *image.Point, destination *image.Point) float64 {
+	return 10.0 * (math.Abs(float64(source.X-destination.X)) + math.Abs(float64(source.Y-destination.Y)))
+}
+
+// DistanceDiagonelShortcut is described here: http://www.policyalmanac.org/games/heuristics.htm
+func (grid *Grid) DistanceDiagonelShortcut(source *image.Point, destination *image.Point) float64 {
+	xDistance := math.Abs(float64(source.X - destination.X))
+	yDistance := math.Abs(float64(source.Y - destination.Y))
+	if xDistance > yDistance {
+		return 14.0*yDistance + 10.0*(xDistance-yDistance)
+	}
+
+	return 14.0*xDistance + 10.0*(yDistance-xDistance)
+}
+
 // DistanceInteger is the distance algorithm using integer arithmetic. Don't use intermediate variables.
 func (grid *Grid) DistanceInteger(source *image.Point, destination *image.Point) int {
 	return int(grid.SqrtHDU32(uint32((destination.X-source.X)*(destination.X-source.X) + (destination.Y-source.Y)*(destination.Y-source.Y))))

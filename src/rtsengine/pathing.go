@@ -82,11 +82,11 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			}
 
 			//successor.g = q.g + distance between successor and q
-			D := grid.Distance(&q.Locus, &successor.Locus)
+			D := grid.DistanceDiagonelShortcut(&q.Locus, &successor.Locus)
 			successor.G = q.G + D
 
 			// successor.h = distance from goal to successor
-			successor.H = grid.Distance(&successor.Locus, destination)
+			successor.H = grid.DistanceDiagonelShortcut(&successor.Locus, destination)
 
 			// successor.f = successor.g + successor.h
 			successor.F = successor.G + successor.H
