@@ -209,44 +209,68 @@ func (path *AStarPathing) constructSuccessor(pool *Pool, q *Square) []*Square {
 	successors[0].Locus.Y = q.Locus.Y - 1
 	successors[0].Parent = q
 	successors[0].Position = q.Position + 1
+	successors[0].F = 0
+	successors[0].G = 0
+	successors[0].H = 0
 
 	// 2
 	successors[1].Locus.X = q.Locus.X - 1
 	successors[1].Parent = q
 	successors[1].Position = q.Position + 1
+	successors[1].F = 0
+	successors[1].G = 0
+	successors[1].H = 0
 
 	// 3
 	successors[2].Locus.X = q.Locus.X - 1
 	successors[2].Locus.Y = q.Locus.Y + 1
 	successors[2].Parent = q
 	successors[2].Position = q.Position + 1
+	successors[2].F = 0
+	successors[2].G = 0
+	successors[2].H = 0
 
 	// 4
 	successors[3].Locus.Y = q.Locus.Y + 1
 	successors[3].Parent = q
 	successors[3].Position = q.Position + 1
+	successors[3].F = 0
+	successors[3].G = 0
+	successors[3].H = 0
 
 	// 5
 	successors[4].Locus.X = q.Locus.X + 1
 	successors[4].Locus.Y = q.Locus.Y + 1
 	successors[4].Parent = q
 	successors[4].Position = q.Position + 1
+	successors[4].F = 0
+	successors[4].G = 0
+	successors[4].H = 0
 
 	// 6
 	successors[5].Locus.X = q.Locus.X + 1
 	successors[5].Parent = q
 	successors[5].Position = q.Position + 1
+	successors[5].F = 0
+	successors[5].G = 0
+	successors[5].H = 0
 
 	// 7
 	successors[6].Locus.X = q.Locus.X + 1
 	successors[6].Locus.Y = q.Locus.Y - 1
 	successors[6].Parent = q
 	successors[6].Position = q.Position + 1
+	successors[6].F = 0
+	successors[6].G = 0
+	successors[6].H = 0
 
 	// 8
 	successors[7].Locus.Y = q.Locus.Y - 1
 	successors[7].Parent = q
 	successors[7].Position = q.Position + 1
+	successors[7].F = 0
+	successors[7].G = 0
+	successors[7].H = 0
 
 	return successors
 }
