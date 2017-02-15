@@ -15,6 +15,7 @@ import (
 // A simple description here: http://www.policyalmanac.org/games/aStarTutorial.htm
 // Psuedocode here at the bottom of this: http://web.mit.edu/eranki/www/tutorials/search/
 // https://github.com/beefsack/go-astar/blob/master/astar.go
+// Smoothing to avoid diagonels: http://www.gamasutra.com/view/feature/131505/toward_more_realistic_pathfinding.php?page=1
 type AStarPathing struct {
 	// We need to only path-find one at a time otherwise
 	// if we path-find as the world changes it will end badly.
