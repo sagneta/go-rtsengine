@@ -54,5 +54,7 @@ type IUnit interface {
 	life() int
 	movement() *Movement
 	owner() IPlayer
+	generate(player IPlayer) IUnit
+
 	sendPacketToChannel(command WireCommand, channel chan *WirePacket)
 }

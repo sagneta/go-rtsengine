@@ -1,5 +1,10 @@
 package rtsengine
 
+import (
+	"math"
+	"time"
+)
+
 /*
  Implements the  unit
 
@@ -16,4 +21,16 @@ func (unit *Castle) name() string {
 
 func (unit *Castle) unitType() UnitType {
 	return UnitCastle
+}
+
+func (unit *Castle) generate(player IPlayer) IUnit {
+	unit.Owner = player
+	unit.HitPoints = 5000
+	unit.Life = 5000
+	unit.AttackPoints = 10
+	unit.AttackRange = 5
+	unit.LastMovement = time.Now()
+	unit.DeltaInMillis = math.MaxInt64
+
+	return unit
 }

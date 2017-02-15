@@ -1,6 +1,9 @@
 package rtsengine
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 /*
  Implements the  unit
@@ -27,7 +30,7 @@ func (unit *HomeStead) generate(player IPlayer) IUnit {
 	unit.AttackPoints = 1
 	unit.AttackRange = 2
 	unit.LastMovement = time.Now()
-	unit.DeltaInMillis = 1000
+	unit.DeltaInMillis = math.MaxInt64
 
 	return unit
 }
