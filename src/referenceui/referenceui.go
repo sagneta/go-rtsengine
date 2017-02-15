@@ -181,7 +181,7 @@ func (ui *ReferenceUI) Start() {
 	}
 
 	// Set the character at position (0, 0) on the entity.
-	ui.screenController.SetCell(0, 0, &tl.Cell{Fg: tl.ColorRed, Ch: '.'})
+	ui.screenController.SetCell(0, 0, &tl.Cell{Fg: tl.ColorRed, Ch: ' '})
 	ui.level.AddEntity(&ui.screenController)
 
 	// Dial up the rtsengine.
