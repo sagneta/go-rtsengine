@@ -298,18 +298,20 @@ func (game *Game) AddUnit(player IPlayer, unit IUnit) {
 		}
 	}
 
-	err := game.OurWorld.Add(unit, locus)
+	worldLocus := view.ToWorldPoint(locus)
+
+	err := game.OurWorld.Add(unit, &worldLocus)
 	if err != nil {
 		fmt.Print(err)
 	}
 
-	unit.movement().CurrentLocation = locus
+	unit.movement().CurrentLocation = &worldLocus
 
 	player.PlayerUnits().Add(unit)
 }
 
 // AddUnitCloseToPoint will add unit to player no further than radius away from the central point.
-// Will ensure no collisions
+// Will ensure no collisions. Central point is in VIEW coordinates.
 func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image.Point, radius int) {
 	view := player.PlayerView()
 
@@ -321,12 +323,14 @@ func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image
 		}
 	}
 
-	err := game.OurWorld.Add(unit, locus)
+	worldLocus := view.ToWorldPoint(locus)
+
+	err := game.OurWorld.Add(unit, &worldLocus)
 	if err != nil {
 		fmt.Print(err)
 	}
 
-	unit.movement().CurrentLocation = locus
+	unit.movement().CurrentLocation = &worldLocus
 
 	player.PlayerUnits().Add(unit)
 }
