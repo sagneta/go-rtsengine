@@ -80,7 +80,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 				closedList.PushBack(successor)
 				path.FreeList(pool, openList)
 				path.freeArray(pool, i+1, successors)
-				//return path.optimizePath(pool, closedList), nil
+
 				return path.smoothPath(grid, pool, closedList), nil
 			}
 
@@ -122,7 +122,6 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	path.FreeList(pool, openList)
 
 	return path.smoothPath(grid, pool, closedList), nil
-	//return path.optimizePath(pool, closedList), nil
 }
 
 // freeArray will free all squares in array from i .. len(squares)-1
