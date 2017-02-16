@@ -68,7 +68,7 @@ func (world *World) GenerateSimple() {
 	world.Matrix[centerPoint.X][centerPoint.Y].terrain = Grass
 
 	// Generate a straight fence and go through anything.
-	points := world.DirectLineBresenham2(&image.Point{20, 20}, &image.Point{40, 40})
+	points := world.DirectLineBresenham(&image.Point{20, 20}, &image.Point{40, 40})
 
 	for _, point := range points {
 		world.Matrix[point.X][point.Y].terrain = Mountains

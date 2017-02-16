@@ -147,20 +147,21 @@ func (path *AStarPathing) FreeList(pool *Pool, l *list.List) {
 // smoothPath will smooth the path making it more direct using a variation walkable algorithm below:
 // http://www.gamasutra.com/view/feature/131505/toward_more_realistic_pathfinding.php?page=2
 func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list.List {
-	result := path.optimizePath(pool, l)
+	result := list.New()
+	l = path.optimizePath(pool, l)
 
 	checkPoint := l.Front().Value.(*Square)
 	for e := l.Front().Next(); e != nil; e = e.Next() {
 		currentPoint := e.Value.(*Square)
 		_, ok := path.walkable(grid, checkPoint, currentPoint)
 		if ok {
-			pool.Free(currentPoint)
 			continue
 		}
 
 		result.PushBack(checkPoint)
 		checkPoint = currentPoint
 	}
+	result.PushBack(checkPoint) // Don't forget the last point
 
 	// Now we have a sparse list of squares with gaps between them.
 	// We fill in the gaps with straight lines.
@@ -172,23 +173,27 @@ func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list
 	smoothPath.PushBack(s1)
 	for e := result.Front().Next(); e != nil; e = e.Next() {
 		to := e.Value.(*Square)
-		points := grid.DirectLineBresenham2(&from.Locus, &to.Locus)
+		points := grid.DirectLineBresenham(&from.Locus, &to.Locus)
 
 		points = points[1:] // Cull the source
-		for _, point := range points {
-			s1 := pool.Squares(1)[0]
-			s1.Locus = point
-			smoothPath.PushBack(s1)
+
+		squares := pool.Squares(len(points))
+		for i, point := range points {
+			squares[i].Locus = point
+			smoothPath.PushBack(squares[i])
 		}
 	}
 
+	// Free them all. You are done with them.
 	path.FreeList(pool, result)
 
 	return smoothPath
 }
 
+// walkable returns all the points between from and to if it is walkable (no collisions) with a true boolean.
+// If no such direct walkable path exists then nil, false is returned.
 func (path *AStarPathing) walkable(grid *Grid, from *Square, to *Square) ([]image.Point, bool) {
-	points := grid.DirectLineBresenham2(&from.Locus, &to.Locus)
+	points := grid.DirectLineBresenham(&from.Locus, &to.Locus)
 
 	for _, point := range points {
 		if grid.Collision(&point) {

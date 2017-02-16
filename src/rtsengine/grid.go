@@ -136,11 +136,11 @@ func (grid *Grid) DistanceInteger(source *image.Point, destination *image.Point)
 	return int(grid.SqrtHDU32(uint32((destination.X-source.X)*(destination.X-source.X) + (destination.Y-source.Y)*(destination.Y-source.Y))))
 }
 
-// DirectLineBresenham2 returns a direct line between to points.
+// DirectLineBresenham returns a direct line between to points.
 // This is an integer implemenation and works on all quadrants
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 // Actual implementation https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Go
-func (grid *Grid) DirectLineBresenham2(source *image.Point, destination *image.Point) []image.Point {
+func (grid *Grid) DirectLineBresenham(source *image.Point, destination *image.Point) []image.Point {
 	x0 := source.X
 	y0 := source.Y
 
