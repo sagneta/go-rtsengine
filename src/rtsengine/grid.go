@@ -136,43 +136,53 @@ func (grid *Grid) DistanceInteger(source *image.Point, destination *image.Point)
 	return int(grid.SqrtHDU32(uint32((destination.X-source.X)*(destination.X-source.X) + (destination.Y-source.Y)*(destination.Y-source.Y))))
 }
 
-// DirectLineBresenham returns a direct line between to points.
+// DirectLineBresenham2 returns a direct line between to points.
+// This is an integer implemenation and works on all quadrants
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-func (grid *Grid) DirectLineBresenham(source *image.Point, destination *image.Point) []image.Point {
+// Actual implementation https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Go
+func (grid *Grid) DirectLineBresenham2(source *image.Point, destination *image.Point) []image.Point {
+	x0 := source.X
+	y0 := source.Y
+
+	x1 := destination.X
+	y1 := destination.Y
 	var waypoints = make([]image.Point, 1)
 
-	// no slope (vertical line)
-	if source.Y == destination.Y {
-		for x := source.X; x <= destination.X; x++ {
-			waypoints = append(waypoints, image.Point{x, source.Y})
-		}
+	// implemented straight from WP pseudocode
+	dx := x1 - x0
+	if dx < 0 {
+		dx = -dx
+	}
+	dy := y1 - y0
+	if dy < 0 {
+		dy = -dy
+	}
+	var sx, sy int
+	if x0 < x1 {
+		sx = 1
 	} else {
-		// swap if desination < source
-		if destination.Y < source.Y {
-			source, destination = destination, source
+		sx = -1
+	}
+	if y0 < y1 {
+		sy = 1
+	} else {
+		sy = -1
+	}
+	err := dx - dy
+
+	for {
+		waypoints = append(waypoints, image.Point{x0, y0})
+		if x0 == x1 && y0 == y1 {
+			break
 		}
-
-		deltaX := float64(destination.X - source.X)
-		deltaY := float64(destination.Y - source.Y)
-		error := -1.0
-		deltaErr := math.Abs(deltaX / deltaY)
-
-		y := float64(source.Y)
-		x := float64(source.X)
-		for ; y <= float64(destination.Y); y++ {
-			waypoints = append(waypoints, image.Point{int(x), int(y)})
-			error += deltaErr
-
-			if error >= 0.0 {
-				x++
-				waypoints = append(waypoints, image.Point{int(x), int(y)})
-				error -= 1.0
-			}
+		e2 := 2 * err
+		if e2 > -dy {
+			err -= dy
+			x0 += sx
 		}
-
-		lastPoint := waypoints[len(waypoints)-1]
-		if !lastPoint.Eq(*destination) {
-			waypoints = waypoints[:len(waypoints)-1]
+		if e2 < dx {
+			err += dx
+			y0 += sy
 		}
 	}
 

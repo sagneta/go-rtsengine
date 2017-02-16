@@ -80,7 +80,8 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 				closedList.PushBack(successor)
 				path.FreeList(pool, openList)
 				path.freeArray(pool, i+1, successors)
-				return path.optimizePath(pool, closedList), nil
+				//return path.optimizePath(pool, closedList), nil
+				return path.smoothPath(grid, pool, closedList), nil
 			}
 
 			//successor.g = q.g + distance between successor and q
@@ -120,7 +121,8 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	// Free all the remaining successors in the open list.
 	path.FreeList(pool, openList)
 
-	return path.optimizePath(pool, closedList), nil
+	return path.smoothPath(grid, pool, closedList), nil
+	//return path.optimizePath(pool, closedList), nil
 }
 
 // freeArray will free all squares in array from i .. len(squares)-1
@@ -140,6 +142,61 @@ func (path *AStarPathing) FreeList(pool *Pool, l *list.List) {
 	for e := l.Front(); e != nil; e = e.Next() {
 		pool.Free(e.Value.(*Square))
 	}
+}
+
+// smoothPath will smooth the path making it more direct using a variation walkable algorithm below:
+// http://www.gamasutra.com/view/feature/131505/toward_more_realistic_pathfinding.php?page=2
+func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list.List {
+	result := path.optimizePath(pool, l)
+
+	checkPoint := l.Front().Value.(*Square)
+	for e := l.Front().Next(); e != nil; e = e.Next() {
+		currentPoint := e.Value.(*Square)
+		_, ok := path.walkable(grid, checkPoint, currentPoint)
+		if ok {
+			pool.Free(currentPoint)
+			continue
+		}
+
+		result.PushBack(checkPoint)
+		checkPoint = currentPoint
+	}
+
+	// Now we have a sparse list of squares with gaps between them.
+	// We fill in the gaps with straight lines.
+	smoothPath := list.New()
+
+	from := result.Front().Value.(*Square)
+	s1 := pool.Squares(1)[0]
+	s1.Locus = from.Locus
+	smoothPath.PushBack(s1)
+	for e := result.Front().Next(); e != nil; e = e.Next() {
+		to := e.Value.(*Square)
+		points := grid.DirectLineBresenham2(&from.Locus, &to.Locus)
+
+		points = points[1:] // Cull the source
+		for _, point := range points {
+			s1 := pool.Squares(1)[0]
+			s1.Locus = point
+			smoothPath.PushBack(s1)
+		}
+	}
+
+	path.FreeList(pool, result)
+
+	return smoothPath
+}
+
+func (path *AStarPathing) walkable(grid *Grid, from *Square, to *Square) ([]image.Point, bool) {
+	points := grid.DirectLineBresenham2(&from.Locus, &to.Locus)
+
+	for _, point := range points {
+		if grid.Collision(&point) {
+			return nil, false
+		}
+	}
+
+	return points, true
 }
 
 // optimizePath will optimize the path list passed as a parameter. Any culled
