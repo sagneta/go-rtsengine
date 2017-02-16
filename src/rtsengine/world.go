@@ -58,12 +58,6 @@ func (world *World) GenerateSimple() {
 		world.Matrix[xr][yr].terrain = Mountains
 	}
 
-	//world.Matrix[0][0].terrain = Trees
-	//world.Matrix[0][1].terrain = Trees
-	//world.Matrix[0][2].terrain = Trees
-	//world.Matrix[0][3].terrain = Trees
-	//world.Matrix[0][4].terrain = Trees
-
 	centerPoint := world.Center()
 	world.Matrix[centerPoint.X][centerPoint.Y].terrain = Grass
 
