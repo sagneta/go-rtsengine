@@ -136,6 +136,49 @@ func (grid *Grid) DistanceInteger(source *image.Point, destination *image.Point)
 	return int(grid.SqrtHDU32(uint32((destination.X-source.X)*(destination.X-source.X) + (destination.Y-source.Y)*(destination.Y-source.Y))))
 }
 
+// DirectLineBresenham returns a direct line between to points.
+// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+func (grid *Grid) DirectLineBresenham(source *image.Point, destination *image.Point) []image.Point {
+	var waypoints = make([]image.Point, 1)
+
+	// no slope (vertical line)
+	if source.Y == destination.Y {
+		for x := source.X; x <= destination.X; x++ {
+			waypoints = append(waypoints, image.Point{x, source.Y})
+		}
+	} else {
+		// swap if desination < source
+		if destination.Y < source.Y {
+			source, destination = destination, source
+		}
+
+		deltaX := float64(destination.X - source.X)
+		deltaY := float64(destination.Y - source.Y)
+		error := -1.0
+		deltaErr := math.Abs(deltaX / deltaY)
+
+		y := float64(source.Y)
+		x := float64(source.X)
+		for ; y <= float64(destination.Y); y++ {
+			waypoints = append(waypoints, image.Point{int(x), int(y)})
+			error += deltaErr
+
+			if error >= 0.0 {
+				x++
+				waypoints = append(waypoints, image.Point{int(x), int(y)})
+				error -= 1.0
+			}
+		}
+
+		lastPoint := waypoints[len(waypoints)-1]
+		if !lastPoint.Eq(*destination) {
+			waypoints = waypoints[:len(waypoints)-1]
+		}
+	}
+
+	return waypoints
+}
+
 // Print the world as ascii text.
 func (grid *Grid) Print() {
 	for i := range grid.Matrix {

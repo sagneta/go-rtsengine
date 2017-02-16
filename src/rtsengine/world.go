@@ -58,14 +58,21 @@ func (world *World) GenerateSimple() {
 		world.Matrix[xr][yr].terrain = Mountains
 	}
 
-	world.Matrix[0][0].terrain = Trees
-	world.Matrix[0][1].terrain = Trees
-	world.Matrix[0][2].terrain = Trees
-	world.Matrix[0][3].terrain = Trees
-	world.Matrix[0][4].terrain = Trees
+	//world.Matrix[0][0].terrain = Trees
+	//world.Matrix[0][1].terrain = Trees
+	//world.Matrix[0][2].terrain = Trees
+	//world.Matrix[0][3].terrain = Trees
+	//world.Matrix[0][4].terrain = Trees
 
 	centerPoint := world.Center()
 	world.Matrix[centerPoint.X][centerPoint.Y].terrain = Grass
+
+	// Generate a straight fence and go through anything.
+	//points := world.DirectLineNaive(&image.Point{20, 0}, &image.Point{40, 10})
+
+	//for _, point := range points {
+	//	world.Matrix[point.X][point.Y].unit = &Fence{}
+	//}
 }
 
 // Center returns the x,y center of this View.
