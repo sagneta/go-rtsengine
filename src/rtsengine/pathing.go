@@ -15,7 +15,7 @@ import (
 // A simple description here: http://www.policyalmanac.org/games/aStarTutorial.htm
 // Psuedocode here at the bottom of this: http://web.mit.edu/eranki/www/tutorials/search/
 // https://github.com/beefsack/go-astar/blob/master/astar.go
-// Smoothing to avoid diagonels: http://www.gamasutra.com/view/feature/131505/toward_more_realistic_pathfinding.php?page=1
+// Smoothing to avoid diagonals: http://www.gamasutra.com/view/feature/131505/toward_more_realistic_pathfinding.php?page=1
 // Basic line scan/ploting algorithm: https://en.wikipedia.org/wiki/Line_drawing_algorithm
 type AStarPathing struct {
 	// We need to only path-find one at a time otherwise
@@ -32,12 +32,6 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	if !grid.In(source) {
 		return nil, fmt.Errorf("Source not in grid! (%d,%d)", source.X, source.Y)
 	}
-
-	/*
-		if grid.Collision(source) {
-			return nil, fmt.Errorf("Source collision! (%d,%d)", source.X, source.Y)
-		}
-	*/
 
 	if !grid.In(destination) || grid.Collision(destination) {
 		return nil, fmt.Errorf("Destination not in grid or collision! (%d,%d)", destination.X, destination.Y)

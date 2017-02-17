@@ -146,6 +146,8 @@ func (grid *Grid) DirectLineBresenham(source *image.Point, destination *image.Po
 
 	x1 := destination.X
 	y1 := destination.Y
+
+	// Basic estimate of distance for initial size
 	var waypoints = make([]image.Point, 1)
 
 	// implemented straight from WP pseudocode
