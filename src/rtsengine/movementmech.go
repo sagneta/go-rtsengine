@@ -53,11 +53,22 @@ func (m *MovementMechanic) start() {
 					if movement.CurrentLocation != nil && movement.MovementDestination != nil && !movement.CurrentLocation.Eq(*movement.MovementDestination) {
 						//fmt.Printf("Move Unit(%d) in movementmech to %s. \n", unit.id(), movement.MovementDestination)
 
+						// Check if a waypoint has already been calculated.
+						// If so then continue down the waypath, making certain to free each waypoint upon use.
+						// Steps
+						// * If point in waypath exists, pop it off
+						// * make a copy of waypoint and free it.
+						// * removeAt the current unit
+						// * add current unit to new location
+						// * update currentlocation
+						// * sendpacket
+						// * updatelastmovement
+
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
 						if err != nil {
 							movement.MovementDestination = nil // stop further movement
 							fmt.Print(err)
-							// Free all squares to the pool.
+							// Free all waypoints to the pool.
 							m.OurGame.FreeList(pathList)
 							continue
 						}
@@ -65,19 +76,22 @@ func (m *MovementMechanic) start() {
 						// Remove the unit from the world and skip through the A* path
 						m.OurWorld.RemoveAt(unit, movement.CurrentLocation)
 						for e := pathList.Front(); e != nil; e = e.Next() {
-							square := e.Value.(*Waypoint)
+							waypoint := e.Value.(*Waypoint)
 
 							// Skip the current location
-							if square.Locus.Eq(*movement.CurrentLocation) {
+							if waypoint.Locus.Eq(*movement.CurrentLocation) {
 								continue
 							}
 
 							// Ok take the next point and use that and move to that point.
 							// That will be our new current destination.
-							// Ensure to use a copy of the square as the square is pooled.
-							newLocation := image.Pt(square.Locus.X, square.Locus.Y)
+							// Ensure to use a copy of the waypoint as the waypoint is pooled.
+							newLocation := image.Pt(waypoint.Locus.X, waypoint.Locus.Y)
 							_ = m.OurWorld.Add(unit, &newLocation)
 							movement.CurrentLocation = &newLocation
+
+							// Remove the head of the pathList as that will be the current location.
+							// Insert the calculated pathList as the current waypath
 							break
 						}
 
@@ -85,8 +99,8 @@ func (m *MovementMechanic) start() {
 						unit.sendPacketToChannel(MoveUnit, m.CommandChannel)
 						movement.UpdateLastMovement()
 
-						// Free all squares to the pool.
-						m.OurGame.FreeList(pathList)
+						// Free all waypoints to the pool.
+						m.OurGame.FreeList(pathList) // REMOVE THIS IF WE STORE THE WAYPATH
 					}
 				} // move?
 				runtime.Gosched()

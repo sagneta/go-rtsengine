@@ -24,7 +24,7 @@ type AStarPathing struct {
 }
 
 // FindPath will find a path between source and destination Points and
-// returns a list of Squares of the proper path.
+// returns a list of Waypoints of the proper path.
 // All coordinates in world coordinates (absolute coordinates) please.
 func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, destination *image.Point) (*list.List, error) {
 
@@ -46,8 +46,8 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	closedList := list.New()
 	openList := list.New()
 
-	// Starting square. 0 out the cost.
-	q := pool.Squares(1)[0]
+	// Starting waypoint. 0 out the cost.
+	q := pool.Waypoints(1)[0]
 	q.F = 0
 	q.G = 0
 	q.H = 0
@@ -60,7 +60,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 
 	// While the open list is not empty
 	for openList.Len() > 0 {
-		//find the square with the least f on the open list, call it "q"
+		//find the waypoint with the least f on the open list, call it "q"
 		//remove q from the open list
 		q = path.leastF(openList)
 
@@ -94,21 +94,21 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 			// successor.f = successor.g + successor.h
 			successor.F = successor.G + successor.H
 
-			//  if a square with the same position as successor is in the OPEN list
+			//  if a waypoint with the same position as successor is in the OPEN list
 			//  exists and has a lower f than successor, skip this successor
 			if path.skipSuccessor(successor, openList) {
 				pool.Free(successor)
 				continue
 			}
 
-			// if a square with the same position as successor is in the CLOSED list
+			// if a waypoint with the same position as successor is in the CLOSED list
 			// exists has a lower f than successor, skip this successor
 			if path.skipSuccessor(successor, closedList) {
 				pool.Free(successor)
 				continue
 			}
 
-			// otherwise, add the square to the open list
+			// otherwise, add the waypoint to the open list
 			openList.PushBack(successor)
 
 		} // for successors
@@ -124,18 +124,18 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	return path.smoothPath(grid, pool, closedList), nil
 }
 
-// freeArray will free all squares in array from i .. len(squares)-1
-func (path *AStarPathing) freeArray(pool *Pool, i int, squares []*Waypoint) {
-	if i >= len(squares) {
+// freeArray will free all waypoints in array from i .. len(waypoints)-1
+func (path *AStarPathing) freeArray(pool *Pool, i int, waypoints []*Waypoint) {
+	if i >= len(waypoints) {
 		return
 	}
 
-	for ; i < len(squares); i++ {
-		pool.Free(squares[i])
+	for ; i < len(waypoints); i++ {
+		pool.Free(waypoints[i])
 	}
 }
 
-// FreeList will free every Square in the list l
+// FreeList will free every Waypoint in the list l
 func (path *AStarPathing) FreeList(pool *Pool, l *list.List) {
 	// Free all the remaining successors in the open list.
 	for e := l.Front(); e != nil; e = e.Next() {
@@ -162,12 +162,12 @@ func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list
 	}
 	result.PushBack(checkPoint) // Don't forget the last point
 
-	// Now we have a sparse list of squares with gaps between them.
+	// Now we have a sparse list of waypoints with gaps between them.
 	// We fill in the gaps with straight lines.
 	smoothPath := list.New()
 
 	from := result.Front().Value.(*Waypoint)
-	s1 := pool.Squares(1)[0]
+	s1 := pool.Waypoints(1)[0]
 	s1.Locus = from.Locus
 	smoothPath.PushBack(s1)
 	for e := result.Front().Next(); e != nil; e = e.Next() {
@@ -176,10 +176,10 @@ func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list
 
 		points = points[1:] // Cull the source
 
-		squares := pool.Squares(len(points))
+		waypoints := pool.Waypoints(len(points))
 		for i, point := range points {
-			squares[i].Locus = point
-			smoothPath.PushBack(squares[i])
+			waypoints[i].Locus = point
+			smoothPath.PushBack(waypoints[i])
 		}
 	}
 
@@ -204,28 +204,28 @@ func (path *AStarPathing) walkable(grid *Grid, from *Waypoint, to *Waypoint) ([]
 }
 
 // optimizePath will optimize the path list passed as a parameter. Any culled
-// squares are freed from the pool.
+// waypoints are freed from the pool.
 //
 // A path list will contain duplicates at each _position_. Thus you want to
 // iterate over the list and remove duplicates at each _position_ leaving the
-// square with the least F in the path list.
+// waypoint with the least F in the path list.
 // For F ties only one is chosen.
 func (path *AStarPathing) optimizePath(pool *Pool, l *list.List) *list.List {
 	var m map[int]*Waypoint
 
 	m = make(map[int]*Waypoint)
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Waypoint)
+		waypoint := e.Value.(*Waypoint)
 
-		p, ok := m[square.Position]
+		p, ok := m[waypoint.Position]
 
 		if !ok {
-			m[square.Position] = square
+			m[waypoint.Position] = waypoint
 		} else {
-			if p.F <= square.F {
-				pool.Free(square)
+			if p.F <= waypoint.F {
+				pool.Free(waypoint)
 			} else {
-				m[square.Position] = square
+				m[waypoint.Position] = waypoint
 				pool.Free(p)
 			}
 		}
@@ -247,9 +247,9 @@ func (path *AStarPathing) optimizePath(pool *Pool, l *list.List) *list.List {
 // F than the successor at the same position, returns TRUE.
 func (path *AStarPathing) skipSuccessor(successor *Waypoint, l *list.List) bool {
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Waypoint)
+		waypoint := e.Value.(*Waypoint)
 
-		if square.Position == successor.Position && square.F <= successor.F {
+		if waypoint.Position == successor.Position && waypoint.F <= successor.F {
 			return true
 		}
 	}
@@ -259,13 +259,13 @@ func (path *AStarPathing) skipSuccessor(successor *Waypoint, l *list.List) bool 
 
 // constructSuccessor will construct 8 successors with parent q from the Pool pool.
 func (path *AStarPathing) constructSuccessor(pool *Pool, q *Waypoint) []*Waypoint {
-	// The successors are the adjoining squares with the source S
+	// The successors are the adjoining waypoints with the source S
 	// in the middle. See below. It moves clockwise. We index
 	// from zero so index 0 is 1 below.
 	// 1  2  3
 	// 8  S  4
 	// 7  6  5
-	successors := pool.Squares(8)
+	successors := pool.Waypoints(8)
 
 	// 1
 	successors[0].Locus.X = q.Locus.X - 1
@@ -338,21 +338,21 @@ func (path *AStarPathing) constructSuccessor(pool *Pool, q *Waypoint) []*Waypoin
 	return successors
 }
 
-// leastF returns the Square with the least F within list l
-// AND remove that Square from list l.
+// leastF returns the Waypoint with the least F within list l
+// AND remove that Waypoint from list l.
 // Returns nil if no item exists.
 func (path *AStarPathing) leastF(l *list.List) *Waypoint {
 
-	var leastSquare *Waypoint
-	var leastSquareE *list.Element
+	var leastWaypoint *Waypoint
+	var leastWaypointE *list.Element
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Waypoint)
-		if leastSquare == nil || square.F < leastSquare.F {
-			leastSquare = square
-			leastSquareE = e
+		waypoint := e.Value.(*Waypoint)
+		if leastWaypoint == nil || waypoint.F < leastWaypoint.F {
+			leastWaypoint = waypoint
+			leastWaypointE = e
 		}
 	}
 
-	l.Remove(leastSquareE)
-	return leastSquare
+	l.Remove(leastWaypointE)
+	return leastWaypoint
 }

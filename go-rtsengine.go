@@ -65,7 +65,7 @@ func main() {
 	*/
 
 	game.FreeList(pathList)
-	game.ItemPool.PrintAllocatedSquares()
+	game.ItemPool.PrintAllocatedWaypoints()
 
 	log.Printf("\n\nPathfinding  took %s\n\n", elapsed)
 

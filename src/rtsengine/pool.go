@@ -38,7 +38,7 @@ type Pool struct {
 	muWalls     sync.Mutex
 	muWoodpiles sync.Mutex
 	muPeasants  sync.Mutex
-	muSquares   sync.Mutex
+	muWaypoints sync.Mutex
 
 	// Units
 	farms     []Farm
@@ -57,7 +57,7 @@ type Pool struct {
 	peasants  []Peasant
 
 	// Misc
-	squares []Waypoint
+	waypoints []Waypoint
 }
 
 // Generate a pool of all internal structures of maximum length
@@ -79,7 +79,7 @@ func (pool *Pool) Generate(items int) {
 	pool.walls = make([]Wall, items)
 	pool.woodpiles = make([]WoodPile, items)
 	pool.peasants = make([]Peasant, items)
-	pool.squares = make([]Waypoint, items)
+	pool.waypoints = make([]Waypoint, items)
 
 	for i := range pool.farms {
 		pool.farms[i].Initialize()
@@ -96,7 +96,7 @@ func (pool *Pool) Generate(items int) {
 		pool.walls[i].Initialize()
 		pool.woodpiles[i].Initialize()
 		pool.peasants[i].Initialize()
-		pool.squares[i].Deallocate()
+		pool.waypoints[i].Deallocate()
 	}
 }
 
@@ -534,19 +534,19 @@ func (pool *Pool) Peasants(n int) []*Peasant {
 	return items
 }
 
-// Squares allocated n at a time.
-func (pool *Pool) Squares(n int) []*Waypoint {
+// Waypoints allocated n at a time.
+func (pool *Pool) Waypoints(n int) []*Waypoint {
 
 	items := make([]*Waypoint, n)
 
-	pool.muSquares.Lock()
-	defer pool.muSquares.Unlock()
+	pool.muWaypoints.Lock()
+	defer pool.muWaypoints.Unlock()
 
 	j := 0
-	for i := range pool.squares {
-		if !pool.squares[i].IsAllocated() {
-			pool.squares[i].Allocate()
-			items[j] = &pool.squares[i]
+	for i := range pool.waypoints {
+		if !pool.waypoints[i].IsAllocated() {
+			pool.waypoints[i].Allocate()
+			items[j] = &pool.waypoints[i]
 			j++
 		}
 		if j >= n {
@@ -555,7 +555,6 @@ func (pool *Pool) Squares(n int) []*Waypoint {
 	}
 
 	if j < n {
-		//log.Print("We failed to allocate a Square!")
 		for ; j < n; j++ {
 			items[j] = &Waypoint{}
 			items[j].Allocate()
@@ -579,13 +578,13 @@ func (pool *Pool) Free(objects ...IPoolable) {
 }
 */
 
-// PrintAllocatedSquares prints the number of still allocatd squares in the pool
-func (pool *Pool) PrintAllocatedSquares() {
+// PrintAllocatedWaypoints prints the number of still allocated waypoints in the pool
+func (pool *Pool) PrintAllocatedWaypoints() {
 	j := 0
-	for i := range pool.squares {
-		if pool.squares[i].IsAllocated() {
+	for i := range pool.waypoints {
+		if pool.waypoints[i].IsAllocated() {
 			j++
 		}
 	}
-	fmt.Printf("\nSquares still allocated: %d  r(%d)\n", j, pool.r)
+	fmt.Printf("\nWaypoints still allocated: %d  r(%d)\n", j, pool.r)
 }

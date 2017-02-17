@@ -235,7 +235,7 @@ func (game *Game) ReadyToGo() bool {
 	return true
 }
 
-// FindPath finds a path from source to destination within this game's world and return it as a list of Squares
+// FindPath finds a path from source to destination within this game's world and return it as a list of Waypoints
 func (game *Game) FindPath(source *image.Point, destination *image.Point) (*list.List, error) {
 	return game.Pathing.FindPath(game.ItemPool, &game.OurWorld.Grid, source, destination)
 }
