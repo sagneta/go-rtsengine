@@ -55,15 +55,6 @@ func main() {
 		return
 	}
 
-	/*
-		for e := pathList.Front(); e != nil; e = e.Next() {
-			square := e.Value.(*rtsengine.Square)
-			fence := rtsengine.Fence{}
-			fence.Initialize()
-			_ = game.OurWorld.Grid.Set(&square.Locus, &fence)
-		}
-	*/
-
 	game.FreeList(pathList)
 	game.ItemPool.PrintAllocatedWaypoints()
 
