@@ -57,7 +57,7 @@ type Pool struct {
 	peasants  []Peasant
 
 	// Misc
-	squares []Square
+	squares []Waypoint
 }
 
 // Generate a pool of all internal structures of maximum length
@@ -79,7 +79,7 @@ func (pool *Pool) Generate(items int) {
 	pool.walls = make([]Wall, items)
 	pool.woodpiles = make([]WoodPile, items)
 	pool.peasants = make([]Peasant, items)
-	pool.squares = make([]Square, items)
+	pool.squares = make([]Waypoint, items)
 
 	for i := range pool.farms {
 		pool.farms[i].Initialize()
@@ -535,9 +535,9 @@ func (pool *Pool) Peasants(n int) []*Peasant {
 }
 
 // Squares allocated n at a time.
-func (pool *Pool) Squares(n int) []*Square {
+func (pool *Pool) Squares(n int) []*Waypoint {
 
-	items := make([]*Square, n)
+	items := make([]*Waypoint, n)
 
 	pool.muSquares.Lock()
 	defer pool.muSquares.Unlock()
@@ -557,7 +557,7 @@ func (pool *Pool) Squares(n int) []*Square {
 	if j < n {
 		//log.Print("We failed to allocate a Square!")
 		for ; j < n; j++ {
-			items[j] = &Square{}
+			items[j] = &Waypoint{}
 			items[j].Allocate()
 		}
 	}

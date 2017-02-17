@@ -125,7 +125,7 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 }
 
 // freeArray will free all squares in array from i .. len(squares)-1
-func (path *AStarPathing) freeArray(pool *Pool, i int, squares []*Square) {
+func (path *AStarPathing) freeArray(pool *Pool, i int, squares []*Waypoint) {
 	if i >= len(squares) {
 		return
 	}
@@ -139,7 +139,7 @@ func (path *AStarPathing) freeArray(pool *Pool, i int, squares []*Square) {
 func (path *AStarPathing) FreeList(pool *Pool, l *list.List) {
 	// Free all the remaining successors in the open list.
 	for e := l.Front(); e != nil; e = e.Next() {
-		pool.Free(e.Value.(*Square))
+		pool.Free(e.Value.(*Waypoint))
 	}
 }
 
@@ -149,9 +149,9 @@ func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list
 	result := list.New()
 	l = path.optimizePath(pool, l)
 
-	checkPoint := l.Front().Value.(*Square)
+	checkPoint := l.Front().Value.(*Waypoint)
 	for e := l.Front().Next(); e != nil; e = e.Next() {
-		currentPoint := e.Value.(*Square)
+		currentPoint := e.Value.(*Waypoint)
 		_, ok := path.walkable(grid, checkPoint, currentPoint)
 		if ok {
 			continue
@@ -166,12 +166,12 @@ func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list
 	// We fill in the gaps with straight lines.
 	smoothPath := list.New()
 
-	from := result.Front().Value.(*Square)
+	from := result.Front().Value.(*Waypoint)
 	s1 := pool.Squares(1)[0]
 	s1.Locus = from.Locus
 	smoothPath.PushBack(s1)
 	for e := result.Front().Next(); e != nil; e = e.Next() {
-		to := e.Value.(*Square)
+		to := e.Value.(*Waypoint)
 		points := grid.DirectLineBresenham(&from.Locus, &to.Locus)
 
 		points = points[1:] // Cull the source
@@ -191,7 +191,7 @@ func (path *AStarPathing) smoothPath(grid *Grid, pool *Pool, l *list.List) *list
 
 // walkable returns all the points between from and to if it is walkable (no collisions) with a true boolean.
 // If no such direct walkable path exists then nil, false is returned.
-func (path *AStarPathing) walkable(grid *Grid, from *Square, to *Square) ([]image.Point, bool) {
+func (path *AStarPathing) walkable(grid *Grid, from *Waypoint, to *Waypoint) ([]image.Point, bool) {
 	points := grid.DirectLineBresenham(&from.Locus, &to.Locus)
 
 	for _, point := range points {
@@ -211,11 +211,11 @@ func (path *AStarPathing) walkable(grid *Grid, from *Square, to *Square) ([]imag
 // square with the least F in the path list.
 // For F ties only one is chosen.
 func (path *AStarPathing) optimizePath(pool *Pool, l *list.List) *list.List {
-	var m map[int]*Square
+	var m map[int]*Waypoint
 
-	m = make(map[int]*Square)
+	m = make(map[int]*Waypoint)
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Square)
+		square := e.Value.(*Waypoint)
 
 		p, ok := m[square.Position]
 
@@ -245,9 +245,9 @@ func (path *AStarPathing) optimizePath(pool *Pool, l *list.List) *list.List {
 
 // skipSuccessor will scan list l and if the list l contains an element with a smaller
 // F than the successor at the same position, returns TRUE.
-func (path *AStarPathing) skipSuccessor(successor *Square, l *list.List) bool {
+func (path *AStarPathing) skipSuccessor(successor *Waypoint, l *list.List) bool {
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Square)
+		square := e.Value.(*Waypoint)
 
 		if square.Position == successor.Position && square.F <= successor.F {
 			return true
@@ -258,7 +258,7 @@ func (path *AStarPathing) skipSuccessor(successor *Square, l *list.List) bool {
 }
 
 // constructSuccessor will construct 8 successors with parent q from the Pool pool.
-func (path *AStarPathing) constructSuccessor(pool *Pool, q *Square) []*Square {
+func (path *AStarPathing) constructSuccessor(pool *Pool, q *Waypoint) []*Waypoint {
 	// The successors are the adjoining squares with the source S
 	// in the middle. See below. It moves clockwise. We index
 	// from zero so index 0 is 1 below.
@@ -341,12 +341,12 @@ func (path *AStarPathing) constructSuccessor(pool *Pool, q *Square) []*Square {
 // leastF returns the Square with the least F within list l
 // AND remove that Square from list l.
 // Returns nil if no item exists.
-func (path *AStarPathing) leastF(l *list.List) *Square {
+func (path *AStarPathing) leastF(l *list.List) *Waypoint {
 
-	var leastSquare *Square
+	var leastSquare *Waypoint
 	var leastSquareE *list.Element
 	for e := l.Front(); e != nil; e = e.Next() {
-		square := e.Value.(*Square)
+		square := e.Value.(*Waypoint)
 		if leastSquare == nil || square.F < leastSquare.F {
 			leastSquare = square
 			leastSquareE = e

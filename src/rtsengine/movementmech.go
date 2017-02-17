@@ -65,7 +65,7 @@ func (m *MovementMechanic) start() {
 						// Remove the unit from the world and skip through the A* path
 						m.OurWorld.RemoveAt(unit, movement.CurrentLocation)
 						for e := pathList.Front(); e != nil; e = e.Next() {
-							square := e.Value.(*Square)
+							square := e.Value.(*Waypoint)
 
 							// Skip the current location
 							if square.Locus.Eq(*movement.CurrentLocation) {
