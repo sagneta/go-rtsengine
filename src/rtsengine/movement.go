@@ -1,7 +1,6 @@
 package rtsengine
 
 import (
-	"container/list"
 	"image"
 	"time"
 )
@@ -22,10 +21,6 @@ type Movement struct {
 
 	// Current location in world coordinates
 	CurrentLocation *image.Point
-
-	// Waypath is a list of Waypoints that correspond to an entire path.
-	// This allows us to calculate the paths once rather than continuously.
-	Waypath *list.List
 }
 
 // CanMove returns true if this unit may move now given the current time.

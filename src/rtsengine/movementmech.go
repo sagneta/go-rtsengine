@@ -52,18 +52,6 @@ func (m *MovementMechanic) start() {
 					// As long as the MovementDestination exists and is different than the current location (obviously)
 					if movement.CurrentLocation != nil && movement.MovementDestination != nil && !movement.CurrentLocation.Eq(*movement.MovementDestination) {
 						//fmt.Printf("Move Unit(%d) in movementmech to %s. \n", unit.id(), movement.MovementDestination)
-
-						// Check if a waypoint has already been calculated.
-						// If so then continue down the waypath, making certain to free each waypoint upon use.
-						// Steps
-						// * If point in waypath exists, pop it off
-						// * make a copy of waypoint and free it.
-						// * removeAt the current unit
-						// * add current unit to new location
-						// * update currentlocation
-						// * sendpacket
-						// * updatelastmovement
-
 						pathList, err := m.OurGame.FindPath(movement.CurrentLocation, movement.MovementDestination)
 						if err != nil {
 							movement.MovementDestination = nil // stop further movement
@@ -100,7 +88,7 @@ func (m *MovementMechanic) start() {
 						movement.UpdateLastMovement()
 
 						// Free all waypoints to the pool.
-						m.OurGame.FreeList(pathList) // REMOVE THIS IF WE STORE THE WAYPATH
+						m.OurGame.FreeList(pathList)
 					}
 				} // move?
 				runtime.Gosched()
