@@ -227,8 +227,8 @@ func (ui *ReferenceUI) listenForWireCommands() {
 		case rtsengine.MoveUnit:
 			acre, ok := ui.acreMap[packetArray[0].UnitID]
 			if ok {
-				acre.X = packetArray[0].CurrentY
-				acre.Y = packetArray[0].CurrentX
+				acre.X = packetArray[0].CurrentColumn
+				acre.Y = packetArray[0].CurrentRow
 				acre.SetPosition(acre.X, acre.Y)
 			}
 
@@ -252,16 +252,16 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 		acre, ok := ui.acreMap[p.UnitID]
 		if ok {
 			delete(ui.acreMap, p.UnitID)
-			acre.X = p.CurrentY
-			acre.Y = p.CurrentX
+			acre.X = p.CurrentColumn
+			acre.Y = p.CurrentRow
 			acre.SetPosition(acre.X, acre.Y)
 		} else {
 			acre = &Acre{
-				Entity:       tl.NewEntity(p.CurrentY, p.CurrentX, 1, 1),
+				Entity:       tl.NewEntity(p.CurrentColumn, p.CurrentRow, 1, 1),
 				level:        ui.level,
 				LocalTerrain: p.LocalTerrain,
-				X:            p.CurrentY,
-				Y:            p.CurrentX,
+				X:            p.CurrentColumn,
+				Y:            p.CurrentRow,
 				Life:         p.Life,
 				UnitID:       p.UnitID,
 				Unit:         p.Unit,
@@ -386,8 +386,8 @@ func (ui *ReferenceUI) pathUnitToLocation(UnitID int, X int, Y int) {
 
 	// Send full View to set our UI to the entire view of the game for testing.
 	packet.Command = rtsengine.PathUnitToLocation
-	packet.CurrentX = Y
-	packet.CurrentY = X
+	packet.CurrentRow = Y
+	packet.CurrentColumn = X
 	packet.UnitID = UnitID
 	err := ui.JSONEncoder.Encode(&packet)
 	if err != nil {
@@ -402,8 +402,8 @@ func (ui *ReferenceUI) scrollView() {
 
 	// Send full View to set our UI to the entire view of the game for testing.
 	packet.Command = rtsengine.ScrollView
-	packet.CurrentX = ui.screenController.Xdiff
-	packet.CurrentY = ui.screenController.Ydiff
+	packet.CurrentRow = ui.screenController.Xdiff
+	packet.CurrentColumn = ui.screenController.Ydiff
 	err := ui.JSONEncoder.Encode(&packet)
 	if err != nil {
 		fmt.Println("Unexpected wire error", err)

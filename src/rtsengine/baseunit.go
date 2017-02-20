@@ -46,19 +46,19 @@ func (unit *BaseUnit) fillOutUnit(packet *WirePacket, command WireCommand) *Wire
 	packet.Command = command
 	viewPoint := unit.Owner.PlayerView().ToViewPoint(unit.CurrentLocation)
 
-	packet.CurrentX = viewPoint.X
-	packet.CurrentY = viewPoint.Y
+	packet.CurrentRow = viewPoint.X
+	packet.CurrentColumn = viewPoint.Y
 
 	packet.UnitID = unit.id()
 
-	packet.ViewX = unit.Owner.PlayerView().WorldOrigin.X
-	packet.ViewY = unit.Owner.PlayerView().WorldOrigin.Y
+	packet.ViewRow = unit.Owner.PlayerView().WorldOrigin.X
+	packet.ViewColumn = unit.Owner.PlayerView().WorldOrigin.Y
 	packet.ViewWidth = unit.Owner.PlayerView().Span.Dx()
 	packet.ViewHeight = unit.Owner.PlayerView().Span.Dx()
 
 	packet.Life = unit.Life
 
-	packet.WorldX = unit.CurrentLocation.X
-	packet.WorldY = unit.CurrentLocation.Y
+	packet.WorldRow = unit.CurrentLocation.X
+	packet.WorldColumn = unit.CurrentLocation.Y
 	return packet
 }

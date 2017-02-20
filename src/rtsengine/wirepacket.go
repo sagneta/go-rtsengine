@@ -72,7 +72,7 @@ type WirePacket struct {
 	Unit UnitType
 
 	// Used in MoveUnit, NewUnitAdded, NewUnitAdded, CancelMove, UnitStateRefresh, UnitDestroyed, ScrollView
-	CurrentX, CurrentY int // View Coordinates
+	CurrentRow, CurrentColumn int // View Coordinates
 
 	// Used in ResourceUpdate
 	Gold, Wood, Food, Stone int
@@ -81,11 +81,11 @@ type WirePacket struct {
 	Life int
 
 	// For the World
-	WorldWidth, WorldHeight, WorldX, WorldY int // World Coordinates
+	WorldWidth, WorldHeight, WorldRow, WorldColumn int // World Coordinates
 
-	// For the View. The ViewX and ViewY are in world coordinates
+	// For the View. The ViewRow and ViewColumn are in world coordinates
 	// FullView uses these. SetView sets the new ViewWidth and ViewHeight
-	ViewWidth, ViewHeight, ViewX, ViewY int
+	ViewWidth, ViewHeight, ViewRow, ViewColumn int
 
 	// WhoAmI fills this in and nothing more.
 	PlayerName string // name of this player
@@ -98,8 +98,8 @@ func (p *WirePacket) Clear() {
 	p.Command = NOOP
 	p.Unit = 0
 	p.LocalTerrain = Grass
-	p.CurrentX = 0
-	p.CurrentY = 0
+	p.CurrentRow = 0
+	p.CurrentColumn = 0
 	p.Gold = 0
 	p.Wood = 0
 	p.Food = 0
@@ -107,17 +107,17 @@ func (p *WirePacket) Clear() {
 	p.Life = 0
 	p.WorldWidth = 0
 	p.WorldHeight = 0
-	p.WorldX = 0
-	p.WorldY = 0
+	p.WorldRow = 0
+	p.WorldColumn = 0
 	p.ViewWidth = 0
 	p.ViewHeight = 0
-	p.ViewX = 0
-	p.ViewY = 0
+	p.ViewRow = 0
+	p.ViewColumn = 0
 	p.UnitID = 0
 
 }
 
 // Print will dump the contents of the packet
 func (p *WirePacket) Print() {
-	fmt.Printf("ID(%d) Command(%d) CurrentX(%d) CurrentY(%d)  Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d) Terrain(%d) UnitType(%d)", p.UnitID, p.Command, p.CurrentX, p.CurrentY, p.Gold, p.Wood, p.Food, p.Stone, p.Life, p.LocalTerrain, p.Unit)
+	fmt.Printf("ID(%d) Command(%d) CurrentX(%d) CurrentY(%d)  Gold(%d) Wood(%d) Food(%d) Stone(%d) Life(%d) Terrain(%d) UnitType(%d)", p.UnitID, p.Command, p.CurrentRow, p.CurrentColumn, p.Gold, p.Wood, p.Food, p.Stone, p.Life, p.LocalTerrain, p.Unit)
 }

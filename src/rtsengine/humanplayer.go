@@ -107,13 +107,13 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 		}
 
 	case ScrollView:
-		X1 := player.WorldOrigin.X + packet.CurrentX
-		Y1 := player.WorldOrigin.Y + packet.CurrentY
+		X1 := player.WorldOrigin.X + packet.CurrentRow
+		Y1 := player.WorldOrigin.Y + packet.CurrentColumn
 		point := image.Rect(X1, Y1, X1+player.Span.Dx(), Y1+player.Span.Dy())
 
 		if point.In(player.OurWorld.Span) {
-			player.WorldOrigin.X += packet.CurrentX
-			player.WorldOrigin.Y += packet.CurrentY
+			player.WorldOrigin.X += packet.CurrentRow
+			player.WorldOrigin.Y += packet.CurrentColumn
 			player.refreshPlayerToUI(true)
 		}
 
@@ -121,14 +121,14 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 		if packet.UnitID > 0 {
 			//fmt.Printf("Move Unit(%d)\n", packet.UnitID)
 			unit := player.Map[packet.UnitID]
-			destinationWorld := player.ToWorldPoint(&image.Point{packet.CurrentX, packet.CurrentY})
+			destinationWorld := player.ToWorldPoint(&image.Point{packet.CurrentRow, packet.CurrentColumn})
 			if unit != nil && player.In(&destinationWorld) {
 				unit.movement().MovementDestination = &destinationWorld
 			}
 		}
 
 	case MoveUnit:
-		if player.In(&image.Point{packet.WorldX, packet.WorldY}) {
+		if player.In(&image.Point{packet.WorldRow, packet.WorldColumn}) {
 			if err := player.Wire.SendAll(packet); err == io.EOF {
 				fmt.Println("\n\nEOF was detected. Connection lost.")
 				return err
@@ -166,8 +166,8 @@ func (player *HumanPlayer) fullView() error {
 	player.View.WorldOrigin = player.OurWorld.Grid.WorldOrigin
 
 	packetArray[0].Command = FullView
-	packetArray[0].ViewX = 0
-	packetArray[0].ViewY = 0
+	packetArray[0].ViewRow = 0
+	packetArray[0].ViewColumn = 0
 	packetArray[0].ViewHeight = player.OurWorld.Grid.Span.Dx()
 	packetArray[0].ViewWidth = player.OurWorld.Grid.Span.Dy()
 
@@ -206,8 +206,8 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 			}
 
 			// Use View Coordinates
-			packet.CurrentX = i
-			packet.CurrentY = j
+			packet.CurrentRow = i
+			packet.CurrentColumn = j
 			packet.LocalTerrain = ourAcre.terrain
 
 			// if occupied use the unit id else use the acre id
@@ -224,13 +224,13 @@ func (player *HumanPlayer) refreshPlayerToUI(isPartial bool) {
 
 			packet.WorldWidth = player.OurWorld.Grid.Span.Dy()
 			packet.WorldHeight = player.OurWorld.Grid.Span.Dx()
-			packet.WorldX = 0
-			packet.WorldY = 0
+			packet.WorldRow = 0
+			packet.WorldColumn = 0
 
 			packet.ViewWidth = player.View.Span.Dy()
 			packet.ViewHeight = player.View.Span.Dx()
-			packet.ViewX = player.View.WorldOrigin.X
-			packet.ViewY = player.View.WorldOrigin.Y
+			packet.ViewRow = player.View.WorldOrigin.X
+			packet.ViewColumn = player.View.WorldOrigin.Y
 
 			packetArray = append(packetArray, packet)
 
