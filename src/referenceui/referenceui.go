@@ -130,8 +130,8 @@ type Acre struct {
 	Life   int
 
 	// Screen coordinates
-	X int
-	Y int
+	Column int
+	Row    int
 }
 
 // ReferenceUI which is the master struct for our Game UI
@@ -227,9 +227,9 @@ func (ui *ReferenceUI) listenForWireCommands() {
 		case rtsengine.MoveUnit:
 			acre, ok := ui.acreMap[packetArray[0].UnitID]
 			if ok {
-				acre.X = packetArray[0].CurrentColumn
-				acre.Y = packetArray[0].CurrentRow
-				acre.SetPosition(acre.X, acre.Y)
+				acre.Column = packetArray[0].CurrentColumn
+				acre.Row = packetArray[0].CurrentRow
+				acre.SetPosition(acre.Column, acre.Row)
 			}
 
 		// Set the View to equial the entire world. Used for testing.
@@ -252,16 +252,16 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 		acre, ok := ui.acreMap[p.UnitID]
 		if ok {
 			delete(ui.acreMap, p.UnitID)
-			acre.X = p.CurrentColumn
-			acre.Y = p.CurrentRow
-			acre.SetPosition(acre.X, acre.Y)
+			acre.Column = p.CurrentColumn
+			acre.Row = p.CurrentRow
+			acre.SetPosition(acre.Column, acre.Row)
 		} else {
 			acre = &Acre{
 				Entity:       tl.NewEntity(p.CurrentColumn, p.CurrentRow, 1, 1),
 				level:        ui.level,
 				LocalTerrain: p.LocalTerrain,
-				X:            p.CurrentColumn,
-				Y:            p.CurrentRow,
+				Column:       p.CurrentColumn,
+				Row:          p.CurrentRow,
 				Life:         p.Life,
 				UnitID:       p.UnitID,
 				Unit:         p.Unit,
@@ -415,7 +415,7 @@ func (ui *ReferenceUI) scrollView() {
 // Presently this is an O(N) search.
 func (ui *ReferenceUI) findAcre(X int, Y int) *Acre {
 	for _, v := range ui.acreMap {
-		if v.X == X && v.Y == Y {
+		if v.Column == X && v.Row == Y {
 			return v
 		}
 	}
