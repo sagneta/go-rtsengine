@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"image"
 	"net"
+	"os"
+
+	"github.com/salviati/go-tmx/tmx"
 )
 
 // Game is an actual game with UDP ports and IPlayers
@@ -105,6 +108,9 @@ func NewGame(
 	movemech := NewMovementMechanic(game.OurWorld, game.CommandChannel, game.Players, game.Pathing, &game)
 	game.Mechanics = make([]IMechanic, 1)
 	game.Mechanics[0] = movemech
+
+	// test tmx
+	//_, _ = game.LoadTMX("./tileset/example.tmx")
 
 	return &game, nil
 }
@@ -353,4 +359,22 @@ func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image
 	unit.movement().CurrentLocation = &worldLocus
 
 	player.PlayerUnits().Add(unit)
+}
+
+// LoadTMX will load the TMX (XML) file from disk (filename)
+// and returns a pointer ot the tmx MAP.
+// http://doc.mapeditor.org/reference/tmx-map-format/
+func (game *Game) LoadTMX(filename string) (*tmx.Map, error) {
+
+	r, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	m, err := tmx.Read(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return m, nil
 }
