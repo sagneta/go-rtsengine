@@ -26,4 +26,7 @@ const (
 
 	// Snow is the white stuff.
 	Snow
+
+	// Dirt is dirt.
+	Dirt
 )

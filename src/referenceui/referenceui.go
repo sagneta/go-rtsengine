@@ -287,6 +287,10 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x8C\xB2")
 				//r, _ := utf8.DecodeRuneInString("\xC2\xAE")
 				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 'T'}
+
+			case rtsengine.Dirt:
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: ' '}
+
 			}
 
 			switch acre.Unit {
