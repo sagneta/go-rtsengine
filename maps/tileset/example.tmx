@@ -24,7 +24,7 @@
  <tileset firstgid="316" name="trees18px" tilewidth="18" tileheight="18" tilecount="6" columns="1">
   <image source="trees18px.png" width="18" height="108"/>
  </tileset>
- <tileset firstgid="322" name="wall" tilewidth="32" tileheight="32" tilecount="48" columns="8">
+ <tileset firstgid="322" name="mountains" tilewidth="32" tileheight="32" tilecount="48" columns="8">
   <image source="../../../../tools/tiled/examples/tmw_desert_spacing.png" width="265" height="199"/>
   <terraintypes>
    <terrain name="wall" tile="9"/>

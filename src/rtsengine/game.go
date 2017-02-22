@@ -41,9 +41,9 @@ type Game struct {
 	// We never load the images of course.
 	TMXMap *tmx.Map
 
-	// First and Last Global Tile Identifier for a wall
-	WallFirstGID int
-	WallLastGID  int
+	// First and Last Global Tile Identifier for mountains
+	MountainsFirstGID int
+	MountainsLastGID  int
 
 	// First and Last Global Tile Identifier for grass
 	GrassFirstGID int
@@ -412,10 +412,10 @@ func (game *Game) RenderTMX() {
 			game.GrassFirstGID = int(tileset.FirstGID)
 			game.GrassLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
 
-		case "wall":
-			game.WallFirstGID = int(tileset.FirstGID)
-			game.WallLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
-			fmt.Printf("Found wall gids %d %d\n", game.WallFirstGID, game.WallLastGID)
+		case "mountains":
+			game.MountainsFirstGID = int(tileset.FirstGID)
+			game.MountainsLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+			fmt.Printf("Found wall gids %d %d\n", game.MountainsFirstGID, game.MountainsLastGID)
 		}
 
 	} //for
@@ -428,11 +428,8 @@ func (game *Game) RenderTMX() {
 				tileID := int(layer.Data.DataTiles[(column + (row * game.TMXMap.Width))].GID)
 				//fmt.Printf("Layer found with GID %d\n", tileID)
 
-				if tileID >= game.WallFirstGID && tileID <= game.WallLastGID {
+				if tileID >= game.MountainsFirstGID && tileID <= game.MountainsLastGID {
 					//fmt.Printf("Found the wall\n")
-					//wallUnit := game.ItemPool.Walls(1)
-					//wallUnit[0].generate(nil)
-					//game.OurWorld.Matrix[row][column].unit = wallUnit[0]
 					game.OurWorld.Matrix[row][column].terrain = Mountains
 				}
 			}
