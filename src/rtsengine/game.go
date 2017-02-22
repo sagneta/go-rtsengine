@@ -415,7 +415,6 @@ func (game *Game) RenderTMX() {
 		case "mountains":
 			game.MountainsFirstGID = int(tileset.FirstGID)
 			game.MountainsLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
-			fmt.Printf("Found wall gids %d %d\n", game.MountainsFirstGID, game.MountainsLastGID)
 		}
 
 	} //for
@@ -424,14 +423,13 @@ func (game *Game) RenderTMX() {
 	for _, layer := range game.TMXMap.Layers {
 		for column := 0; column < game.TMXMap.Width; column++ {
 			for row := 0; row < game.TMXMap.Height; row++ {
-				//tileID := int(layer.DecodedTiles[(column + (row * game.TMXMap.Width))].ID)
-				tileID := int(layer.Data.DataTiles[(column + (row * game.TMXMap.Width))].GID)
-				//fmt.Printf("Layer found with GID %d\n", tileID)
 
-				if tileID >= game.MountainsFirstGID && tileID <= game.MountainsLastGID {
-					//fmt.Printf("Found the wall\n")
+				switch v := int(layer.Data.DataTiles[(column + (row * game.TMXMap.Width))].GID); {
+
+				case v >= game.MountainsFirstGID && v <= game.MountainsLastGID:
 					game.OurWorld.Matrix[row][column].terrain = Mountains
-				}
+
+				} //switch
 			}
 
 		}

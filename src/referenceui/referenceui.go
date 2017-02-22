@@ -219,6 +219,10 @@ func (ui *ReferenceUI) listenForWireCommands() {
 			return
 		}
 
+		if len(packetArray) == 0 {
+			continue
+		}
+
 		switch packetArray[0].Command {
 		case rtsengine.WhoAmI:
 			ui.playerName = packetArray[0].PlayerName
