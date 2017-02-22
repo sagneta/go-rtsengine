@@ -36,11 +36,27 @@ type Game struct {
 
 	// Command channel
 	CommandChannel chan *WirePacket
+
+	// Our TMX map that describes the world.
+	// We never load the images of course.
+	TMXMap *tmx.Map
+
+	// First and Last Global Tile Identifier for a wall
+	WallFirstGID int
+	WallLastGID  int
+
+	// First and Last Global Tile Identifier for grass
+	GrassFirstGID int
+	GrassLastGID  int
 }
 
 // NewGame constructs a new game according to the parameters.
 func NewGame(
 	description string,
+
+	// Name/path to a TMX file to load the world.
+	// If nil a crappy default world is produced.
+	filenameTMX string,
 
 	// How many items to pool for decreased GC
 	poolItems int,
@@ -72,11 +88,21 @@ func NewGame(
 	// Make this very descriptive and long. Like '4 Human Players, Fog of War, World(500,500)'
 	game.Description = description
 
-	// Instantiate the world
-	game.OurWorld = NewWorld(worldWidth, worldHeight)
-
 	// Generate a world. Fill it with trees and rivers and ...
-	game.OurWorld.GenerateSimple()
+	if len(filenameTMX) > 0 {
+		tmxmap, err := game.LoadTMX(filenameTMX)
+		if err != nil {
+			return nil, fmt.Errorf("Could not load TMX file %s", filenameTMX)
+		}
+		game.TMXMap = tmxmap
+		game.RenderTMX()
+	} else {
+		// Instantiate the world
+		game.OurWorld = NewWorld(worldWidth, worldHeight)
+		game.OurWorld.GenerateSimple()
+	}
+
+	//_, _ = game.LoadTMX("./tileset/example.tmx")
 
 	// Create Players
 	game.Players = make([]IPlayer, noOfAIPlayers+noOfHumanPlayers)
@@ -108,9 +134,6 @@ func NewGame(
 	movemech := NewMovementMechanic(game.OurWorld, game.CommandChannel, game.Players, game.Pathing, &game)
 	game.Mechanics = make([]IMechanic, 1)
 	game.Mechanics[0] = movemech
-
-	// test tmx
-	//_, _ = game.LoadTMX("./tileset/example.tmx")
 
 	return &game, nil
 }
@@ -377,4 +400,11 @@ func (game *Game) LoadTMX(filename string) (*tmx.Map, error) {
 	}
 
 	return m, nil
+}
+
+// RenderTMX will read the TMX file (presumably already loaded) and
+// render the terrain items within to our world.
+func (game *Game) RenderTMX() {
+	game.OurWorld = NewWorld(game.TMXMap.Height, game.TMXMap.Width)
+	game.OurWorld.GenerateGrassWorld()
 }

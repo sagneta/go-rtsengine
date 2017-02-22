@@ -69,6 +69,22 @@ func (world *World) GenerateSimple() {
 	}
 }
 
+// GenerateGrassWorld will generate a world of grass....
+func (world *World) GenerateGrassWorld() {
+
+	// Make all the world grass!
+	for i := range world.Matrix {
+		for j := range world.Matrix[i] {
+			world.Matrix[i][j].unit = nil
+			world.Matrix[i][j].terrain = Grass
+		}
+	}
+
+	centerPoint := world.Center()
+	world.Matrix[centerPoint.X][centerPoint.Y].terrain = Grass
+
+}
+
 // Center returns the x,y center of this View.
 func (world *World) Center() image.Point {
 	return image.Point{world.Span.Min.X + (world.Span.Dx() / 2), world.Span.Min.Y + (world.Span.Dy() / 2)}
