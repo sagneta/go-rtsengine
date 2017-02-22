@@ -294,6 +294,9 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 			}
 
 			switch acre.Unit {
+			case rtsengine.UnitWall:
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: ' '}
+
 			case rtsengine.UnitFarm:
 				cell = tl.Cell{Fg: tl.ColorYellow, Ch: 'F'}
 

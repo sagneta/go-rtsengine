@@ -102,8 +102,6 @@ func NewGame(
 		game.OurWorld.GenerateSimple()
 	}
 
-	//_, _ = game.LoadTMX("./tileset/example.tmx")
-
 	// Create Players
 	game.Players = make([]IPlayer, noOfAIPlayers+noOfHumanPlayers)
 
@@ -407,4 +405,39 @@ func (game *Game) LoadTMX(filename string) (*tmx.Map, error) {
 func (game *Game) RenderTMX() {
 	game.OurWorld = NewWorld(game.TMXMap.Height, game.TMXMap.Width)
 	game.OurWorld.GenerateGrassWorld()
+
+	for _, tileset := range game.TMXMap.Tilesets {
+		switch tileset.Name {
+		case "grass":
+			game.GrassFirstGID = int(tileset.FirstGID)
+			game.GrassLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+
+		case "wall":
+			game.WallFirstGID = int(tileset.FirstGID)
+			game.WallLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+			fmt.Printf("Found wall gids %d %d\n", game.WallFirstGID, game.WallLastGID)
+		}
+
+	} //for
+
+	// Set the terrain
+	for _, layer := range game.TMXMap.Layers {
+		for column := 0; column < game.TMXMap.Width; column++ {
+			for row := 0; row < game.TMXMap.Height; row++ {
+				//tileID := int(layer.DecodedTiles[(column + (row * game.TMXMap.Width))].ID)
+				tileID := int(layer.Data.DataTiles[(column + (row * game.TMXMap.Width))].GID)
+				//fmt.Printf("Layer found with GID %d\n", tileID)
+
+				if tileID >= game.WallFirstGID && tileID <= game.WallLastGID {
+					//fmt.Printf("Found the wall\n")
+					//wallUnit := game.ItemPool.Walls(1)
+					//wallUnit[0].generate(nil)
+					//game.OurWorld.Matrix[row][column].unit = wallUnit[0]
+					game.OurWorld.Matrix[row][column].terrain = Mountains
+				}
+			}
+
+		}
+	}
+
 }
