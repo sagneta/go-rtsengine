@@ -406,6 +406,7 @@ func (game *Game) RenderTMX() {
 	game.OurWorld = NewWorld(game.TMXMap.Height, game.TMXMap.Width)
 	game.OurWorld.GenerateGrassWorld()
 
+	// Determine the GID range of our supported terrain tiles
 	for _, tileset := range game.TMXMap.Tilesets {
 		switch tileset.Name {
 		case "grass":
@@ -419,7 +420,7 @@ func (game *Game) RenderTMX() {
 
 	} //for
 
-	// Set the terrain
+	// Set the non-grass terrain for each layer.
 	for _, layer := range game.TMXMap.Layers {
 		for column := 0; column < game.TMXMap.Width; column++ {
 			for row := 0; row < game.TMXMap.Height; row++ {
