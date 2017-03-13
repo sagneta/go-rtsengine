@@ -119,7 +119,7 @@ func (player *HumanPlayer) dispatch(packet *WirePacket) error {
 
 	case PathUnitToLocation:
 		if packet.UnitID > 0 {
-			fmt.Printf("Move Unit(%d)\n", packet.UnitID)
+			//fmt.Printf("Move Unit(%d)\n", packet.UnitID)
 			unit := player.Map[packet.UnitID]
 			destinationWorld := player.ToWorldPoint(&image.Point{packet.CurrentRow, packet.CurrentColumn})
 			if unit != nil && player.In(&destinationWorld) {

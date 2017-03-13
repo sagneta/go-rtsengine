@@ -97,21 +97,20 @@ func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
 				}
 			}
 		} else if controller.UnitID > 0 { // was there a previous selection of a unit?
-			id := controller.UnitID
-			controller.UnitID = 0
-			controller.MouseX = event.MouseX
-			controller.MouseY = event.MouseY
-			//fmt.Println("Path to unit")
-			controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
+			controller.pathUnit(event)
 		}
 	} else if controller.UnitID > 0 { // was there a previous selection of a unit?
-		id := controller.UnitID
-		controller.UnitID = 0
-		controller.MouseX = event.MouseX
-		controller.MouseY = event.MouseY
-		//fmt.Println("Path to unit")
-		controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
+		controller.pathUnit(event)
 	}
+}
+
+// pathUnit will path a unit to the mouse location in event.
+func (controller *ScreenController) pathUnit(event *tl.Event) {
+	id := controller.UnitID
+	controller.UnitID = 0
+	controller.MouseX = event.MouseX
+	controller.MouseY = event.MouseY
+	controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
 }
 
 // Draw the screen.
