@@ -69,6 +69,10 @@ type Game struct {
 	// First and Last Global Tile Identifier for snow
 	SnowFirstGID int
 	SnowLastGID  int
+
+	// Spawn locations. Suggested locations for Home bases.
+	// They are called spawns or spawn-points in game lingo.
+	SpawnLocations []tmx.Object
 }
 
 // NewGame constructs a new game according to the parameters.
@@ -490,6 +494,18 @@ func (game *Game) RenderTMX() {
 				} //switch
 			}
 
+		}
+	}
+
+	// Search for spawn locations. That will be our suggested home base locations.
+	for _, objectGroup := range game.TMXMap.ObjectGroups {
+		if "spawns" == objectGroup.Name {
+			// Store a *copy* of each spawn location.
+			game.SpawnLocations = make([]tmx.Object, len(objectGroup.Objects))
+			for i, obj := range objectGroup.Objects {
+				game.SpawnLocations[i] = obj
+				fmt.Printf("%s %d %d", game.SpawnLocations[i].Name, game.SpawnLocations[i].X, game.SpawnLocations[i].Y)
+			}
 		}
 	}
 

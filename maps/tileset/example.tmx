@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="32" tileheight="32" nextobjectid="2">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="32" tileheight="32" nextobjectid="4">
  <tileset firstgid="1" name="grass" tilewidth="32" tileheight="32" tilecount="72" columns="12">
   <image source="grass-tiles-2-small.png" width="384" height="192"/>
  </tileset>
@@ -40065,4 +40065,7 @@
    <tile gid="13"/>
   </data>
  </layer>
+ <objectgroup name="spawns">
+  <object id="2" name="spawn1" x="918" y="1759" width="216" height="209"/>
+ </objectgroup>
 </map>
