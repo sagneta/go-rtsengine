@@ -65,6 +65,10 @@ type Game struct {
 	// First and Last Global Tile Identifier for sand
 	SandFirstGID int
 	SandLastGID  int
+
+	// First and Last Global Tile Identifier for snow
+	SnowFirstGID int
+	SnowLastGID  int
 }
 
 // NewGame constructs a new game according to the parameters.
@@ -427,6 +431,10 @@ func (game *Game) RenderTMX() {
 	for _, tileset := range game.TMXMap.Tilesets {
 		switch tileset.Name {
 
+		case "snow":
+			game.SnowFirstGID = int(tileset.FirstGID)
+			game.SnowLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+
 		case "sand":
 			game.SandFirstGID = int(tileset.FirstGID)
 			game.SandLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
@@ -472,11 +480,12 @@ func (game *Game) RenderTMX() {
 
 				case v >= game.DirtFirstGID && v <= game.DirtLastGID:
 					game.OurWorld.Matrix[row][column].terrain = Dirt
-					game.OurWorld.Matrix[row][column].unit = nil
 
 				case v >= game.SandFirstGID && v <= game.SandLastGID:
 					game.OurWorld.Matrix[row][column].terrain = Sand
-					game.OurWorld.Matrix[row][column].unit = nil
+
+				case v >= game.SnowFirstGID && v <= game.SnowLastGID:
+					game.OurWorld.Matrix[row][column].terrain = Snow
 
 				} //switch
 			}

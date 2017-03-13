@@ -58,6 +58,9 @@
  <tileset firstgid="385" name="sand" tilewidth="32" tileheight="32" tilecount="4" columns="2">
   <image source="../towntiles/PNG/terrainTile1.png" width="64" height="64"/>
  </tileset>
+ <tileset firstgid="389" name="snow" tilewidth="32" tileheight="32" tilecount="4" columns="2">
+  <image source="../towntiles/PNG/snow.png" width="64" height="64"/>
+ </tileset>
  <layer name="Background" width="200" height="200">
   <data>
    <tile gid="13"/>
@@ -12892,6 +12895,10 @@
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
    <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="1"/>
@@ -12903,15 +12910,11 @@
    <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
@@ -13060,12 +13063,6 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
    <tile gid="13"/>
    <tile gid="14"/>
    <tile gid="13"/>
@@ -13096,6 +13093,12 @@
    <tile gid="14"/>
    <tile gid="13"/>
    <tile gid="14"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
    <tile gid="13"/>
    <tile gid="14"/>
    <tile gid="13"/>
@@ -13257,22 +13260,8 @@
    <tile gid="1"/>
    <tile gid="13"/>
    <tile gid="13"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
@@ -13296,6 +13285,20 @@
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
    <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="1"/>
@@ -13460,12 +13463,6 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
    <tile gid="13"/>
    <tile gid="14"/>
    <tile gid="13"/>
@@ -13489,11 +13486,19 @@
    <tile gid="13"/>
    <tile gid="14"/>
    <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
-   <tile gid="14"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
    <tile gid="13"/>
    <tile gid="14"/>
    <tile gid="13"/>
@@ -13511,8 +13516,6 @@
    <tile gid="13"/>
    <tile gid="14"/>
    <tile gid="13"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -13688,9 +13691,9 @@
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
+   <tile gid="389"/>
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
