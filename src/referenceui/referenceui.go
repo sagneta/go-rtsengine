@@ -78,7 +78,6 @@ func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
 
 	// Does our acre exist?
 	if acre != nil {
-		//	if acre.UnitID > 0 { // has a Unit?
 		if acre.Unit > 0 { // has a Unit?
 			// Moveable unit?
 			switch acre.Unit {
