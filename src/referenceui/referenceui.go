@@ -281,10 +281,10 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 
 			switch acre.LocalTerrain {
 			case rtsengine.Snow:
-				cell = tl.Cell{Fg: tl.ColorWhite, Ch: ' '}
+				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 'S'}
 
 			case rtsengine.Sand:
-				cell = tl.Cell{Fg: tl.ColorYellow, Ch: ' '}
+				cell = tl.Cell{Fg: tl.ColorYellow, Ch: 's'}
 
 			case rtsengine.Water:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'W'}
@@ -306,7 +306,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 
 			switch acre.Unit {
 			case rtsengine.UnitWall:
-				cell = tl.Cell{Fg: tl.ColorBlack, Ch: ' '}
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'X'}
 
 			case rtsengine.UnitFarm:
 				cell = tl.Cell{Fg: tl.ColorYellow, Ch: 'F'}
@@ -346,7 +346,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 
 			case rtsengine.UnitFence:
 				//r, _ := utf8.DecodeRuneInString("\xE2\xAC\x9B")
-				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'X'}
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'x'}
 			}
 			acre.SetCell(0, 0, &cell)
 			ui.level.AddEntity(acre)
