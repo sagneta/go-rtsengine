@@ -78,7 +78,8 @@ func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
 
 	// Does our acre exist?
 	if acre != nil {
-		if acre.UnitID > 0 { // has a Unit?
+		//	if acre.UnitID > 0 { // has a Unit?
+		if acre.Unit > 0 { // has a Unit?
 			// Moveable unit?
 			switch acre.Unit {
 			case rtsengine.UnitInfantry,
@@ -95,6 +96,13 @@ func (controller *ScreenController) HandleMouseDown(event *tl.Event) {
 					controller.MouseY = event.MouseY
 				}
 			}
+		} else if controller.UnitID > 0 { // was there a previous selection of a unit?
+			id := controller.UnitID
+			controller.UnitID = 0
+			controller.MouseX = event.MouseX
+			controller.MouseY = event.MouseY
+			//fmt.Println("Path to unit")
+			controller.ui.pathUnitToLocation(id, controller.MouseX, controller.MouseY)
 		}
 	} else if controller.UnitID > 0 { // was there a previous selection of a unit?
 		id := controller.UnitID
@@ -294,6 +302,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 
 			case rtsengine.Dirt:
 				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'D'}
+				//fmt.Printf("Acre UnitType: %d", acre.Unit)
 
 			}
 

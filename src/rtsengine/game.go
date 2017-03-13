@@ -464,6 +464,7 @@ func (game *Game) RenderTMX() {
 
 				case v >= game.DirtFirstGID && v <= game.DirtLastGID:
 					game.OurWorld.Matrix[row][column].terrain = Dirt
+					game.OurWorld.Matrix[row][column].unit = nil
 
 				} //switch
 			}
