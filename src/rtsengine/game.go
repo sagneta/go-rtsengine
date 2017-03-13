@@ -26,6 +26,7 @@ type Game struct {
 	OurWorld *World
 
 	// The automated mechanics of this particular game.
+
 	Mechanics []IMechanic
 
 	// Our master pool for frequently used items
@@ -48,6 +49,18 @@ type Game struct {
 	// First and Last Global Tile Identifier for grass
 	GrassFirstGID int
 	GrassLastGID  int
+
+	// First and Last Global Tile Identifier for trees
+	TreesFirstGID int
+	TreesLastGID  int
+
+	// First and Last Global Tile Identifier for water
+	WaterFirstGID int
+	WaterLastGID  int
+
+	// First and Last Global Tile Identifier for dirt
+	DirtFirstGID int
+	DirtLastGID  int
 }
 
 // NewGame constructs a new game according to the parameters.
@@ -409,6 +422,19 @@ func (game *Game) RenderTMX() {
 	// Determine the GID range of our supported terrain tiles
 	for _, tileset := range game.TMXMap.Tilesets {
 		switch tileset.Name {
+
+		case "dirt":
+			game.DirtFirstGID = int(tileset.FirstGID)
+			game.DirtLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+
+		case "water":
+			game.WaterFirstGID = int(tileset.FirstGID)
+			game.WaterLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+
+		case "trees":
+			game.TreesFirstGID = int(tileset.FirstGID)
+			game.TreesLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
+
 		case "grass":
 			game.GrassFirstGID = int(tileset.FirstGID)
 			game.GrassLastGID = int(tileset.FirstGID) + tileset.Tilecount - 1
@@ -429,6 +455,15 @@ func (game *Game) RenderTMX() {
 
 				case v >= game.MountainsFirstGID && v <= game.MountainsLastGID:
 					game.OurWorld.Matrix[row][column].terrain = Mountains
+
+				case v >= game.TreesFirstGID && v <= game.TreesLastGID:
+					game.OurWorld.Matrix[row][column].terrain = Trees
+
+				case v >= game.WaterFirstGID && v <= game.WaterLastGID:
+					game.OurWorld.Matrix[row][column].terrain = Water
+
+				case v >= game.DirtFirstGID && v <= game.DirtLastGID:
+					game.OurWorld.Matrix[row][column].terrain = Dirt
 
 				} //switch
 			}

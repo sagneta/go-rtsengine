@@ -56,8 +56,6 @@ func (m *MovementMechanic) start() {
 						if err != nil {
 							movement.MovementDestination = nil // stop further movement
 							fmt.Print(err)
-							// Free all waypoints to the pool.
-							//m.OurGame.FreeList(pathList)
 							continue
 						}
 

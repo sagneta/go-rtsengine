@@ -281,7 +281,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				cell = tl.Cell{Fg: tl.ColorYellow, Ch: ' '}
 
 			case rtsengine.Water:
-				cell = tl.Cell{Fg: tl.ColorBlue, Ch: ' '}
+				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'W'}
 
 			case rtsengine.Mountains:
 				//r, _ := utf8.DecodeRuneInString("\xF0\x9F\x97\xBB")
@@ -293,7 +293,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				cell = tl.Cell{Fg: tl.ColorWhite, Ch: 'T'}
 
 			case rtsengine.Dirt:
-				cell = tl.Cell{Fg: tl.ColorBlack, Ch: ' '}
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'D'}
 
 			}
 
