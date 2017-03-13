@@ -53,7 +53,17 @@ func (path *AStarPathing) FindPath(pool *Pool, grid *Grid, source *image.Point, 
 	openList.PushFront(q)
 
 	// While the open list is not empty
+	count := 0
 	for openList.Len() > 0 {
+		//log.Print("outer loop")
+
+		count++
+		if count > 20000 {
+			path.FreeList(pool, openList)
+			path.FreeList(pool, closedList)
+			return nil, fmt.Errorf("Path does not converge\n")
+		}
+
 		//find the waypoint with the least f on the open list, call it "q"
 		//remove q from the open list
 		q = path.leastF(openList)

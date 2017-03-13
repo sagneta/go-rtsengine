@@ -24,7 +24,7 @@
  <tileset firstgid="316" name="trees18px" tilewidth="18" tileheight="18" tilecount="6" columns="1">
   <image source="trees18px.png" width="18" height="108"/>
  </tileset>
- <tileset firstgid="322" name="mountains" tilewidth="32" tileheight="32" tilecount="48" columns="8">
+ <tileset firstgid="322" name="mountains" tilewidth="32" tileheight="32" tilecount="12" columns="8">
   <image source="../../../../tools/tiled/examples/tmw_desert_spacing.png" width="265" height="199"/>
   <terraintypes>
    <terrain name="wall" tile="9"/>
@@ -461,8 +461,8 @@
    <tile gid="39"/>
    <tile gid="13"/>
    <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="1"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
    <tile gid="331"/>
    <tile gid="331"/>
    <tile gid="331"/>
@@ -1890,8 +1890,8 @@
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
-   <tile gid="14"/>
-   <tile gid="13"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
    <tile gid="13"/>
    <tile gid="13"/>
    <tile gid="13"/>
@@ -2091,8 +2091,8 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
    <tile gid="13"/>
    <tile gid="13"/>
    <tile gid="13"/>
@@ -2292,8 +2292,8 @@
    <tile gid="13"/>
    <tile gid="13"/>
    <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
    <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="2"/>
@@ -2493,8 +2493,8 @@
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="2"/>
-   <tile gid="2"/>
+   <tile gid="331"/>
+   <tile gid="331"/>
    <tile gid="14"/>
    <tile gid="14"/>
    <tile gid="1"/>
