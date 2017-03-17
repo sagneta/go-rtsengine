@@ -39,7 +39,7 @@ func main() {
 		log.Print("GO RTS Engine starting")
 	}
 
-	game, err := rtsengine.NewGame("Game Test", "./maps/tileset/example.tmx", 10000, 1, 0, 50, 50, *cargs.width, *cargs.height)
+	game, err := rtsengine.NewGame("Game Test", "./maps/tileset/example.tmx", 10000, 1, 3, 50, 50, *cargs.width, *cargs.height)
 	if err != nil {
 		log.Print(err)
 		return

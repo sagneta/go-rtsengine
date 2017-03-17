@@ -40069,6 +40069,6 @@
   <object id="2" name="spawn1" x="510" y="353" width="224" height="224"/>
   <object id="4" name="spawn2" x="764" y="5349" width="386" height="313"/>
   <object id="5" name="spawn3" x="5405" y="5380" width="416" height="304"/>
-  <object id="6" name="spawn4" x="5482" y="46" width="387" height="334"/>
+  <object id="6" name="spawn4" x="5504" y="34" width="334" height="334"/>
  </objectgroup>
 </map>
