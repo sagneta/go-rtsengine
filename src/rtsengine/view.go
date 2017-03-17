@@ -60,6 +60,11 @@ func (view *View) Center() image.Point {
 	return image.Point{view.Span.Min.X + (view.Span.Dx() / 2), view.Span.Min.Y + (view.Span.Dy() / 2)}
 }
 
+// CenterOfRect returns the center of the Rectangle passed as a parameter.
+func (view *View) CenterOfRect(rect *image.Rectangle) image.Point {
+	return image.Point{rect.Min.X + (rect.Dx() / 2), rect.Min.Y + (rect.Dy() / 2)}
+}
+
 //RandomPointInView returns a pointer to a point randomly selected within the view.
 func (view *View) RandomPointInView() *image.Point {
 	return &image.Point{view.Generator.Intn(view.Span.Max.X), view.Generator.Intn(view.Span.Max.Y)}

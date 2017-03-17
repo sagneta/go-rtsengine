@@ -18,6 +18,8 @@ func NewAIPlayer(description string, worldLocation image.Point, width int, heigh
 	player.Pathing = pathing
 	player.OurWorld = world
 
+	player.Map = make(map[int]IUnit)
+
 	player.AutoNumber.Initialize()
 	// Add mechanics
 

@@ -127,11 +127,18 @@ func NewGame(
 		game.OurWorld.GenerateSimple()
 	}
 
+	// Check that there are sufficient spawn locations within the map.
+	if noOfAIPlayers+noOfHumanPlayers > len(game.SpawnLocations) {
+		return nil, fmt.Errorf("Insufficient spawn locations within map. Spawn locations found (%d)", len(game.SpawnLocations))
+	}
+
+	//fmt.Println(game.SpawnLocations)
+
 	// Create Players
 	game.Players = make([]IPlayer, noOfAIPlayers+noOfHumanPlayers)
 
 	// Situate player bases onto the world without overlapping.
-	rects, error := game.SituateHomeBases(noOfAIPlayers+noOfHumanPlayers, playerViewWidth, playerViewHeight)
+	rects, error := game.SituateHomeBases(noOfAIPlayers + noOfHumanPlayers)
 
 	if error != nil {
 		return nil, fmt.Errorf("Failed to situate home bases into world grid. Please reduce number of players and/or increase world size")
@@ -142,15 +149,15 @@ func NewGame(
 	for ; i < noOfHumanPlayers; i++ {
 		// The world point needs to be inserted into a random location
 		game.Players[i] = NewHumanPlayer(fmt.Sprintf("Human Player %d", i), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing, game.OurWorld)
-		game.GenerateUnits(game.Players[i])
+		game.GenerateUnits(game.Players[i], rects[i])
 	}
 
 	// Create Machine Intelligent Players
 	for j := 0; j < noOfAIPlayers; j++ {
 		// The world point needs to be inserted into a random location
 		game.Players[i] = NewAIPlayer(fmt.Sprintf("AI Player %d", j), rects[i].Min, playerViewWidth, playerViewHeight, game.ItemPool, game.Pathing, game.OurWorld)
+		game.GenerateUnits(game.Players[i], rects[i])
 		i++
-		game.GenerateUnits(game.Players[i])
 	}
 
 	// Add mechanics
@@ -194,47 +201,13 @@ func (game *Game) AcceptNetConnections(host string, port int) error {
 // locations on the world. That is within the world but not overlapping one another.
 // It's possible for large numbers of players on a too small grid this heuristic will not converge
 // and an error will be returned.
-func (game *Game) SituateHomeBases(noOfPlayers int, playerViewWidth int, playerViewHeight int) ([]*image.Rectangle, error) {
+func (game *Game) SituateHomeBases(noOfPlayers int) ([]*image.Rectangle, error) {
 	playerRects := make([]*image.Rectangle, noOfPlayers)
 
-	//s1 := rand.NewSource(time.Now().UnixNano())
-	//r1 := rand.New(s1)
-
-OUTER:
-	for i, j := 0, 0; i < noOfPlayers; j++ {
-
-		// No convergence?
-		if j >= 1000 {
-			return nil, fmt.Errorf("Not enough space in world grid to insert player grids.")
-		}
-
+	for i := 0; i < noOfPlayers; i++ {
 		// Random point within the world
-		//randomRect := image.Rect(r1.Intn(game.OurWorld.Span.Dx()), r1.Intn(game.OurWorld.Span.Dy()), playerViewHeight, playerViewWidth)
-		randomRect := image.Rect(0, 0, playerViewHeight, playerViewWidth)
-
-		// If no players yet just add it and continue.
-		if i == 0 {
-			playerRects[i] = &randomRect
-			i++
-			continue
-		}
-
-		// Ensure no overlaps with existing player rects
-		for _, r := range playerRects {
-			// End of array.
-			if r == nil {
-				break
-			}
-
-			// two player home grids overlap. Try again...
-			if r.Overlaps(randomRect) {
-				continue OUTER
-			}
-		}
-
-		// no overlap!
+		randomRect := image.Rect(game.SpawnLocations[i].Y, game.SpawnLocations[i].X, game.SpawnLocations[i].Height, game.SpawnLocations[i].Width)
 		playerRects[i] = &randomRect
-		i++
 	}
 
 	return playerRects, nil
@@ -298,12 +271,12 @@ func (game *Game) FreeList(l *list.List) {
 }
 
 // GenerateUnits will construct the starting units per player.
-func (game *Game) GenerateUnits(player IPlayer) {
+func (game *Game) GenerateUnits(player IPlayer, spawnRect *image.Rectangle) {
 
 	// Need general information about our grid and our view projection onto the grid.
 	view := player.PlayerView()
-	viewCenter := view.Center()
-	worldCenter := view.ToWorldPoint(&viewCenter)
+	worldCenter := view.CenterOfRect(spawnRect)
+	viewCenter := view.ToViewPoint(&worldCenter)
 
 	/////////////////////////////////////////////////////////////////////////
 	//           HomeStead is special. Only one in center location         //
@@ -503,6 +476,13 @@ func (game *Game) RenderTMX() {
 			// Store a *copy* of each spawn location.
 			game.SpawnLocations = make([]tmx.Object, len(objectGroup.Objects))
 			for i, obj := range objectGroup.Objects {
+
+				// Spawn locations in pixels. Each acre is a 32pixel square plot.
+				obj.X /= 32
+				obj.Y /= 32
+				obj.Width /= 32
+				obj.Height /= 32
+
 				game.SpawnLocations[i] = obj
 				//fmt.Printf("%s %d %d", game.SpawnLocations[i].Name, game.SpawnLocations[i].X, game.SpawnLocations[i].Y)
 			}
