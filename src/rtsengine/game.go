@@ -362,9 +362,16 @@ func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image
 	view := player.PlayerView()
 
 	var locus *image.Point
+	i := 0
 	for {
 		locus = view.RandomPointCloseToPoint(central, radius)
 		if game.OurWorld.In(locus) && !game.OurWorld.Collision(locus) {
+			break
+		}
+
+		// If the algorithm doesn't converge, break.
+		i++
+		if i > 1000 {
 			break
 		}
 	}
