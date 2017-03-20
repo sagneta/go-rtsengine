@@ -282,6 +282,7 @@ func (game *Game) GenerateUnits(player IPlayer, spawnRect *image.Rectangle) {
 	//           HomeStead is special. Only one in center location         //
 	/////////////////////////////////////////////////////////////////////////
 	homestead := HomeStead{}
+	homestead.Initialize()
 	homestead.generate(player)
 
 	err := game.OurWorld.Add(&homestead, &worldCenter)

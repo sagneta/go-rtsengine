@@ -327,7 +327,7 @@ func (ui *ReferenceUI) handleRefreshPlayerToUI(packetArray []rtsengine.WirePacke
 				cell = tl.Cell{Fg: tl.ColorYellow, Ch: 'G'}
 
 			case rtsengine.UnitHomeStead:
-				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'H'}
+				cell = tl.Cell{Fg: tl.ColorBlack, Ch: 'H'}
 
 			case rtsengine.UnitPeasant:
 				cell = tl.Cell{Fg: tl.ColorBlue, Ch: 'P'}
