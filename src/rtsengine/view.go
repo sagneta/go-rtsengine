@@ -70,7 +70,7 @@ func (view *View) RandomPointInView() *image.Point {
 	return &image.Point{view.Generator.Intn(view.Span.Max.X), view.Generator.Intn(view.Span.Max.Y)}
 }
 
-// RandomPointClostToPoint will generate a point close to locus no farther than maxDistance away
-func (view *View) RandomPointClostToPoint(locus *image.Point, maxDistance int) *image.Point {
+// RandomPointCloseToPoint will generate a point close to locus no farther than maxDistance away
+func (view *View) RandomPointCloseToPoint(locus *image.Point, maxDistance int) *image.Point {
 	return &image.Point{locus.X + view.Generator.Intn(maxDistance), locus.Y + view.Generator.Intn(maxDistance)}
 }

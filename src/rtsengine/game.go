@@ -363,7 +363,7 @@ func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image
 
 	var locus *image.Point
 	for {
-		locus = view.RandomPointClostToPoint(central, radius)
+		locus = view.RandomPointCloseToPoint(central, radius)
 		if game.OurWorld.In(locus) && !game.OurWorld.Collision(locus) {
 			break
 		}
