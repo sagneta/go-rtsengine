@@ -297,27 +297,45 @@ func (game *Game) GenerateUnits(player IPlayer, spawnRect *image.Rectangle) {
 	/////////////////////////////////////////////////////////////////////////
 	infantry := game.ItemPool.Infantry(1)
 	infantry[0].generate(player)
-	game.AddUnitCloseToPoint(player, infantry[0], &viewCenter, 10)
+	err = game.AddUnitCloseToPoint(player, infantry[0], &viewCenter, 10)
+	if err != nil {
+		fmt.Print(err)
+	}
 
 	farm := game.ItemPool.Farms(1)
 	farm[0].generate(player)
-	game.AddUnitCloseToPoint(player, farm[0], &viewCenter, 10)
+	err = game.AddUnitCloseToPoint(player, farm[0], &viewCenter, 10)
+	if err != nil {
+		fmt.Print(err)
+	}
 
 	cavalry := game.ItemPool.Cavalry(1)
 	cavalry[0].generate(player)
-	game.AddUnitCloseToPoint(player, cavalry[0], &viewCenter, 20)
+	err = game.AddUnitCloseToPoint(player, cavalry[0], &viewCenter, 20)
+	if err != nil {
+		fmt.Print(err)
+	}
 
 	woodpile := game.ItemPool.Woodpiles(1)
 	woodpile[0].generate(player)
-	game.AddUnitCloseToPoint(player, woodpile[0], &viewCenter, 30)
+	err = game.AddUnitCloseToPoint(player, woodpile[0], &viewCenter, 30)
+	if err != nil {
+		fmt.Print(err)
+	}
 
 	goldmine := game.ItemPool.Goldmines(1)
 	goldmine[0].generate(player)
-	game.AddUnitCloseToPoint(player, goldmine[0], &viewCenter, 30)
+	err = game.AddUnitCloseToPoint(player, goldmine[0], &viewCenter, 30)
+	if err != nil {
+		fmt.Print(err)
+	}
 
 	stonequarry := game.ItemPool.StoneQuarry(1)
 	stonequarry[0].generate(player)
-	game.AddUnitCloseToPoint(player, stonequarry[0], &viewCenter, 30)
+	err = game.AddUnitCloseToPoint(player, stonequarry[0], &viewCenter, 30)
+	if err != nil {
+		fmt.Print(err)
+	}
 
 }
 
@@ -358,7 +376,7 @@ func (game *Game) AddUnit(player IPlayer, unit IUnit) {
 
 // AddUnitCloseToPoint will add unit to player no further than radius away from the central point.
 // Will ensure no collisions. Central point is in VIEW coordinates.
-func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image.Point, radius int) {
+func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image.Point, radius int) error {
 	view := player.PlayerView()
 
 	var locus *image.Point
@@ -372,7 +390,7 @@ func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image
 		// If the algorithm doesn't converge, break.
 		i++
 		if i > 1000 {
-			break
+			return fmt.Errorf("AddUnitCloseToPoint does not converge: X(%d) Y(%d)", central.X, central.Y)
 		}
 	}
 
@@ -386,6 +404,8 @@ func (game *Game) AddUnitCloseToPoint(player IPlayer, unit IUnit, central *image
 	unit.movement().CurrentLocation = &worldLocus
 
 	player.PlayerUnits().Add(unit)
+
+	return nil
 }
 
 // LoadTMX will load the TMX (XML) file from disk (filename)
