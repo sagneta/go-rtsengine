@@ -1,0 +1,19 @@
+Principal Software Engineer
+
+Job Expectations/Performance Metrics
+Leading technical contributor to the enhancement and maintenance of one or more Charles River IMS modules or components of an agile scrum team. Provide engineering troubleshooting assistance to customer support teams and other development teams within Charles River.
+Description
+•	Drive technical excellence by working independently to analyze, design, develop, test, and debug large and complex software enhancements and solutions within Charles River’s business and technical problem domains including modifications to core frameworks and other primary facilities critical to system operation
+•	Collaborate with Business Analysts and Product Managers to create simple and sustainable software solutions for complex problems
+•	Provide thought leadership in the design of product architecture within and beyond the team’s scope of responsibility
+•	Direct problem solving for projects or major phases of projects to resolve advanced software technical issues
+•	Develop, test, debug, and implement software programs, applications and projects using Java, C#, SQL, JavaScript, or other related software engineering languages as well as keeping abreast of emerging technologies impactful to CRDs business
+•	Provide informed guidance and critical analysis of proposed changes during code reviews
+•	Write unit and automation tests to ensure a high quality end product
+•	Identify ways of improving development test methodologies contribute to and related test methodology frameworks
+•	Conduct manual tests to ensure a high quality end product
+•	Provide expert level troubleshooting on large, mission critical client implementations
+•	Actively assist team leaders in the agile software development process by adhering to and advancing the CRD scrum methodology, including attending all daily standups, sprint planning, backlog grooming, and retrospectives
+•	Plan and coordinate cross-team activities groups to complete assignments
+•	Advise senior management on technical strategy
+•	Provide mentoring to junior and senior staff
